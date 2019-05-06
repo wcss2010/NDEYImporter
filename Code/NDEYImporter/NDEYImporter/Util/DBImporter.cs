@@ -252,7 +252,7 @@ namespace NDEYImporter.Util
 
                             //检查本地库中有没有这条记录
                             DataList dlLocalCustomUnit = ConnectionManager.Context.table("Unit").where("UnitBankNo='" + dlUnitList.getRow(0).getString("UnitBankNo") + "'").select("*").getDataList();
-                            
+
                             //添加或更新的单位信息
                             DataItem diNewUnit = new DataItem();
                             diNewUnit.set("ID", Guid.NewGuid().ToString());
@@ -284,6 +284,11 @@ namespace NDEYImporter.Util
 
                             //更新本项目的Catalog的ProjectCreaterUnitID
                             ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", diNewUnit.getString("ID")).where("ProjectID = '" + projID + "'").update();
+                        }
+                        else
+                        {
+                            //更新本项目的Catalog的ProjectCreaterUnitID
+                            ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", dlUnitList.getRow(0).getString("ID")).where("ProjectID = '" + projID + "'").update();
                         }
                     }
                     else
