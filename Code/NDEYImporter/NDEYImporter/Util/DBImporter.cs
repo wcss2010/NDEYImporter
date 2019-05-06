@@ -154,6 +154,12 @@ namespace NDEYImporter.Util
 
                             //添加单位数据
                             ConnectionManager.Context.table("Unit").insert(diNewUnit);
+
+                            //更新本项目的Project的UnitID
+                            ConnectionManager.Context.table("Project").set("UnitID", diNewUnit.getString("ID")).where("ID = '" + projID + "'").update();
+
+                            //更新本项目的Catalog的ProjectCreaterUnitID
+                            ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", diNewUnit.getString("ID")).where("ProjectID = '" + projID + "'").update();
                         }
                     }
                     else
