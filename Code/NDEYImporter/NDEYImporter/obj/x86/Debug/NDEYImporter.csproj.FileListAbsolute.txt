@@ -1,0 +1,9 @@
+C:\Codes\NDEYImporter\Release\NDEYImporter.exe
+C:\Codes\NDEYImporter\Release\NDEYImporter.pdb
+C:\Codes\NDEYImporter\Code\NDEYImporter\NDEYImporter\obj\x86\Debug\NDEYImporter.csprojResolveAssemblyReference.cache
+C:\Codes\NDEYImporter\Code\NDEYImporter\NDEYImporter\obj\x86\Debug\NDEYImporter.Properties.Resources.resources
+C:\Codes\NDEYImporter\Code\NDEYImporter\NDEYImporter\obj\x86\Debug\NDEYImporter.csproj.GenerateResource.Cache
+C:\Codes\NDEYImporter\Code\NDEYImporter\NDEYImporter\obj\x86\Debug\NDEYImporter.exe
+C:\Codes\NDEYImporter\Code\NDEYImporter\NDEYImporter\obj\x86\Debug\NDEYImporter.pdb
+C:\Codes\NDEYImporter\Release\static.db
+C:\Codes\NDEYImporter\Code\NDEYImporter\NDEYImporter\obj\x86\Debug\NDEYImporter.Form1.resources
