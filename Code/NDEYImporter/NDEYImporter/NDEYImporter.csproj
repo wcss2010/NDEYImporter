@@ -50,24 +50,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ComponentFactory.Krypton.Design">
-      <HintPath>..\..\..\Lib\ComponentFactory.Krypton.Design.dll</HintPath>
-    </Reference>
-    <Reference Include="ComponentFactory.Krypton.Docking">
-      <HintPath>..\..\..\Lib\ComponentFactory.Krypton.Docking.dll</HintPath>
-    </Reference>
-    <Reference Include="ComponentFactory.Krypton.Navigator">
-      <HintPath>..\..\..\Lib\ComponentFactory.Krypton.Navigator.dll</HintPath>
-    </Reference>
-    <Reference Include="ComponentFactory.Krypton.Ribbon">
-      <HintPath>..\..\..\Lib\ComponentFactory.Krypton.Ribbon.dll</HintPath>
-    </Reference>
-    <Reference Include="ComponentFactory.Krypton.Toolkit">
-      <HintPath>..\..\..\Lib\ComponentFactory.Krypton.Toolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="ComponentFactory.Krypton.Workspace">
-      <HintPath>..\..\..\Lib\ComponentFactory.Krypton.Workspace.dll</HintPath>
-    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\..\Lib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
@@ -87,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DB\ConnectionManager.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,6 +102,9 @@
     <None Include="static.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Forms\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
