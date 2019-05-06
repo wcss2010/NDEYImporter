@@ -149,7 +149,7 @@ namespace NDEYImporter.Util
                                 ConnectionManager.Context.table("Project").set("UnitID", diNewUnit.getString("ID")).where("UnitID = '" + dlLocalCustomUnit.getRow(0).getString("ID") + "'").update();
 
                                 //更新Catalog的ProjectCreaterUnitID
-                                ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", diNewUnit.getString("ID")).where("UnitID = '" + dlLocalCustomUnit.getRow(0).getString("ID") + "'").update();
+                                ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", diNewUnit.getString("ID")).where("ProjectCreaterUnitID = '" + dlLocalCustomUnit.getRow(0).getString("ID") + "'").update();
                             }
 
                             //添加单位数据
