@@ -14,9 +14,13 @@ namespace NDEYImporter.Util
         /// <summary>
         /// 导入数据库
         /// </summary>
-        /// <param name="sourceFile">NDEY数据文件</param>        
-        public static void importDB(string sourceFile)
+        /// <param name="sourceFile">NDEY数据文件</param>
+        /// <returns>ProjectID</returns>
+        public static string importDB(string sourceFile)
         {
+            //项目ID
+            string projectID = string.Empty;
+
             //SQLite数据库工厂
             System.Data.SQLite.SQLiteFactory factory = new System.Data.SQLite.SQLiteFactory();
 
@@ -46,14 +50,14 @@ namespace NDEYImporter.Util
                     {
                         //不需要新建
 
-                        //项目ID
-                        string projectID = dlCatalogs.getRow(0).getString("ProjectID");
+                        //当前项目ID
+                        projectID = dlCatalogs.getRow(0).getString("ProjectID");
 
                         //清理项目数据
                         clearProjectData(projectID);
 
                         //插入数据到本地库中
-                        projectID = insertToLocalDB(sourceFile);
+                        projectID = insertToLocalDB(projectID, sourceFile);
 
                         //更新索引中的项目ID
                         ConnectionManager.Context.table("Catalog").set("ProjectID", projectID).where("ProjectName='" + projectName + "' and ProjectCreater='" + projectCreater + "'").update();
@@ -63,8 +67,8 @@ namespace NDEYImporter.Util
                         //需要新建
                         
                         //插入数据到本地库中
-                        //项目ID
-                        string projectID = insertToLocalDB(sourceFile);
+                        //新项目ID
+                        projectID = insertToLocalDB(Guid.NewGuid().ToString(), sourceFile);
 
                         //项目单位ID
                         string projectCreaterUnitID = ConnectionManager.Context.table("Project").where("ID='" + projectID + "'").select("UnitID").getValue<string>(string.Empty);
@@ -90,13 +94,15 @@ namespace NDEYImporter.Util
                 factory.Dispose();
                 context = null;
             }
+
+            return projectID;
         }
 
         /// <summary>
         /// 清理本地数据库中的指定项目ID下的所有数据
         /// </summary>
         /// <param name="projID">项目ID</param>
-        public static void clearProjectData(string projID)
+        private static void clearProjectData(string projID)
         {
             //清理项目信息
             ConnectionManager.Context.table("Project").where("ID='" + projID + "'").delete();
@@ -134,13 +140,11 @@ namespace NDEYImporter.Util
         /// <summary>
         /// 将NDEY数据添加到本地数据库中
         /// </summary>
+        /// <param name="projID">项目ID</param>
         /// <param name="sourceFile">NDEY数据文件</param>        
         /// <returns>ProjectID</returns>        
-        public static string insertToLocalDB(string sourceFile)
+        private static string insertToLocalDB(string projID, string sourceFile)
         {
-            //ProjectID
-            string projID = Guid.NewGuid().ToString();
-
             //SQLite数据库工厂
             System.Data.SQLite.SQLiteFactory factory = new System.Data.SQLite.SQLiteFactory();
 
