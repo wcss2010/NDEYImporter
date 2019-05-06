@@ -120,8 +120,16 @@ namespace NDEYImporter.Util
                         
             //单位ID
             string unitId = ConnectionManager.Context.table("Catalog").where("ProjectID='" + projID + "'").select("ProjectCreaterUnitID").getValue<string>(string.Empty);
-            //清理单位信息
-            ConnectionManager.Context.table("Unit").where("ID='" + unitId + "' and IsUserAdded = 1").delete();
+            //使用次数
+            int unitUseCount = ConnectionManager.Context.table("Catalog").where("ProjectCreaterUnitID='" + unitId + "'").select("count(*)").getValue<int>(0);
+
+            //判断是否可以删除
+            if (unitUseCount <= 1)
+            {
+                //只有当这个单位只有一次引用时才能删除
+                //清理单位信息
+                ConnectionManager.Context.table("Unit").where("ID='" + unitId + "' and IsUserAdded = 1").delete();
+            }
         }
 
         /// <summary>
