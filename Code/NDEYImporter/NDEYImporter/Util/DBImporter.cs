@@ -121,8 +121,7 @@ namespace NDEYImporter.Util
             //单位ID
             string unitId = ConnectionManager.Context.table("Catalog").where("ProjectID='" + projID + "'").select("ProjectCreaterUnitID").getValue<string>(string.Empty);
             //使用次数
-            int unitUseCount = ConnectionManager.Context.table("Catalog").where("ProjectCreaterUnitID='" + unitId + "'").select("count(*)").getValue<int>(0);
-
+            long unitUseCount = ConnectionManager.Context.table("Catalog").where("ProjectCreaterUnitID='" + unitId + "'").select("count(*)").getValue<long>(0);
             //判断是否可以删除
             if (unitUseCount <= 1)
             {
