@@ -12,11 +12,52 @@ namespace NDEYImporter.Util
     public class DBImporter
     {
         /// <summary>
+        /// 导入数据库
+        /// </summary>
+        /// <param name="sourceFile">NDEY数据文件</param>        
+        public static void importDB(string sourceFile)
+        {
+           
+        }
+
+        /// <summary>
+        /// 清理本地数据库中的指定项目ID下的所有数据
+        /// </summary>
+        /// <param name="projID">项目ID</param>
+        public static void clearProjectData(string projID)
+        {
+            //清理项目信息
+            ConnectionManager.Context.table("Project").where("ID='" + projID + "'").delete();
+
+            //清理学术经历
+            ConnectionManager.Context.table("ResearchExperience").where("ProjectID='" + projID + "'").delete();
+            //清理工作经历
+            ConnectionManager.Context.table("WorkExperience").where("ProjectID='" + projID + "'").delete();
+            //清理教育经历
+            ConnectionManager.Context.table("EducationExperience").where("ProjectID='" + projID + "'").delete();
+            //清理获得科技奖项经历
+            ConnectionManager.Context.table("TechnologyAwardsExperience").where("ProjectID='" + projID + "'").delete();
+            //清理入选人才计划经历
+            ConnectionManager.Context.table("TalentsPlanExperience").where("ProjectID='" + projID + "'").delete();
+            //清理代表性论著经历
+            ConnectionManager.Context.table("TreatisesExperience").where("ProjectID='" + projID + "'").delete();
+            //清理承担国防项目经历
+            ConnectionManager.Context.table("NationalDefenseProjectExperience").where("ProjectID='" + projID + "'").delete();
+            //清理获得国防专利经历
+            ConnectionManager.Context.table("NationalDefensePatentExperience ").where("ProjectID='" + projID + "'").delete();
+                        
+            //单位ID
+            string unitId = ConnectionManager.Context.table("Catalog").where("ProjectID='" + projID + "'").select("ProjectCreaterUnitID").getValue<string>(string.Empty);
+            //清理单位信息
+            ConnectionManager.Context.table("Unit").where("ID='" + unitId + "' and IsUserAdded = 1").delete();
+        }
+
+        /// <summary>
         /// 将NDEY数据添加到本地数据库中
         /// </summary>
-        /// <param name="sourceFile">NDEY数据文本</param>        
+        /// <param name="sourceFile">NDEY数据文件</param>        
         /// <returns>ProjectID</returns>        
-        public static string appendNdeyToLocal(string sourceFile)
+        public static string insertToLocalDB(string sourceFile)
         {
             //ProjectID
             string projID = Guid.NewGuid().ToString();
