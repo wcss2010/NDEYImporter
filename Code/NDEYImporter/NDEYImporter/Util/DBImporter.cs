@@ -178,7 +178,7 @@ namespace NDEYImporter.Util
                         diNewResearch.set("EndDate", di.get("AcademicPostEDate"));
                         diNewResearch.set("Org", di.get("AcademicPostOrg"));
                         diNewResearch.set("Job", di.get("AcademicPostContent"));
-                        diNewResearch.set("Order", di.get("AcademicPostOrder"));
+                        diNewResearch.set("RecordOrder", di.get("AcademicPostOrder"));
                         ConnectionManager.Context.table("ResearchExperience").insert(diNewResearch);
                     }
 
@@ -198,7 +198,7 @@ namespace NDEYImporter.Util
                         diNewWork.set("EndDate", di.get("WorkExperienceEDate"));
                         diNewWork.set("Org", di.get("WorkExperienceOrg"));
                         diNewWork.set("Job", di.get("WorkExperienceContent"));
-                        diNewWork.set("Order", di.get("WorkExperienceOrder"));
+                        diNewWork.set("RecordOrder", di.get("WorkExperienceOrder"));
                         ConnectionManager.Context.table("WorkExperience").insert(diNewWork);
                     }
 
@@ -220,7 +220,7 @@ namespace NDEYImporter.Util
                         diNewEducation.set("Org", di.get("EducationOrg"));
                         diNewEducation.set("Major", di.get("EducationMajor"));
                         diNewEducation.set("Degree", di.get("EducationDegree"));
-                        diNewEducation.set("Order", di.get("EducationOrder"));
+                        diNewEducation.set("RecordOrder", di.get("EducationOrder"));
                         ConnectionManager.Context.table("EducationExperience").insert(diNewEducation);
                     }
 
@@ -242,7 +242,7 @@ namespace NDEYImporter.Util
                         diNewTechnologyAwards.set("PDF", di.get("TechnologyAwardsPDF"));
                         diNewTechnologyAwards.set("PDFOName", di.get("TechnologyAwardsPDFOName"));
                         diNewTechnologyAwards.set("Ranking", di.get("TechnologyAwardsee"));
-                        diNewTechnologyAwards.set("Order", di.get("TechnologyAwardsOrder"));
+                        diNewTechnologyAwards.set("RecordOrder", di.get("TechnologyAwardsOrder"));
                         ConnectionManager.Context.table("TechnologyAwardsExperience").insert(diNewTechnologyAwards);
                     }
 
@@ -262,7 +262,7 @@ namespace NDEYImporter.Util
                         diNewTalentsPlan.set("Name", di.get("TalentsPlanName"));
                         diNewTalentsPlan.set("RA", di.get("TalentsPlanRA"));
                         diNewTalentsPlan.set("Outlay", di.get("TalentsPlanOutlay"));
-                        diNewTalentsPlan.set("Order", di.get("TalentsPlanOrder"));
+                        diNewTalentsPlan.set("RecordOrder", di.get("TalentsPlanOrder"));
                         ConnectionManager.Context.table("TalentsPlanExperience").insert(diNewTalentsPlan);
                     }
 
@@ -286,7 +286,7 @@ namespace NDEYImporter.Util
                         diNewRTreatises.set("PDF", di.get("RTreatisesPDF"));
                         diNewRTreatises.set("PDFOName", di.get("RTreatisesPDFOName"));
                         diNewRTreatises.set("Ranking", di.get("RTreatisesAuthor"));
-                        diNewRTreatises.set("Order", di.get("RTreatisesOrder"));
+                        diNewRTreatises.set("RecordOrder", di.get("RTreatisesOrder"));
                         ConnectionManager.Context.table("TreatisesExperience").insert(diNewRTreatises);
                     }
 
@@ -309,7 +309,7 @@ namespace NDEYImporter.Util
                         diNewNDProject.set("Outlay", di.get("NDProjectOutlay"));
                         diNewNDProject.set("TaskBySelf", di.get("NDProjectTaskBySelf"));
                         diNewNDProject.set("Ranking", di.get("NDProjectUserOrder"));
-                        diNewNDProject.set("Order", di.get("NDProjectOrder"));
+                        diNewNDProject.set("RecordOrder", di.get("NDProjectOrder"));
                         ConnectionManager.Context.table("NationalDefenseProjectExperience").insert(diNewNDProject);
                     }
 
@@ -332,7 +332,7 @@ namespace NDEYImporter.Util
                         diNewNDPatent.set("PDF", di.get("NDPatentPDF"));
                         diNewNDPatent.set("PDFOName", di.get("NDPatentPDFOName"));
                         diNewNDPatent.set("Ranking", di.get("NDPatentApplicants"));
-                        diNewNDPatent.set("Order", di.get("NDPatentOrder"));
+                        diNewNDPatent.set("RecordOrder", di.get("NDPatentOrder"));
                         ConnectionManager.Context.table("NationalDefensePatentExperience").insert(diNewNDPatent);
                     }
                 }

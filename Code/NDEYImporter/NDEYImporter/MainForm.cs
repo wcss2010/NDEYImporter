@@ -20,7 +20,7 @@ namespace NDEYImporter
         {
             NDEYImporter.Util.DBImporter.appendNdeyToLocal(@"C:\Users\wcss\Desktop\AA\myData.db");
 
-            NDEYImporter.Util.DBImporter.appendNdeyToLocal(@"C:\Users\wcss\Desktop\BB\myData.db");
+            //NDEYImporter.Util.DBImporter.appendNdeyToLocal(@"C:\Users\wcss\Desktop\BB\myData.db");
         }
     }
 }
