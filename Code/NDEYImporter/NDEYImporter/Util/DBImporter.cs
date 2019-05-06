@@ -17,7 +17,79 @@ namespace NDEYImporter.Util
         /// <param name="sourceFile">NDEY数据文件</param>        
         public static void importDB(string sourceFile)
         {
-           
+            //SQLite数据库工厂
+            System.Data.SQLite.SQLiteFactory factory = new System.Data.SQLite.SQLiteFactory();
+
+            //NDEY数据库连接
+            Noear.Weed.DbContext context = new Noear.Weed.DbContext("main", "Data Source = " + sourceFile, factory);
+
+            try
+            {
+                //项目信息 （Old）BaseInfor --- （New）Project
+
+                //旧的工程信息数据
+                DataList dlOldProjects = context.table("BaseInfor").select("*").getDataList();
+
+                //判断数据库是否有内容
+                if (dlOldProjects.getRowCount() >= 1)
+                {
+                    //项目名称
+                    string projectName = dlOldProjects.getRow(0).getString("ProjectName");
+                    //申请人
+                    string projectCreater = dlOldProjects.getRow(0).getString("UserName");
+
+                    //查找项目索引
+                    DataList dlCatalogs = ConnectionManager.Context.table("Catalog").where("ProjectName='" + projectName + "' and ProjectCreater='" + projectCreater + "'").select("*").getDataList();
+
+                    //判断是否需要新建索引
+                    if (dlCatalogs.getRowCount() >= 1)
+                    {
+                        //不需要新建
+
+                        //项目ID
+                        string projectID = dlCatalogs.getRow(0).getString("ProjectID");
+
+                        //清理项目数据
+                        clearProjectData(projectID);
+
+                        //插入数据到本地库中
+                        projectID = insertToLocalDB(sourceFile);
+
+                        //更新索引中的项目ID
+                        ConnectionManager.Context.table("Catalog").set("ProjectID", projectID).where("ProjectName='" + projectName + "' and ProjectCreater='" + projectCreater + "'").update();
+                    }
+                    else
+                    {
+                        //需要新建
+                        
+                        //插入数据到本地库中
+                        //项目ID
+                        string projectID = insertToLocalDB(sourceFile);
+
+                        //项目单位ID
+                        string projectCreaterUnitID = ConnectionManager.Context.table("Project").where("ID='" + projectID + "'").select("UnitID").getValue<string>(string.Empty);
+
+                        //创建索引
+                        DataItem diCatalog = new DataItem();
+                        diCatalog.set("ProjectID", projectID);
+                        diCatalog.set("ProjectNumber", projectID);
+                        diCatalog.set("ProjectName", projectName);
+                        diCatalog.set("ProjectCreater", projectCreater);
+                        diCatalog.set("ProjectCreaterUnitID", projectCreaterUnitID);
+                        ConnectionManager.Context.table("Catalog").insert(diCatalog);
+                    }
+                }
+                else
+                {
+                    //空数据库
+                    throw new Exception("对不起，数据库为空！");
+                }
+            }
+            finally
+            {
+                factory.Dispose();
+                context = null;
+            }
         }
 
         /// <summary>

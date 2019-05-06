@@ -42,7 +42,7 @@ namespace NDEYImporter
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            NDEYImporter.Util.DBImporter.insertToLocalDB(@"C:\Users\wcss\Desktop\BB\myData.db");
+            NDEYImporter.Util.DBImporter.insertToLocalDB(@"C:\Users\wcss\Desktop\AA\myData.db");
 
             //NDEYImporter.Util.DBImporter.appendNdeyToLocal(@"C:\Users\wcss\Desktop\BB\myData.db");
         }
