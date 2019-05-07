@@ -76,7 +76,7 @@ namespace NDEYImporter.Util
                         //创建索引
                         DataItem diCatalog = new DataItem();
                         diCatalog.set("ProjectID", projectID);
-                        diCatalog.set("ProjectNumber", projectID);
+                        diCatalog.set("ProjectNumber", getProjectNumbers());
                         diCatalog.set("ProjectName", projectName);
                         diCatalog.set("ProjectCreater", projectCreater);
                         diCatalog.set("ProjectCreaterUnitID", projectCreaterUnitID);
@@ -96,6 +96,15 @@ namespace NDEYImporter.Util
             }
 
             return projectID;
+        }
+
+        /// <summary>
+        /// 生成项目编号
+        /// </summary>
+        /// <returns></returns>
+        private static string getProjectNumbers()
+        {
+            return string.Empty;
         }
 
         /// <summary>
