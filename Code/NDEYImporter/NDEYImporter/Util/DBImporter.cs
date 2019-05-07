@@ -104,7 +104,82 @@ namespace NDEYImporter.Util
         /// <returns></returns>
         private static string getProjectNumbers()
         {
-            return string.Empty;
+            //读取当前的项目编号
+            ProjectNumberRecord temp = getCurrentProjectNumberRecord();
+
+            //判断是否为今年的序号
+            if (temp.LastYear == DateTime.Now.Year)
+            {
+                //是今年的序号，直接给LastID+1
+                temp.LastID++;
+            }
+            else
+            {
+                //不是今年的序号，直接重置成1
+                temp.LastID = 1;
+            }
+
+            //保存当前项目编号
+            saveCurrentProjectNumberRecord(temp);
+
+            //生成项目编号
+            //项目编号字符串缓存
+            StringBuilder sb = new StringBuilder();
+            sb.Append(temp.LastYear).Append("-ZQ");
+            //需要补0的数量
+            int zeroCount = 4 - temp.LastID.ToString().Length;
+            //补0
+            for (int k = 0; k < zeroCount; k++)
+            {
+                sb.Append("0");
+            }
+            //写序号
+            sb.Append(temp.LastID.ToString());
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 获得当前的项目编号记录数据
+        /// </summary>
+        /// <returns></returns>
+        private static ProjectNumberRecord getCurrentProjectNumberRecord()
+        {
+            try
+            {
+                //当前ProjectNumber记录文件
+                string xmlFile = System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "numbers.xml");
+                if (System.IO.File.Exists(xmlFile))
+                {
+                    //读取项目编号记录
+                    return XmlSerializeTool.deserialize<ProjectNumberRecord>(System.IO.File.ReadAllText(xmlFile));
+                }
+                else
+                {
+                    //没有找到项目编号记录文件，创建一个默认的编号2019-ZQ000
+                    return new ProjectNumberRecord(DateTime.Now.Year, 0);
+                }
+            }
+            catch (Exception ex)
+            {
+                //出错了，创建一个默认的编号2019-ZQ000
+                return new ProjectNumberRecord(DateTime.Now.Year, 0);
+            }
+        }
+
+        /// <summary>
+        /// 保存当前项目编号记录数据
+        /// </summary>
+        /// <param name="numberObj"></param>
+        private static void saveCurrentProjectNumberRecord(ProjectNumberRecord numberObj)
+        {
+            //判断对象是否为空
+            if (numberObj != null)
+            {
+                //当前ProjectNumber记录文件
+                string xmlFile = System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "numbers.xml");
+                //写入项目编号记录文件
+                System.IO.File.WriteAllText(xmlFile, XmlSerializeTool.serializer<ProjectNumberRecord>(numberObj));
+            }
         }
 
         /// <summary>
@@ -494,5 +569,29 @@ namespace NDEYImporter.Util
 
             return projID;
         }
+    }
+
+    /// <summary>
+    /// 用于存储当前数据库中的ProjectNumber当前的序号组成
+    /// </summary>
+    public class ProjectNumberRecord
+    {
+        public ProjectNumberRecord() { }
+
+        public ProjectNumberRecord(int y, int id)
+        {
+            this.LastYear = y;
+            this.LastID = id;
+        }
+
+        /// <summary>
+        /// 上一次的年份
+        /// </summary>
+        public int LastYear { get; set; }
+
+        /// <summary>
+        /// 上一次生成的ID
+        /// </summary>
+        public int LastID { get; set; }
     }
 }
