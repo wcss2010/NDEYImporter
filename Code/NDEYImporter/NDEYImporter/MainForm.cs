@@ -196,9 +196,6 @@ namespace NDEYImporter
 
         private void btnExportExcel_Click(object sender, EventArgs e)
         {
-            //需要显示的词
-            string[] words = new string[] { "项目编号", "申请人", "性别", "出生年月", "学位", "职称", "职务", "主要研究领域", "身份证号码", "办公电话", "手机", "电子邮箱", "单位名称", "开户账号", "单位常用名", "单位联系人", "隶属部门", "单位性质", "单位联系电话", "机要地址", "项目名称", "技术方向", "主要研究方向", "基地类别", "申报类别", "研究周期", "密级", "研究目标", "研究内容", "主要创新点", "预期军事价值", "入选人才计划情况", "代表性成果或贡献", "成果形式", "推荐方式", "专家一姓名", "专家一研究领域", "专家一职务职称", "专家一工作单位", "专家二姓名", "专家二研究领域", "专家二职务职称", "专家二工作单位", "专家三姓名", "专家三研究领域", "专家三职务职称", "专家三工作单位" };
-
             //输出的Excel路径
             string excelFile = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "output.xlsx");
 
@@ -241,44 +238,44 @@ namespace NDEYImporter
                 string projectUnitID = diCatalogItem.getString("ProjectCreaterUnitID");
 
                 //需要输出的数据
-                List<KeyValuePair<string, string>> projectItem = new List<KeyValuePair<string, string>>();
-                projectItem.Add(new KeyValuePair<string, string>("项目编号", projectNumber));
+                List<KeyValuePair<string, object>> projectItem = new List<KeyValuePair<string, object>>();
+                projectItem.Add(new KeyValuePair<string, object>("项目编号", projectNumber));
 
                 //读取项目数据
                 DataList dlProjects = ConnectionManager.Context.table("Project").where("ID='" + projectID + "'").select("*").getDataList();
                 //判断是否可以填充数据恢复
                 if (dlProjects.getRowCount() >= 1)
                 {
-                    projectItem.Add(new KeyValuePair<string, string>("申请人", dlProjects.getRow(0).getString("UserName")));
-                    projectItem.Add(new KeyValuePair<string, string>("性别", dlProjects.getRow(0).getString("Sex")));
-                    projectItem.Add(new KeyValuePair<string, string>("出生年月", dlProjects.getRow(0).getString("Birthdate")));
-                    projectItem.Add(new KeyValuePair<string, string>("学位", dlProjects.getRow(0).getString("Degree")));
-                    projectItem.Add(new KeyValuePair<string, string>("职称", dlProjects.getRow(0).getString("JobTitle")));
-                    projectItem.Add(new KeyValuePair<string, string>("职务", dlProjects.getRow(0).getString("UnitPosition")));
-                    projectItem.Add(new KeyValuePair<string, string>("主要研究领域", dlProjects.getRow(0).getString("MainResearch")));
-                    projectItem.Add(new KeyValuePair<string, string>("身份证号码", dlProjects.getRow(0).getString("CardNo")));
-                    projectItem.Add(new KeyValuePair<string, string>("办公电话", dlProjects.getRow(0).getString("OfficePhones")));
-                    projectItem.Add(new KeyValuePair<string, string>("手机", dlProjects.getRow(0).getString("MobilePhone")));
-                    projectItem.Add(new KeyValuePair<string, string>("电子邮箱", dlProjects.getRow(0).getString("EMail")));
-                    projectItem.Add(new KeyValuePair<string, string>("单位名称", dlProjects.getRow(0).getString("UnitName")));
+                    projectItem.Add(new KeyValuePair<string, object>("申请人", dlProjects.getRow(0).get("UserName")));
+                    projectItem.Add(new KeyValuePair<string, object>("性别", dlProjects.getRow(0).get("Sex")));
+                    projectItem.Add(new KeyValuePair<string, object>("出生年月", dlProjects.getRow(0).get("Birthdate")));
+                    projectItem.Add(new KeyValuePair<string, object>("学位", dlProjects.getRow(0).get("Degree")));
+                    projectItem.Add(new KeyValuePair<string, object>("职称", dlProjects.getRow(0).get("JobTitle")));
+                    projectItem.Add(new KeyValuePair<string, object>("职务", dlProjects.getRow(0).get("UnitPosition")));
+                    projectItem.Add(new KeyValuePair<string, object>("主要研究领域", dlProjects.getRow(0).get("MainResearch")));
+                    projectItem.Add(new KeyValuePair<string, object>("身份证号码", dlProjects.getRow(0).get("CardNo")));
+                    projectItem.Add(new KeyValuePair<string, object>("办公电话", dlProjects.getRow(0).get("OfficePhones")));
+                    projectItem.Add(new KeyValuePair<string, object>("手机", dlProjects.getRow(0).get("MobilePhone")));
+                    projectItem.Add(new KeyValuePair<string, object>("电子邮箱", dlProjects.getRow(0).get("EMail")));
+                    projectItem.Add(new KeyValuePair<string, object>("单位名称", dlProjects.getRow(0).get("UnitName")));
 
                     //读取开户帐号
                     string unitBankNo = ConnectionManager.Context.table("Unit").where("ID='" + projectUnitID + "'").select("UnitBankNo").getValue<string>(string.Empty);
-                    projectItem.Add(new KeyValuePair<string, string>("开户账号", unitBankNo));
+                    projectItem.Add(new KeyValuePair<string, object>("开户账号", unitBankNo));
 
-                    projectItem.Add(new KeyValuePair<string, string>("单位常用名", dlProjects.getRow(0).getString("UnitNormal")));
-                    projectItem.Add(new KeyValuePair<string, string>("单位联系人", dlProjects.getRow(0).getString("UnitContacts")));
-                    projectItem.Add(new KeyValuePair<string, string>("隶属部门", dlProjects.getRow(0).getString("UnitForORG")));
-                    projectItem.Add(new KeyValuePair<string, string>("单位性质", dlProjects.getRow(0).getString("UnitProperties")));
-                    projectItem.Add(new KeyValuePair<string, string>("单位联系电话", dlProjects.getRow(0).getString("UnitContactsPhone")));
-                    projectItem.Add(new KeyValuePair<string, string>("机要地址", dlProjects.getRow(0).getString("UnitAddress")));
-                    projectItem.Add(new KeyValuePair<string, string>("项目名称", dlProjects.getRow(0).getString("ProjectName")));
-                    projectItem.Add(new KeyValuePair<string, string>("技术方向", dlProjects.getRow(0).getString("ProjectTD")));
-                    projectItem.Add(new KeyValuePair<string, string>("主要研究方向", dlProjects.getRow(0).getString("ProjectMRD")));
-                    projectItem.Add(new KeyValuePair<string, string>("基地类别", dlProjects.getRow(0).getString("ProjectBaseT")));
-                    projectItem.Add(new KeyValuePair<string, string>("申报类别", dlProjects.getRow(0).getString("ApplicationArea")));
-                    projectItem.Add(new KeyValuePair<string, string>("研究周期", "五年"));
-                    projectItem.Add(new KeyValuePair<string, string>("密级", dlProjects.getRow(0).getString("ProjectSecret")));
+                    projectItem.Add(new KeyValuePair<string, object>("单位常用名", dlProjects.getRow(0).get("UnitNormal")));
+                    projectItem.Add(new KeyValuePair<string, object>("单位联系人", dlProjects.getRow(0).get("UnitContacts")));
+                    projectItem.Add(new KeyValuePair<string, object>("隶属部门", dlProjects.getRow(0).get("UnitForORG")));
+                    projectItem.Add(new KeyValuePair<string, object>("单位性质", dlProjects.getRow(0).get("UnitProperties")));
+                    projectItem.Add(new KeyValuePair<string, object>("单位联系电话", dlProjects.getRow(0).get("UnitContactsPhone")));
+                    projectItem.Add(new KeyValuePair<string, object>("机要地址", dlProjects.getRow(0).get("UnitAddress")));
+                    projectItem.Add(new KeyValuePair<string, object>("项目名称", dlProjects.getRow(0).get("ProjectName")));
+                    projectItem.Add(new KeyValuePair<string, object>("技术方向", dlProjects.getRow(0).get("ProjectTD")));
+                    projectItem.Add(new KeyValuePair<string, object>("主要研究方向", dlProjects.getRow(0).get("ProjectMRD")));
+                    projectItem.Add(new KeyValuePair<string, object>("基地类别", dlProjects.getRow(0).get("ProjectBaseT")));
+                    projectItem.Add(new KeyValuePair<string, object>("申报类别", dlProjects.getRow(0).get("ApplicationArea")));
+                    projectItem.Add(new KeyValuePair<string, object>("研究周期", "五年"));
+                    projectItem.Add(new KeyValuePair<string, object>("密级", dlProjects.getRow(0).get("ProjectSecret")));
 
                     //处理摘要
                     string projectBrief = dlProjects.getRow(0).getString("ProjectBrief");
@@ -290,32 +287,32 @@ namespace NDEYImporter
 					});
                         if (array.Length == 6)
                         {
-                            projectItem.Add(new KeyValuePair<string, string>("入选人才计划情况", array[0]));
-                            projectItem.Add(new KeyValuePair<string, string>("代表性成果或贡献", array[1]));
-                            projectItem.Add(new KeyValuePair<string, string>("研究目标", array[2]));
-                            projectItem.Add(new KeyValuePair<string, string>("研究内容", array[3]));
-                            projectItem.Add(new KeyValuePair<string, string>("主要创新点", array[4]));
-                            projectItem.Add(new KeyValuePair<string, string>("预期军事价值", array[5]));
+                            projectItem.Add(new KeyValuePair<string, object>("入选人才计划情况", array[0]));
+                            projectItem.Add(new KeyValuePair<string, object>("代表性成果或贡献", array[1]));
+                            projectItem.Add(new KeyValuePair<string, object>("研究目标", array[2]));
+                            projectItem.Add(new KeyValuePair<string, object>("研究内容", array[3]));
+                            projectItem.Add(new KeyValuePair<string, object>("主要创新点", array[4]));
+                            projectItem.Add(new KeyValuePair<string, object>("预期军事价值", array[5]));
                         }
                     }
                     
                     //处理成果形式
-                    projectItem.Add(new KeyValuePair<string, string>("成果形式", new ResultConfigRecord(dlProjects.getRow(0).getString("ResultConfig")).getDescription()));
+                    projectItem.Add(new KeyValuePair<string, object>("成果形式", new ResultConfigRecord(dlProjects.getRow(0).getString("ResultConfig")).getDescription()));
 
-                    projectItem.Add(new KeyValuePair<string, string>("推荐方式", string.IsNullOrEmpty(dlProjects.getRow(0).getString("ApplicationType")) ? "单位推荐" : dlProjects.getRow(0).getString("ApplicationType")));
+                    projectItem.Add(new KeyValuePair<string, object>("推荐方式", dlProjects.getRow(0).get("ApplicationType") == null ? "单位推荐" : dlProjects.getRow(0).get("ApplicationType")));
 
-                    projectItem.Add(new KeyValuePair<string, string>("专家一姓名", dlProjects.getRow(0).getString("ExpertName1")));
-                    projectItem.Add(new KeyValuePair<string, string>("专家一研究领域", dlProjects.getRow(0).getString("ExpertArea1")));
-                    projectItem.Add(new KeyValuePair<string, string>("专家一职务职称", dlProjects.getRow(0).getString("ExpertUnitPosition1")));
-                    projectItem.Add(new KeyValuePair<string, string>("专家一工作单位", dlProjects.getRow(0).getString("ExpertUnit1")));
-                    projectItem.Add(new KeyValuePair<string, string>("专家二姓名", dlProjects.getRow(0).getString("ExpertName2")));
-                    projectItem.Add(new KeyValuePair<string, string>("专家二研究领域", dlProjects.getRow(0).getString("ExpertArea2")));
-                    projectItem.Add(new KeyValuePair<string, string>("专家二职务职称", dlProjects.getRow(0).getString("ExpertUnitPosition2")));
-                    projectItem.Add(new KeyValuePair<string, string>("专家二工作单位", dlProjects.getRow(0).getString("ExpertUnit2")));
-                    projectItem.Add(new KeyValuePair<string, string>("专家三姓名", dlProjects.getRow(0).getString("ExpertName3")));
-                    projectItem.Add(new KeyValuePair<string, string>("专家三研究领域", dlProjects.getRow(0).getString("ExpertArea3")));
-                    projectItem.Add(new KeyValuePair<string, string>("专家三职务职称", dlProjects.getRow(0).getString("ExpertUnitPosition3")));
-                    projectItem.Add(new KeyValuePair<string, string>("专家三工作单位", dlProjects.getRow(0).getString("ExpertUnit3")));
+                    projectItem.Add(new KeyValuePair<string, object>("专家一姓名", dlProjects.getRow(0).get("ExpertName1")));
+                    projectItem.Add(new KeyValuePair<string, object>("专家一研究领域", dlProjects.getRow(0).get("ExpertArea1")));
+                    projectItem.Add(new KeyValuePair<string, object>("专家一职务职称", dlProjects.getRow(0).get("ExpertUnitPosition1")));
+                    projectItem.Add(new KeyValuePair<string, object>("专家一工作单位", dlProjects.getRow(0).get("ExpertUnit1")));
+                    projectItem.Add(new KeyValuePair<string, object>("专家二姓名", dlProjects.getRow(0).get("ExpertName2")));
+                    projectItem.Add(new KeyValuePair<string, object>("专家二研究领域", dlProjects.getRow(0).get("ExpertArea2")));
+                    projectItem.Add(new KeyValuePair<string, object>("专家二职务职称", dlProjects.getRow(0).get("ExpertUnitPosition2")));
+                    projectItem.Add(new KeyValuePair<string, object>("专家二工作单位", dlProjects.getRow(0).get("ExpertUnit2")));
+                    projectItem.Add(new KeyValuePair<string, object>("专家三姓名", dlProjects.getRow(0).get("ExpertName3")));
+                    projectItem.Add(new KeyValuePair<string, object>("专家三研究领域", dlProjects.getRow(0).get("ExpertArea3")));
+                    projectItem.Add(new KeyValuePair<string, object>("专家三职务职称", dlProjects.getRow(0).get("ExpertUnitPosition3")));
+                    projectItem.Add(new KeyValuePair<string, object>("专家三工作单位", dlProjects.getRow(0).get("ExpertUnit3")));
                 }
 
                 //列号
@@ -325,7 +322,7 @@ namespace NDEYImporter
                 NPOI.SS.UserModel.IRow row = sheet.CreateRow(rowIndex);
 
                 //输出数据到Excel
-                foreach (KeyValuePair<string, string> kvp in projectItem)
+                foreach (KeyValuePair<string, object> kvp in projectItem)
                 {
                     //列名
                     //创建列
@@ -342,7 +339,7 @@ namespace NDEYImporter
                     //设置样式
                     cell.CellStyle = cellStyle;
                     //设置数据
-                    cell.SetCellValue(kvp.Value);
+                    cell.SetCellValue(kvp.Value != null ? kvp.Value.ToString() : string.Empty);
                     colIndex++;
                 }
 
