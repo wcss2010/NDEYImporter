@@ -105,7 +105,7 @@ namespace NDEYImporter
                         //将申报包Copy到保存路径
                         System.IO.File.Copy(ofdPackages.FileName, packageDestPath, true);
 
-                        MessageBox.Show("对不起,申报数据包导入完成！", "提示");
+                        MessageBox.Show("申报数据包导入完成！", "提示");
                     }
                     catch (Exception ex)
                     {
