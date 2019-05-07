@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -195,7 +196,340 @@ namespace NDEYImporter
 
         private void btnExportExcel_Click(object sender, EventArgs e)
         {
+            //需要显示的词
+            string[] words = new string[] { "项目编号", "申请人", "性别", "出生年月", "学位", "职称", "职务", "主要研究领域", "身份证号码", "办公电话", "手机", "电子邮箱", "单位名称", "开户账号", "单位常用名", "单位联系人", "隶属部门", "单位性质", "单位联系电话", "机要地址", "项目名称", "技术方向", "主要研究方向", "基地类别", "申报类别", "研究周期", "密级", "研究目标", "研究内容", "主要创新点", "预期军事价值", "入选人才计划情况", "代表性成果或贡献", "成果形式", "推荐方式", "专家一姓名", "专家一研究领域", "专家一职务职称", "专家一工作单位", "专家二姓名", "专家二研究领域", "专家二职务职称", "专家二工作单位", "专家三姓名", "专家三研究领域", "专家三职务职称", "专家三工作单位" };
 
+            //输出的Excel路径
+            string excelFile = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "output.xlsx");
+
+            //Excel数据
+            MemoryStream memoryStream = new MemoryStream();
+            //创建Workbook
+            NPOI.HSSF.UserModel.HSSFWorkbook workbook = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            //创建Sheet
+            NPOI.SS.UserModel.ISheet sheet = workbook.CreateSheet();
+            //创建单元格设置对象
+            NPOI.SS.UserModel.ICellStyle cellStyle = workbook.CreateCellStyle();
+            //设置水平、垂直居中
+            cellStyle.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
+            cellStyle.VerticalAlignment = NPOI.SS.UserModel.VerticalAlignment.Center;
+            //设置边框
+            cellStyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+            cellStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+            cellStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+            cellStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+
+            //创建设置字体对象
+            NPOI.SS.UserModel.IFont font = workbook.CreateFont();
+            font.FontHeightInPoints = 16;//设置字体大小
+            font.Boldweight = short.MaxValue; //加粗
+            font.FontName = "宋体";
+            cellStyle.SetFont(font);
+
+            //读取索引数据
+            DataList dlCatalogs = ConnectionManager.Context.table("Catalog").select("*").getDataList();
+            //行号
+            int rowIndex = 0;
+            //输出Excel数据
+            foreach (DataItem diCatalogItem in dlCatalogs.getRows())
+            {
+                //项目ID
+                string projectID = diCatalogItem.getString("ProjectID");
+                //项目编号
+                string projectNumber = diCatalogItem.getString("ProjectNumber");
+                //项目申请单位ID
+                string projectUnitID = diCatalogItem.getString("ProjectCreaterUnitID");
+
+                //需要输出的数据
+                List<KeyValuePair<string, string>> projectItem = new List<KeyValuePair<string, string>>();
+                projectItem.Add(new KeyValuePair<string, string>("项目编号", projectNumber));
+
+                //读取项目数据
+                DataList dlProjects = ConnectionManager.Context.table("Project").where("ID='" + projectID + "'").select("*").getDataList();
+                //判断是否可以填充数据恢复
+                if (dlProjects.getRowCount() >= 1)
+                {
+                    projectItem.Add(new KeyValuePair<string, string>("申请人", dlProjects.getRow(0).getString("UserName")));
+                    projectItem.Add(new KeyValuePair<string, string>("性别", dlProjects.getRow(0).getString("Sex")));
+                    projectItem.Add(new KeyValuePair<string, string>("出生年月", dlProjects.getRow(0).getString("Birthdate")));
+                    projectItem.Add(new KeyValuePair<string, string>("学位", dlProjects.getRow(0).getString("Degree")));
+                    projectItem.Add(new KeyValuePair<string, string>("职称", dlProjects.getRow(0).getString("JobTitle")));
+                    projectItem.Add(new KeyValuePair<string, string>("职务", dlProjects.getRow(0).getString("UnitPosition")));
+                    projectItem.Add(new KeyValuePair<string, string>("主要研究领域", dlProjects.getRow(0).getString("MainResearch")));
+                    projectItem.Add(new KeyValuePair<string, string>("身份证号码", dlProjects.getRow(0).getString("CardNo")));
+                    projectItem.Add(new KeyValuePair<string, string>("办公电话", dlProjects.getRow(0).getString("OfficePhones")));
+                    projectItem.Add(new KeyValuePair<string, string>("手机", dlProjects.getRow(0).getString("MobilePhone")));
+                    projectItem.Add(new KeyValuePair<string, string>("电子邮箱", dlProjects.getRow(0).getString("EMail")));
+                    projectItem.Add(new KeyValuePair<string, string>("单位名称", dlProjects.getRow(0).getString("UnitName")));
+
+                    //读取开户帐号
+                    string unitBankNo = ConnectionManager.Context.table("Unit").where("ID='" + projectUnitID + "'").select("UnitBankNo").getValue<string>(string.Empty);
+                    projectItem.Add(new KeyValuePair<string, string>("开户账号", unitBankNo));
+
+                    projectItem.Add(new KeyValuePair<string, string>("单位常用名", dlProjects.getRow(0).getString("UnitNormal")));
+                    projectItem.Add(new KeyValuePair<string, string>("单位联系人", dlProjects.getRow(0).getString("UnitContacts")));
+                    projectItem.Add(new KeyValuePair<string, string>("隶属部门", dlProjects.getRow(0).getString("UnitForORG")));
+                    projectItem.Add(new KeyValuePair<string, string>("单位性质", dlProjects.getRow(0).getString("UnitProperties")));
+                    projectItem.Add(new KeyValuePair<string, string>("单位联系电话", dlProjects.getRow(0).getString("UnitContactsPhone")));
+                    projectItem.Add(new KeyValuePair<string, string>("机要地址", dlProjects.getRow(0).getString("UnitAddress")));
+                    projectItem.Add(new KeyValuePair<string, string>("项目名称", dlProjects.getRow(0).getString("ProjectName")));
+                    projectItem.Add(new KeyValuePair<string, string>("技术方向", dlProjects.getRow(0).getString("ProjectTD")));
+                    projectItem.Add(new KeyValuePair<string, string>("主要研究方向", dlProjects.getRow(0).getString("ProjectMRD")));
+                    projectItem.Add(new KeyValuePair<string, string>("基地类别", dlProjects.getRow(0).getString("ProjectBaseT")));
+                    projectItem.Add(new KeyValuePair<string, string>("申报类别", dlProjects.getRow(0).getString("ApplicationArea")));
+                    projectItem.Add(new KeyValuePair<string, string>("研究周期", "五年"));
+                    projectItem.Add(new KeyValuePair<string, string>("密级", dlProjects.getRow(0).getString("ProjectSecret")));
+
+                    //处理摘要
+                    string projectBrief = dlProjects.getRow(0).getString("ProjectBrief");
+                    if (projectBrief != string.Empty)
+                    {
+                        string[] array = projectBrief.Split(new char[]
+					{
+						'|'
+					});
+                        if (array.Length == 6)
+                        {
+                            projectItem.Add(new KeyValuePair<string, string>("入选人才计划情况", array[0]));
+                            projectItem.Add(new KeyValuePair<string, string>("代表性成果或贡献", array[1]));
+                            projectItem.Add(new KeyValuePair<string, string>("研究目标", array[2]));
+                            projectItem.Add(new KeyValuePair<string, string>("研究内容", array[3]));
+                            projectItem.Add(new KeyValuePair<string, string>("主要创新点", array[4]));
+                            projectItem.Add(new KeyValuePair<string, string>("预期军事价值", array[5]));
+                        }
+                    }
+                    
+                    //处理成果形式
+                    projectItem.Add(new KeyValuePair<string, string>("成果形式", new ResultConfigRecord(dlProjects.getRow(0).getString("ResultConfig")).getDescription()));
+
+                    projectItem.Add(new KeyValuePair<string, string>("推荐方式", string.IsNullOrEmpty(dlProjects.getRow(0).getString("ApplicationType")) ? "单位推荐" : dlProjects.getRow(0).getString("ApplicationType")));
+
+                    projectItem.Add(new KeyValuePair<string, string>("专家一姓名", dlProjects.getRow(0).getString("ExpertName1")));
+                    projectItem.Add(new KeyValuePair<string, string>("专家一研究领域", dlProjects.getRow(0).getString("ExpertArea1")));
+                    projectItem.Add(new KeyValuePair<string, string>("专家一职务职称", dlProjects.getRow(0).getString("ExpertUnitPosition1")));
+                    projectItem.Add(new KeyValuePair<string, string>("专家一工作单位", dlProjects.getRow(0).getString("ExpertUnit1")));
+                    projectItem.Add(new KeyValuePair<string, string>("专家二姓名", dlProjects.getRow(0).getString("ExpertName2")));
+                    projectItem.Add(new KeyValuePair<string, string>("专家二研究领域", dlProjects.getRow(0).getString("ExpertArea2")));
+                    projectItem.Add(new KeyValuePair<string, string>("专家二职务职称", dlProjects.getRow(0).getString("ExpertUnitPosition2")));
+                    projectItem.Add(new KeyValuePair<string, string>("专家二工作单位", dlProjects.getRow(0).getString("ExpertUnit2")));
+                    projectItem.Add(new KeyValuePair<string, string>("专家三姓名", dlProjects.getRow(0).getString("ExpertName3")));
+                    projectItem.Add(new KeyValuePair<string, string>("专家三研究领域", dlProjects.getRow(0).getString("ExpertArea3")));
+                    projectItem.Add(new KeyValuePair<string, string>("专家三职务职称", dlProjects.getRow(0).getString("ExpertUnitPosition3")));
+                    projectItem.Add(new KeyValuePair<string, string>("专家三工作单位", dlProjects.getRow(0).getString("ExpertUnit3")));
+                }
+
+                //列号
+                int colIndex = 0;
+
+                //创建行
+                NPOI.SS.UserModel.IRow row = sheet.CreateRow(rowIndex);
+
+                //输出数据到Excel
+                foreach (KeyValuePair<string, string> kvp in projectItem)
+                {
+                    //列名
+                    //创建列
+                    NPOI.SS.UserModel.ICell cell = row.CreateCell(colIndex);
+                    //设置样式
+                    cell.CellStyle = cellStyle;
+                    //设置数据
+                    cell.SetCellValue(kvp.Key);
+                    colIndex++;
+
+                    //列值
+                    //创建列
+                    cell = row.CreateCell(colIndex);
+                    //设置样式
+                    cell.CellStyle = cellStyle;
+                    //设置数据
+                    cell.SetCellValue(kvp.Value);
+                    colIndex++;
+                }
+
+                rowIndex++;
+            }
+
+            //输出到Excel文件
+            workbook.Write(memoryStream);
+            File.WriteAllBytes(excelFile, memoryStream.ToArray());
+
+            MessageBox.Show("导出完成！","提示");
+            //打开Excel文件
+            System.Diagnostics.Process.Start(excelFile);
+        }
+    }
+
+    /// <summary>
+    /// 成果形式配置
+    /// </summary>
+    public class ResultConfigRecord
+    {
+        public ResultConfigRecord(string config)
+        {
+            string[] array = config.Split(new char[]
+					{
+						'|'
+					});
+            if (array.Length == 13)
+            {
+                isCBR1Checked = bool.Parse(array[0]);
+                isCBR2Checked = bool.Parse(array[1]);
+                isCBR3Checked = bool.Parse(array[2]);
+                isCBR4Checked = bool.Parse(array[3]);
+                isCBR5Checked = bool.Parse(array[4]);
+                isCBR6Checked = bool.Parse(array[5]);
+                isCBR7Checked = bool.Parse(array[6]);
+                isCBR8Checked = bool.Parse(array[7]);
+                isCBR9Checked = bool.Parse(array[8]);
+                isCBR10Checked = bool.Parse(array[9]);
+                isCBR11Checked = bool.Parse(array[10]);
+                isCBR12Checked = bool.Parse(array[11]);
+                cbrOtherText = array[12];
+            }
+        }
+
+        public bool isCBR1Checked
+        {
+            get;
+            set;
+        }
+
+        public bool isCBR2Checked
+        {
+            get;
+            set;
+        }
+
+        public bool isCBR3Checked
+        {
+            get;
+            set;
+        }
+
+        public bool isCBR4Checked
+        {
+            get;
+            set;
+        }
+
+        public bool isCBR5Checked
+        {
+            get;
+            set;
+        }
+
+        public bool isCBR6Checked
+        {
+            get;
+            set;
+        }
+
+        public bool isCBR7Checked
+        {
+            get;
+            set;
+        }
+
+        public bool isCBR8Checked
+        {
+            get;
+            set;
+        }
+
+        public bool isCBR9Checked
+        {
+            get;
+            set;
+        }
+
+        public bool isCBR10Checked
+        {
+            get;
+            set;
+        }
+
+        public bool isCBR11Checked
+        {
+            get;
+            set;
+        }
+
+        public bool isCBR12Checked
+        {
+            get;
+            set;
+        }
+
+        public string cbrOtherText
+        {
+            get;
+            set;
+        }
+
+        public string getDescription()
+        {
+            string text = "";
+            if (this.isCBR1Checked)
+            {
+                text += "样品、";
+            }
+            if (this.isCBR2Checked)
+            {
+                text += "样机、";
+            }
+            if (this.isCBR3Checked)
+            {
+                text += "数据库、";
+            }
+            if (this.isCBR4Checked)
+            {
+                text += "试验（演示）系统、";
+            }
+            if (this.isCBR5Checked)
+            {
+                text += "软件、";
+            }
+            if (this.isCBR6Checked)
+            {
+                text += "仿真模型、";
+            }
+            if (this.isCBR7Checked)
+            {
+                text += "工程工艺、";
+            }
+            if (this.isCBR8Checked)
+            {
+                text += "标准（规范）、";
+            }
+            if (this.isCBR9Checked)
+            {
+                text += "论文、";
+            }
+            if (this.isCBR10Checked)
+            {
+                text += "专利、";
+            }
+            if (this.isCBR11Checked)
+            {
+                text += "研究报告、";
+            }
+            if (this.isCBR12Checked)
+            {
+                text += "试验方案（报告）、";
+            }
+            if (this.cbrOtherText != "")
+            {
+                text += this.cbrOtherText;
+            }
+            text = text.TrimEnd(new char[]
+			{
+				'、'
+			});
+            if (text != string.Empty)
+            {
+                text += "。";
+            }
+            return text;
         }
     }
 }
