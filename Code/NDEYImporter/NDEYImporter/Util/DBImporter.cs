@@ -185,31 +185,31 @@ namespace NDEYImporter.Util
         /// <summary>
         /// 清理本地数据库中的指定项目ID下的所有数据
         /// </summary>
-        /// <param name="projID">项目ID</param>
-        private static void clearProjectData(string projID)
+        /// <param name="projectID">项目ID</param>
+        private static void clearProjectData(string projectID)
         {
             //清理项目信息
-            ConnectionManager.Context.table("Project").where("ID='" + projID + "'").delete();
+            ConnectionManager.Context.table("Project").where("ID='" + projectID + "'").delete();
 
             //清理学术经历
-            ConnectionManager.Context.table("ResearchExperience").where("ProjectID='" + projID + "'").delete();
+            ConnectionManager.Context.table("ResearchExperience").where("ProjectID='" + projectID + "'").delete();
             //清理工作经历
-            ConnectionManager.Context.table("WorkExperience").where("ProjectID='" + projID + "'").delete();
+            ConnectionManager.Context.table("WorkExperience").where("ProjectID='" + projectID + "'").delete();
             //清理教育经历
-            ConnectionManager.Context.table("EducationExperience").where("ProjectID='" + projID + "'").delete();
+            ConnectionManager.Context.table("EducationExperience").where("ProjectID='" + projectID + "'").delete();
             //清理获得科技奖项经历
-            ConnectionManager.Context.table("TechnologyAwardsExperience").where("ProjectID='" + projID + "'").delete();
+            ConnectionManager.Context.table("TechnologyAwardsExperience").where("ProjectID='" + projectID + "'").delete();
             //清理入选人才计划经历
-            ConnectionManager.Context.table("TalentsPlanExperience").where("ProjectID='" + projID + "'").delete();
+            ConnectionManager.Context.table("TalentsPlanExperience").where("ProjectID='" + projectID + "'").delete();
             //清理代表性论著经历
-            ConnectionManager.Context.table("TreatisesExperience").where("ProjectID='" + projID + "'").delete();
+            ConnectionManager.Context.table("TreatisesExperience").where("ProjectID='" + projectID + "'").delete();
             //清理承担国防项目经历
-            ConnectionManager.Context.table("NationalDefenseProjectExperience").where("ProjectID='" + projID + "'").delete();
+            ConnectionManager.Context.table("NationalDefenseProjectExperience").where("ProjectID='" + projectID + "'").delete();
             //清理获得国防专利经历
-            ConnectionManager.Context.table("NationalDefensePatentExperience ").where("ProjectID='" + projID + "'").delete();
+            ConnectionManager.Context.table("NationalDefensePatentExperience ").where("ProjectID='" + projectID + "'").delete();
                         
             //单位ID
-            string unitId = ConnectionManager.Context.table("Catalog").where("ProjectID='" + projID + "'").select("ProjectCreaterUnitID").getValue<string>(string.Empty);
+            string unitId = ConnectionManager.Context.table("Catalog").where("ProjectID='" + projectID + "'").select("ProjectCreaterUnitID").getValue<string>(string.Empty);
             //使用次数
             long unitUseCount = ConnectionManager.Context.table("Catalog").where("ProjectCreaterUnitID='" + unitId + "'").select("count(*)").getValue<long>(0);
             //判断是否可以删除
@@ -222,12 +222,25 @@ namespace NDEYImporter.Util
         }
 
         /// <summary>
+        /// 删除项目(索引+所有数据)
+        /// </summary>
+        /// <param name="projectID"></param>
+        public static void deleteProject(string projectID)
+        {
+            //删除索引数据
+            ConnectionManager.Context.table("Catalog").where("ProjectID='" + projectID + "'").delete();
+
+            //删除其它表的数据
+            clearProjectData(projectID);
+        }
+
+        /// <summary>
         /// 将NDEY数据添加到本地数据库中
         /// </summary>
-        /// <param name="projID">项目ID</param>
+        /// <param name="projectID">项目ID</param>
         /// <param name="sourceFile">NDEY数据文件</param>        
         /// <returns>ProjectID</returns>        
-        private static string insertToLocalDB(string projID, string sourceFile)
+        private static string insertToLocalDB(string projectID, string sourceFile)
         {
             //SQLite数据库工厂
             System.Data.SQLite.SQLiteFactory factory = new System.Data.SQLite.SQLiteFactory();
@@ -249,7 +262,7 @@ namespace NDEYImporter.Util
 
                     //要添加到本地数据库的记录
                     DataItem diNewProject = new DataItem();
-                    diNewProject.set("ID", projID);
+                    diNewProject.set("ID", projectID);
                     diNewProject.set("UserName", dlOldProjects.getRow(0).get("UserName"));
                     diNewProject.set("Sex", dlOldProjects.getRow(0).get("Sex"));
                     diNewProject.set("Birthdate", dlOldProjects.getRow(0).get("Birthdate"));
@@ -364,15 +377,15 @@ namespace NDEYImporter.Util
                             ConnectionManager.Context.table("Unit").insert(diNewUnit);
 
                             //更新本项目的Project的UnitID
-                            ConnectionManager.Context.table("Project").set("UnitID", diNewUnit.getString("ID")).where("ID = '" + projID + "'").update();
+                            ConnectionManager.Context.table("Project").set("UnitID", diNewUnit.getString("ID")).where("ID = '" + projectID + "'").update();
 
                             //更新本项目的Catalog的ProjectCreaterUnitID
-                            ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", diNewUnit.getString("ID")).where("ProjectID = '" + projID + "'").update();
+                            ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", diNewUnit.getString("ID")).where("ProjectID = '" + projectID + "'").update();
                         }
                         else
                         {
                             //更新本项目的Catalog的ProjectCreaterUnitID
-                            ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", dlUnitList.getRow(0).getString("ID")).where("ProjectID = '" + projID + "'").update();
+                            ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", dlUnitList.getRow(0).getString("ID")).where("ProjectID = '" + projectID + "'").update();
                         }
                     }
                     else
@@ -391,7 +404,7 @@ namespace NDEYImporter.Util
                     {
                         //添加学术经历数据
                         DataItem diNewResearch = new DataItem();
-                        diNewResearch.set("ProjectID", projID);
+                        diNewResearch.set("ProjectID", projectID);
                         diNewResearch.set("ID", Guid.NewGuid().ToString());
                         diNewResearch.set("StartDate", di.get("AcademicPostSDate"));
                         diNewResearch.set("EndDate", di.get("AcademicPostEDate"));
@@ -411,7 +424,7 @@ namespace NDEYImporter.Util
                     {
                         //添加工作经历数据
                         DataItem diNewWork = new DataItem();
-                        diNewWork.set("ProjectID", projID);
+                        diNewWork.set("ProjectID", projectID);
                         diNewWork.set("ID", Guid.NewGuid().ToString());
                         diNewWork.set("StartDate", di.get("WorkExperienceSDate"));
                         diNewWork.set("EndDate", di.get("WorkExperienceEDate"));
@@ -432,7 +445,7 @@ namespace NDEYImporter.Util
                     {
                         //添加教育经历数据
                         DataItem diNewEducation = new DataItem();
-                        diNewEducation.set("ProjectID", projID);
+                        diNewEducation.set("ProjectID", projectID);
                         diNewEducation.set("ID", Guid.NewGuid().ToString());
                         diNewEducation.set("StartDate", di.get("EducationSDate"));
                         diNewEducation.set("EndDate", di.get("EducationEDate"));
@@ -453,7 +466,7 @@ namespace NDEYImporter.Util
                     {
                         //添加获得科技奖项经历数据
                         DataItem diNewTechnologyAwards = new DataItem();
-                        diNewTechnologyAwards.set("ProjectID", projID);
+                        diNewTechnologyAwards.set("ProjectID", projectID);
                         diNewTechnologyAwards.set("ID", Guid.NewGuid().ToString());
                         diNewTechnologyAwards.set("Name", di.get("TechnologyAwardsPName"));
                         diNewTechnologyAwards.set("Date", di.get("TechnologyAwardsYear"));
@@ -475,7 +488,7 @@ namespace NDEYImporter.Util
                     {
                         //添加入选人才计划经历数据
                         DataItem diNewTalentsPlan = new DataItem();
-                        diNewTalentsPlan.set("ProjectID", projID);
+                        diNewTalentsPlan.set("ProjectID", projectID);
                         diNewTalentsPlan.set("ID", Guid.NewGuid().ToString());
                         diNewTalentsPlan.set("Date", di.get("TalentsPlanDate"));
                         diNewTalentsPlan.set("Name", di.get("TalentsPlanName"));
@@ -495,7 +508,7 @@ namespace NDEYImporter.Util
                     {
                         //添加代表性论著经历数据
                         DataItem diNewRTreatises = new DataItem();
-                        diNewRTreatises.set("ProjectID", projID);
+                        diNewRTreatises.set("ProjectID", projectID);
                         diNewRTreatises.set("ID", Guid.NewGuid().ToString());
                         diNewRTreatises.set("Type", di.get("RTreatisesType"));
                         diNewRTreatises.set("Name", di.get("RTreatisesName"));
@@ -519,7 +532,7 @@ namespace NDEYImporter.Util
                     {
                         //添加承担国防项目经历数据
                         DataItem diNewNDProject = new DataItem();
-                        diNewNDProject.set("ProjectID", projID);
+                        diNewNDProject.set("ProjectID", projectID);
                         diNewNDProject.set("ID", Guid.NewGuid().ToString());
                         diNewNDProject.set("StartDate", di.get("NDProjectSYear"));
                         diNewNDProject.set("EndDate", di.get("NDProjectEYear"));
@@ -542,7 +555,7 @@ namespace NDEYImporter.Util
                     {
                         //添加获得国防专利经历数据
                         DataItem diNewNDPatent = new DataItem();
-                        diNewNDPatent.set("ProjectID", projID);
+                        diNewNDPatent.set("ProjectID", projectID);
                         diNewNDPatent.set("ID", Guid.NewGuid().ToString());
                         diNewNDPatent.set("PatentName", di.get("NDPatentName"));
                         diNewNDPatent.set("PatentType", di.get("NDPatentType"));
@@ -567,7 +580,7 @@ namespace NDEYImporter.Util
                 context = null;
             }
 
-            return projID;
+            return projectID;
         }
     }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NDEYImporter.DB;
+using Noear.Weed;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -40,11 +42,62 @@ namespace NDEYImporter
             catch (Exception ex) { }
         }
 
-        private void btnTest_Click(object sender, EventArgs e)
+        private void btnExit_Click(object sender, EventArgs e)
         {
-            NDEYImporter.Util.DBImporter.importDB(@"C:\Users\wcss\Desktop\CCC\myData.db");
+            Application.Exit();
+        }
 
-            //NDEYImporter.Util.DBImporter.appendNdeyToLocal(@"C:\Users\wcss\Desktop\BB\myData.db");
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            reloadCatalogList();
+        }
+
+        /// <summary>
+        /// 载入Catalog数据
+        /// </summary>
+        private void reloadCatalogList()
+        {
+            //清理GridView
+            dgvCatalogs.Rows.Clear();
+
+            //获得Catalog全部列表
+            DataList dlCatalogs = ConnectionManager.Context.table("Catalog").select("*").getDataList();
+            //显示序号
+            int rIndex = 0;
+            //向GridView添加可显示的列表
+            foreach (DataItem di in dlCatalogs.getRows())
+            {
+                rIndex++;
+
+                //行数据
+                List<object> cells = new List<object>();
+                cells.Add(rIndex);
+                cells.Add(di.getString("ProjectNumber"));
+                cells.Add(di.getString("ProjectName"));
+                cells.Add(di.getString("ProjectCreater"));
+
+                //提取并向GridView中添加Project中的单位名称
+                string unitName = ConnectionManager.Context.table("Project").where("ID='" + di.getString("ProjectID") + "'").select("UnitName").getValue<string>(string.Empty);
+                cells.Add(unitName);
+
+                //提取并向GridView中添加Unit中的单位名称
+                string realUnitName = ConnectionManager.Context.table("Unit").where("ID='" + di.getString("ProjectCreaterUnitID") + "'").select("UnitName").getValue<string>(string.Empty);
+                cells.Add(realUnitName);
+
+                //添加行数据，并获得行号
+                int rowIndex = dgvCatalogs.Rows.Add(cells.ToArray());
+                dgvCatalogs.Rows[rowIndex].Tag = di;
+            }            
+        }
+
+        private void dgvCatalogs_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }
