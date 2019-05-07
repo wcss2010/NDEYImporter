@@ -183,7 +183,7 @@ namespace NDEYImporter
                     //删除申报包缓存
                     try
                     {
-                        System.IO.Directory.Delete(System.IO.Path.Combine(PackageDir, projectNumber));
+                        System.IO.Directory.Delete(System.IO.Path.Combine(PackageDir, projectNumber), true);
                     }
                     catch (Exception ex) { }
 
