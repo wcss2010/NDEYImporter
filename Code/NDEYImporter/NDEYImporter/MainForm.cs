@@ -1,4 +1,5 @@
 ﻿using NDEYImporter.DB;
+using NDEYImporter.Util;
 using Noear.Weed;
 using System;
 using System.Collections.Generic;
@@ -97,7 +98,22 @@ namespace NDEYImporter
 
         private void dgvCatalogs_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            //检查是否点击的是删除的那一列
+            if (e.ColumnIndex == dgvCatalogs.Columns.Count - 1)
+            {
+                //获得要删除的项目ID
+                string projectId = ((DataItem)dgvCatalogs.Rows[e.RowIndex].Tag).getString("ProjectID");
 
+                //显示删除提示框
+                if (MessageBox.Show("真的要删除吗？", "提示", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    //删除项目
+                    DBImporter.deleteProject(projectId);
+
+                    //刷新GridView
+                    reloadCatalogList();
+                }
+            }
         }
     }
 }
