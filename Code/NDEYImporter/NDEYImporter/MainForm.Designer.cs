@@ -31,11 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.ssStatus = new System.Windows.Forms.StatusStrip();
             this.tsToolBar = new System.Windows.Forms.ToolStrip();
-            this.plContent = new System.Windows.Forms.Panel();
-            this.dgvCatalogs = new System.Windows.Forms.DataGridView();
             this.btnImport = new System.Windows.Forms.ToolStripButton();
             this.btnExit = new System.Windows.Forms.ToolStripButton();
-            this.ofdPackages = new System.Windows.Forms.OpenFileDialog();
+            this.plContent = new System.Windows.Forms.Panel();
+            this.dgvCatalogs = new System.Windows.Forms.DataGridView();
             this.colIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -43,6 +42,8 @@
             this.colCreaterUnit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colRealUnit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDel = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.ofdPackages = new System.Windows.Forms.OpenFileDialog();
+            this.btnExportExcel = new System.Windows.Forms.ToolStripButton();
             this.tsToolBar.SuspendLayout();
             this.plContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCatalogs)).BeginInit();
@@ -60,12 +61,35 @@
             // 
             this.tsToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnImport,
+            this.btnExportExcel,
             this.btnExit});
             this.tsToolBar.Location = new System.Drawing.Point(0, 0);
             this.tsToolBar.Name = "tsToolBar";
             this.tsToolBar.Size = new System.Drawing.Size(1067, 37);
             this.tsToolBar.TabIndex = 1;
             this.tsToolBar.Text = "toolStrip1";
+            // 
+            // btnImport
+            // 
+            this.btnImport.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnImport.Image = ((System.Drawing.Image)(resources.GetObject("btnImport.Image")));
+            this.btnImport.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(39, 34);
+            this.btnImport.Text = "导入";
+            this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // btnExit
+            // 
+            this.btnExit.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnExit.Image = ((System.Drawing.Image)(resources.GetObject("btnExit.Image")));
+            this.btnExit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(39, 34);
+            this.btnExit.Text = "退出";
+            this.btnExit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // plContent
             // 
@@ -99,39 +123,13 @@
             this.dgvCatalogs.TabIndex = 0;
             this.dgvCatalogs.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCatalogs_CellContentClick);
             // 
-            // btnImport
-            // 
-            this.btnImport.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnImport.Image = ((System.Drawing.Image)(resources.GetObject("btnImport.Image")));
-            this.btnImport.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(39, 34);
-            this.btnImport.Text = "导入";
-            this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
-            // 
-            // btnExit
-            // 
-            this.btnExit.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnExit.Image = ((System.Drawing.Image)(resources.GetObject("btnExit.Image")));
-            this.btnExit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(39, 34);
-            this.btnExit.Text = "退出";
-            this.btnExit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
-            // 
-            // ofdPackages
-            // 
-            this.ofdPackages.Filter = "*.zip|*.zip";
-            // 
             // colIndex
             // 
             this.colIndex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.colIndex.HeaderText = "序号";
             this.colIndex.Name = "colIndex";
             this.colIndex.ReadOnly = true;
-            this.colIndex.Width = 54;
+            this.colIndex.Width = 51;
             // 
             // colNumber
             // 
@@ -139,7 +137,7 @@
             this.colNumber.HeaderText = "编号";
             this.colNumber.Name = "colNumber";
             this.colNumber.ReadOnly = true;
-            this.colNumber.Width = 54;
+            this.colNumber.Width = 51;
             // 
             // colName
             // 
@@ -147,7 +145,7 @@
             this.colName.HeaderText = "名称";
             this.colName.Name = "colName";
             this.colName.ReadOnly = true;
-            this.colName.Width = 54;
+            this.colName.Width = 51;
             // 
             // colCreater
             // 
@@ -155,7 +153,7 @@
             this.colCreater.HeaderText = "申请人";
             this.colCreater.Name = "colCreater";
             this.colCreater.ReadOnly = true;
-            this.colCreater.Width = 66;
+            this.colCreater.Width = 61;
             // 
             // colCreaterUnit
             // 
@@ -180,6 +178,21 @@
             this.colDel.Text = "删除";
             this.colDel.UseColumnTextForButtonValue = true;
             this.colDel.Width = 5;
+            // 
+            // ofdPackages
+            // 
+            this.ofdPackages.Filter = "*.zip|*.zip";
+            // 
+            // btnExportExcel
+            // 
+            this.btnExportExcel.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnExportExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExportExcel.Image")));
+            this.btnExportExcel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnExportExcel.Name = "btnExportExcel";
+            this.btnExportExcel.Size = new System.Drawing.Size(74, 34);
+            this.btnExportExcel.Text = "导出Excel";
+            this.btnExportExcel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
             // 
             // MainForm
             // 
@@ -218,6 +231,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colCreaterUnit;
         private System.Windows.Forms.DataGridViewTextBoxColumn colRealUnit;
         private System.Windows.Forms.DataGridViewButtonColumn colDel;
+        private System.Windows.Forms.ToolStripButton btnExportExcel;
 
     }
 }
