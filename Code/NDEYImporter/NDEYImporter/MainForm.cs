@@ -170,14 +170,22 @@ namespace NDEYImporter
             //检查是否点击的是删除的那一列
             if (e.ColumnIndex == dgvCatalogs.Columns.Count - 1)
             {
-                //获得要删除的项目ID
+                //获得要删除的项目ID,项目编号
                 string projectId = ((DataItem)dgvCatalogs.Rows[e.RowIndex].Tag).getString("ProjectID");
+                string projectNumber = ((DataItem)dgvCatalogs.Rows[e.RowIndex].Tag).getString("ProjectNumber");
 
                 //显示删除提示框
                 if (MessageBox.Show("真的要删除吗？", "提示", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                 {
-                    //删除项目
+                    //删除项目数据
                     DBImporter.deleteProject(projectId);
+
+                    //删除申报包缓存
+                    try
+                    {
+                        System.IO.Directory.Delete(System.IO.Path.Combine(PackageDir, projectNumber));
+                    }
+                    catch (Exception ex) { }
 
                     //刷新GridView
                     reloadCatalogList();

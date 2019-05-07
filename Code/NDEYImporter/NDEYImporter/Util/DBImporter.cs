@@ -227,11 +227,11 @@ namespace NDEYImporter.Util
         /// <param name="projectID"></param>
         public static void deleteProject(string projectID)
         {
-            //删除索引数据
-            ConnectionManager.Context.table("Catalog").where("ProjectID='" + projectID + "'").delete();
-
             //删除其它表的数据
             clearProjectData(projectID);
+
+            //删除索引数据
+            ConnectionManager.Context.table("Catalog").where("ProjectID='" + projectID + "'").delete();
         }
 
         /// <summary>
