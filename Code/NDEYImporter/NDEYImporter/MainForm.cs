@@ -202,7 +202,7 @@ namespace NDEYImporter
             //Excel数据
             MemoryStream memoryStream = new MemoryStream();
             //创建Workbook
-            NPOI.HSSF.UserModel.HSSFWorkbook workbook = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            NPOI.XSSF.UserModel.XSSFWorkbook workbook = new NPOI.XSSF.UserModel.XSSFWorkbook();
             //创建Sheet
             NPOI.SS.UserModel.ISheet sheet = workbook.CreateSheet();
             //创建单元格设置对象
