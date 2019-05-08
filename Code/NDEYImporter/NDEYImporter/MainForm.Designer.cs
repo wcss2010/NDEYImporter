@@ -36,6 +36,7 @@
             this.btnExit = new System.Windows.Forms.ToolStripButton();
             this.plContent = new System.Windows.Forms.Panel();
             this.dgvCatalogs = new System.Windows.Forms.DataGridView();
+            this.ofdPackages = new System.Windows.Forms.OpenFileDialog();
             this.colIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -43,7 +44,6 @@
             this.colCreaterUnit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colRealUnit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDel = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.ofdPackages = new System.Windows.Forms.OpenFileDialog();
             this.tsToolBar.SuspendLayout();
             this.plContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCatalogs)).BeginInit();
@@ -131,49 +131,47 @@
             this.dgvCatalogs.TabIndex = 0;
             this.dgvCatalogs.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCatalogs_CellContentClick);
             // 
+            // ofdPackages
+            // 
+            this.ofdPackages.Filter = "*.zip|*.zip";
+            // 
             // colIndex
             // 
-            this.colIndex.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.colIndex.HeaderText = "序号";
             this.colIndex.Name = "colIndex";
             this.colIndex.ReadOnly = true;
-            this.colIndex.Width = 51;
+            this.colIndex.Width = 60;
             // 
             // colNumber
             // 
-            this.colNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colNumber.HeaderText = "编号";
+            this.colNumber.HeaderText = "项目编号";
             this.colNumber.Name = "colNumber";
             this.colNumber.ReadOnly = true;
-            this.colNumber.Width = 51;
             // 
             // colName
             // 
-            this.colName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.colName.HeaderText = "名称";
+            this.colName.HeaderText = "项目名称";
             this.colName.Name = "colName";
             this.colName.ReadOnly = true;
-            this.colName.Width = 51;
+            this.colName.Width = 200;
             // 
             // colCreater
             // 
-            this.colCreater.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.colCreater.HeaderText = "申请人";
             this.colCreater.Name = "colCreater";
             this.colCreater.ReadOnly = true;
-            this.colCreater.Width = 61;
             // 
             // colCreaterUnit
             // 
             this.colCreaterUnit.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colCreaterUnit.HeaderText = "申请单位名称";
+            this.colCreaterUnit.HeaderText = "申请人单位";
             this.colCreaterUnit.Name = "colCreaterUnit";
             this.colCreaterUnit.ReadOnly = true;
             // 
             // colRealUnit
             // 
             this.colRealUnit.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colRealUnit.HeaderText = "真实申请单位名称";
+            this.colRealUnit.HeaderText = "申请单位名称(标准库)";
             this.colRealUnit.Name = "colRealUnit";
             this.colRealUnit.ReadOnly = true;
             // 
@@ -186,10 +184,6 @@
             this.colDel.Text = "删除";
             this.colDel.UseColumnTextForButtonValue = true;
             this.colDel.Width = 5;
-            // 
-            // ofdPackages
-            // 
-            this.ofdPackages.Filter = "*.zip|*.zip";
             // 
             // MainForm
             // 
@@ -221,6 +215,7 @@
         private System.Windows.Forms.ToolStripButton btnImport;
         private System.Windows.Forms.ToolStripButton btnExit;
         private System.Windows.Forms.OpenFileDialog ofdPackages;
+        private System.Windows.Forms.ToolStripButton btnExportExcel;
         private System.Windows.Forms.DataGridViewTextBoxColumn colIndex;
         private System.Windows.Forms.DataGridViewTextBoxColumn colNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn colName;
@@ -228,7 +223,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colCreaterUnit;
         private System.Windows.Forms.DataGridViewTextBoxColumn colRealUnit;
         private System.Windows.Forms.DataGridViewButtonColumn colDel;
-        private System.Windows.Forms.ToolStripButton btnExportExcel;
 
     }
 }
