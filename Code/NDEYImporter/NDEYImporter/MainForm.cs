@@ -219,9 +219,12 @@ namespace NDEYImporter
             //创建设置字体对象
             NPOI.SS.UserModel.IFont font = workbook.CreateFont();
             font.FontHeightInPoints = 16;//设置字体大小
-            font.Boldweight = short.MaxValue; //加粗
+            font.Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Normal;
             font.FontName = "宋体";
             cellStyle.SetFont(font);
+
+            //是否需要输出表头
+            bool isNeedCreateHeader = true;
 
             //读取索引数据
             DataList dlCatalogs = ConnectionManager.Context.table("Catalog").select("*").getDataList();
@@ -318,32 +321,60 @@ namespace NDEYImporter
                 //列号
                 int colIndex = 0;
 
-                //创建行
-                NPOI.SS.UserModel.IRow row = sheet.CreateRow(rowIndex);
+                //Excel行
+                NPOI.SS.UserModel.IRow row = null;
 
-                //输出数据到Excel
+                //是否需要输入表头
+                if (isNeedCreateHeader)
+                {
+                    isNeedCreateHeader = false;
+
+                    //字休加粗
+                    cellStyle.GetFont(workbook).Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Bold;
+
+                    //创建行
+                    row = sheet.CreateRow(rowIndex);
+                    //输出列名到Excel
+                    colIndex = 0;
+                    foreach (KeyValuePair<string, object> kvp in projectItem)
+                    {
+                        //列名
+                        //创建列
+                        NPOI.SS.UserModel.ICell cell = row.CreateCell(colIndex);
+                        //设置样式
+                        cell.CellStyle = cellStyle;
+                        //设置数据
+                        cell.SetCellValue(kvp.Key);
+                        colIndex++;
+                    }
+                    rowIndex++;
+
+                    //字体恢复为普通
+                    cellStyle.GetFont(workbook).Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Normal;
+                }
+
+                //创建行
+                row = sheet.CreateRow(rowIndex);
+                //输出列值到Excel
+                colIndex = 0;
                 foreach (KeyValuePair<string, object> kvp in projectItem)
                 {
-                    //列名
-                    //创建列
-                    NPOI.SS.UserModel.ICell cell = row.CreateCell(colIndex);
-                    //设置样式
-                    cell.CellStyle = cellStyle;
-                    //设置数据
-                    cell.SetCellValue(kvp.Key);
-                    colIndex++;
-
                     //列值
                     //创建列
-                    cell = row.CreateCell(colIndex);
+                    NPOI.SS.UserModel.ICell cell = row.CreateCell(colIndex);
                     //设置样式
                     cell.CellStyle = cellStyle;
                     //设置数据
                     cell.SetCellValue(kvp.Value != null ? kvp.Value.ToString() : string.Empty);
                     colIndex++;
                 }
-
                 rowIndex++;
+            }
+
+            //Excel列宽自动适应
+            for (int k = 0; k < sheet.GetRow(0).Cells.Count; k++)
+            {
+                sheet.AutoSizeColumn(k);
             }
 
             //输出到Excel文件
