@@ -59,15 +59,15 @@
             // 
             // tsToolBar
             // 
+            this.tsToolBar.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.tsToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnImport,
             this.btnExportExcel,
             this.btnExit});
             this.tsToolBar.Location = new System.Drawing.Point(0, 0);
             this.tsToolBar.Name = "tsToolBar";
-            this.tsToolBar.Size = new System.Drawing.Size(1067, 25);
+            this.tsToolBar.Size = new System.Drawing.Size(1067, 39);
             this.tsToolBar.TabIndex = 1;
-            this.tsToolBar.Text = "toolStrip1";
             // 
             // btnImport
             // 
@@ -75,7 +75,7 @@
             this.btnImport.Image = ((System.Drawing.Image)(resources.GetObject("btnImport.Image")));
             this.btnImport.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(55, 22);
+            this.btnImport.Size = new System.Drawing.Size(71, 36);
             this.btnImport.Text = "导入";
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
@@ -85,7 +85,7 @@
             this.btnExportExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExportExcel.Image")));
             this.btnExportExcel.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnExportExcel.Name = "btnExportExcel";
-            this.btnExportExcel.Size = new System.Drawing.Size(90, 22);
+            this.btnExportExcel.Size = new System.Drawing.Size(106, 36);
             this.btnExportExcel.Text = "导出Excel";
             this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
             // 
@@ -95,7 +95,7 @@
             this.btnExit.Image = ((System.Drawing.Image)(resources.GetObject("btnExit.Image")));
             this.btnExit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(55, 22);
+            this.btnExit.Size = new System.Drawing.Size(71, 36);
             this.btnExit.Text = "退出";
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
@@ -103,9 +103,9 @@
             // 
             this.plContent.Controls.Add(this.dgvCatalogs);
             this.plContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.plContent.Location = new System.Drawing.Point(0, 25);
+            this.plContent.Location = new System.Drawing.Point(0, 39);
             this.plContent.Name = "plContent";
-            this.plContent.Size = new System.Drawing.Size(1067, 473);
+            this.plContent.Size = new System.Drawing.Size(1067, 459);
             this.plContent.TabIndex = 2;
             // 
             // dgvCatalogs
@@ -127,7 +127,7 @@
             this.dgvCatalogs.ReadOnly = true;
             this.dgvCatalogs.RowHeadersVisible = false;
             this.dgvCatalogs.RowTemplate.Height = 23;
-            this.dgvCatalogs.Size = new System.Drawing.Size(1067, 473);
+            this.dgvCatalogs.Size = new System.Drawing.Size(1067, 459);
             this.dgvCatalogs.TabIndex = 0;
             this.dgvCatalogs.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCatalogs_CellContentClick);
             // 
