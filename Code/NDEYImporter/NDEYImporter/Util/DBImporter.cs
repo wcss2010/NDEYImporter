@@ -127,7 +127,7 @@ namespace NDEYImporter.Util
             StringBuilder sb = new StringBuilder();
             sb.Append(temp.LastYear).Append("-ZQ");
             //需要补0的数量
-            int zeroCount = 4 - temp.LastID.ToString().Length;
+            int zeroCount = 3 - temp.LastID.ToString().Length;
             //补0
             for (int k = 0; k < zeroCount; k++)
             {

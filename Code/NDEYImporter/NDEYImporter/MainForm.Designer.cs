@@ -32,6 +32,7 @@
             this.ssStatus = new System.Windows.Forms.StatusStrip();
             this.tsToolBar = new System.Windows.Forms.ToolStrip();
             this.btnImport = new System.Windows.Forms.ToolStripButton();
+            this.btnExportExcel = new System.Windows.Forms.ToolStripButton();
             this.btnExit = new System.Windows.Forms.ToolStripButton();
             this.plContent = new System.Windows.Forms.Panel();
             this.dgvCatalogs = new System.Windows.Forms.DataGridView();
@@ -43,7 +44,6 @@
             this.colRealUnit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDel = new System.Windows.Forms.DataGridViewButtonColumn();
             this.ofdPackages = new System.Windows.Forms.OpenFileDialog();
-            this.btnExportExcel = new System.Windows.Forms.ToolStripButton();
             this.tsToolBar.SuspendLayout();
             this.plContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCatalogs)).BeginInit();
@@ -65,7 +65,7 @@
             this.btnExit});
             this.tsToolBar.Location = new System.Drawing.Point(0, 0);
             this.tsToolBar.Name = "tsToolBar";
-            this.tsToolBar.Size = new System.Drawing.Size(1067, 37);
+            this.tsToolBar.Size = new System.Drawing.Size(1067, 25);
             this.tsToolBar.TabIndex = 1;
             this.tsToolBar.Text = "toolStrip1";
             // 
@@ -75,10 +75,19 @@
             this.btnImport.Image = ((System.Drawing.Image)(resources.GetObject("btnImport.Image")));
             this.btnImport.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(39, 34);
+            this.btnImport.Size = new System.Drawing.Size(55, 22);
             this.btnImport.Text = "导入";
-            this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // btnExportExcel
+            // 
+            this.btnExportExcel.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnExportExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExportExcel.Image")));
+            this.btnExportExcel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnExportExcel.Name = "btnExportExcel";
+            this.btnExportExcel.Size = new System.Drawing.Size(90, 22);
+            this.btnExportExcel.Text = "导出Excel";
+            this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
             // 
             // btnExit
             // 
@@ -86,18 +95,17 @@
             this.btnExit.Image = ((System.Drawing.Image)(resources.GetObject("btnExit.Image")));
             this.btnExit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(39, 34);
+            this.btnExit.Size = new System.Drawing.Size(55, 22);
             this.btnExit.Text = "退出";
-            this.btnExit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // plContent
             // 
             this.plContent.Controls.Add(this.dgvCatalogs);
             this.plContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.plContent.Location = new System.Drawing.Point(0, 37);
+            this.plContent.Location = new System.Drawing.Point(0, 25);
             this.plContent.Name = "plContent";
-            this.plContent.Size = new System.Drawing.Size(1067, 461);
+            this.plContent.Size = new System.Drawing.Size(1067, 473);
             this.plContent.TabIndex = 2;
             // 
             // dgvCatalogs
@@ -119,7 +127,7 @@
             this.dgvCatalogs.ReadOnly = true;
             this.dgvCatalogs.RowHeadersVisible = false;
             this.dgvCatalogs.RowTemplate.Height = 23;
-            this.dgvCatalogs.Size = new System.Drawing.Size(1067, 461);
+            this.dgvCatalogs.Size = new System.Drawing.Size(1067, 473);
             this.dgvCatalogs.TabIndex = 0;
             this.dgvCatalogs.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCatalogs_CellContentClick);
             // 
@@ -182,17 +190,6 @@
             // ofdPackages
             // 
             this.ofdPackages.Filter = "*.zip|*.zip";
-            // 
-            // btnExportExcel
-            // 
-            this.btnExportExcel.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnExportExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExportExcel.Image")));
-            this.btnExportExcel.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnExportExcel.Name = "btnExportExcel";
-            this.btnExportExcel.Size = new System.Drawing.Size(74, 34);
-            this.btnExportExcel.Text = "导出Excel";
-            this.btnExportExcel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
             // 
             // MainForm
             // 
