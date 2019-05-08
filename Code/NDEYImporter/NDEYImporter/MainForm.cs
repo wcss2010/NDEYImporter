@@ -350,7 +350,7 @@ namespace NDEYImporter
             workbook.Write(memoryStream);
             File.WriteAllBytes(excelFile, memoryStream.ToArray());
 
-            MessageBox.Show("导出完成！","提示");
+            MessageBox.Show("导出完成！路径：" + excelFile,"提示");
             //打开Excel文件
             System.Diagnostics.Process.Start(excelFile);
         }
