@@ -330,7 +330,8 @@ namespace NDEYImporter
                     isNeedCreateHeader = false;
 
                     //字休加粗
-                    cellStyle.GetFont(workbook).Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Bold;
+                    font.Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Bold;
+                    cellStyle.SetFont(font);
 
                     //创建行
                     row = sheet.CreateRow(rowIndex);
@@ -350,7 +351,8 @@ namespace NDEYImporter
                     rowIndex++;
 
                     //字体恢复为普通
-                    cellStyle.GetFont(workbook).Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Normal;
+                    font.Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Normal;
+                    cellStyle.SetFont(font);
                 }
 
                 //创建行
