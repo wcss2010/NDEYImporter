@@ -94,7 +94,7 @@ namespace NDEYImporter
                     try
                     {
                         //导入数据并返回项目Id
-                        string projectId = DBImporter.importDB(dbFile);
+                        string projectId = DBImporter.importDB(string.Empty, dbFile);
 
                         //获取项目编号
                         string projectNumber = ConnectionManager.Context.table("Catalog").where("ProjectID='" + projectId + "'").select("ProjectNumber").getValue<string>(string.Empty);
@@ -452,6 +452,27 @@ namespace NDEYImporter
             {
                 MessageBox.Show("对不起，导出失败！Ex:" + ex.ToString());
             }
+        }
+
+        private void btnSelectTotalDir_Click(object sender, EventArgs e)
+        {
+            //显示目录选择对话框
+            fbdTotalDirSelect.SelectedPath = MainForm.Config.TotalDir;
+            if (fbdTotalDirSelect.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                MainForm.Config.TotalDir = fbdTotalDirSelect.SelectedPath;
+                saveConfig();
+            }
+        }
+
+        private void btnImportAll_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnImportWithSelectedList_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

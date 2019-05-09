@@ -32,6 +32,9 @@
             this.ssStatus = new System.Windows.Forms.StatusStrip();
             this.tsToolBar = new System.Windows.Forms.ToolStrip();
             this.btnImport = new System.Windows.Forms.ToolStripButton();
+            this.btnSelectTotalDir = new System.Windows.Forms.ToolStripButton();
+            this.btnImportAll = new System.Windows.Forms.ToolStripButton();
+            this.btnImportWithSelectedList = new System.Windows.Forms.ToolStripButton();
             this.btnExportExcel = new System.Windows.Forms.ToolStripButton();
             this.btnExit = new System.Windows.Forms.ToolStripButton();
             this.plContent = new System.Windows.Forms.Panel();
@@ -45,9 +48,6 @@
             this.colDel = new System.Windows.Forms.DataGridViewButtonColumn();
             this.ofdPackages = new System.Windows.Forms.OpenFileDialog();
             this.fbdTotalDirSelect = new System.Windows.Forms.FolderBrowserDialog();
-            this.btnImportWithSelectedList = new System.Windows.Forms.ToolStripButton();
-            this.btnImportAll = new System.Windows.Forms.ToolStripButton();
-            this.btnSelectTotalDir = new System.Windows.Forms.ToolStripButton();
             this.tsToolBar.SuspendLayout();
             this.plContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCatalogs)).BeginInit();
@@ -86,6 +86,36 @@
             this.btnImport.Text = "导入";
             this.btnImport.Visible = false;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // btnSelectTotalDir
+            // 
+            this.btnSelectTotalDir.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSelectTotalDir.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectTotalDir.Image")));
+            this.btnSelectTotalDir.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSelectTotalDir.Name = "btnSelectTotalDir";
+            this.btnSelectTotalDir.Size = new System.Drawing.Size(155, 36);
+            this.btnSelectTotalDir.Text = "设置申报包总目录";
+            this.btnSelectTotalDir.Click += new System.EventHandler(this.btnSelectTotalDir_Click);
+            // 
+            // btnImportAll
+            // 
+            this.btnImportAll.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnImportAll.Image = ((System.Drawing.Image)(resources.GetObject("btnImportAll.Image")));
+            this.btnImportAll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnImportAll.Name = "btnImportAll";
+            this.btnImportAll.Size = new System.Drawing.Size(99, 36);
+            this.btnImportAll.Text = "全部导入";
+            this.btnImportAll.Click += new System.EventHandler(this.btnImportAll_Click);
+            // 
+            // btnImportWithSelectedList
+            // 
+            this.btnImportWithSelectedList.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnImportWithSelectedList.Image = ((System.Drawing.Image)(resources.GetObject("btnImportWithSelectedList.Image")));
+            this.btnImportWithSelectedList.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnImportWithSelectedList.Name = "btnImportWithSelectedList";
+            this.btnImportWithSelectedList.Size = new System.Drawing.Size(113, 36);
+            this.btnImportWithSelectedList.Text = "选择性导入";
+            this.btnImportWithSelectedList.Click += new System.EventHandler(this.btnImportWithSelectedList_Click);
             // 
             // btnExportExcel
             // 
@@ -192,33 +222,6 @@
             // ofdPackages
             // 
             this.ofdPackages.Filter = "*.zip|*.zip";
-            // 
-            // btnImportWithSelectedList
-            // 
-            this.btnImportWithSelectedList.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnImportWithSelectedList.Image = ((System.Drawing.Image)(resources.GetObject("btnImportWithSelectedList.Image")));
-            this.btnImportWithSelectedList.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnImportWithSelectedList.Name = "btnImportWithSelectedList";
-            this.btnImportWithSelectedList.Size = new System.Drawing.Size(113, 36);
-            this.btnImportWithSelectedList.Text = "选择性导入";
-            // 
-            // btnImportAll
-            // 
-            this.btnImportAll.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnImportAll.Image = ((System.Drawing.Image)(resources.GetObject("btnImportAll.Image")));
-            this.btnImportAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnImportAll.Name = "btnImportAll";
-            this.btnImportAll.Size = new System.Drawing.Size(99, 36);
-            this.btnImportAll.Text = "全部导入";
-            // 
-            // btnSelectTotalDir
-            // 
-            this.btnSelectTotalDir.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnSelectTotalDir.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectTotalDir.Image")));
-            this.btnSelectTotalDir.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnSelectTotalDir.Name = "btnSelectTotalDir";
-            this.btnSelectTotalDir.Size = new System.Drawing.Size(155, 36);
-            this.btnSelectTotalDir.Text = "设置申报包总目录";
             // 
             // MainForm
             // 
