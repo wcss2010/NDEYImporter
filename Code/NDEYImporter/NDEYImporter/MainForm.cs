@@ -203,7 +203,7 @@ namespace NDEYImporter
         /// <summary>
         /// 载入Catalog数据
         /// </summary>
-        private void reloadCatalogList()
+        public void reloadCatalogList()
         {
             //清理GridView
             dgvCatalogs.Rows.Clear();
