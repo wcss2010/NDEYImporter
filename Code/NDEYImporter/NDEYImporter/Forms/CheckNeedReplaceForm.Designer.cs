@@ -90,7 +90,7 @@
             // chID
             // 
             this.chID.Text = "项目编号";
-            this.chID.Width = 400;
+            this.chID.Width = 300;
             // 
             // groupBox2
             // 
