@@ -253,62 +253,88 @@ namespace NDEYImporter.Util
         /// <param name="overWrite">是否覆盖已存在的文件。</param>
         public void UnZipFile(string zipedFile, string strDirectory, string password, bool overWrite)
         {
-            if (strDirectory == "")
+            //判断目标是否为空
+            if (string.IsNullOrEmpty(strDirectory))
             {
-                strDirectory = Directory.GetCurrentDirectory();
+                return;
             }
-            if (!strDirectory.EndsWith("\\"))
-            {
-                strDirectory = strDirectory + "\\";
-            }
-            using (ZipInputStream s = new ZipInputStream(File.OpenRead(zipedFile)))
-            {
-                s.Password = password;
-                ZipEntry theEntry;
 
-                while ((theEntry = s.GetNextEntry()) != null)
+            //判断压缩文件是否存在
+            if (File.Exists(zipedFile))
+            {
+                //载入ZIP文件
+                ZipFile zip = new ZipFile(zipedFile);
+
+                //解压myData.db文件
+                try
                 {
-                    string directoryName = "";
-                    string pathToZip = "";
-                    pathToZip = theEntry.Name;
-
-                    if (pathToZip != "")
+                    foreach (ZipEntry ze in zip)
                     {
-                        directoryName = Path.GetDirectoryName(pathToZip) + "\\";
-                    }
+                        //目标路径
+                        string destPath = Path.Combine(strDirectory, ze.Name);
 
-                    string fileName = Path.GetFileName(pathToZip);
-
-                    Directory.CreateDirectory(strDirectory + directoryName);
-
-                    if (fileName != "" && fileName.EndsWith(".db"))
-                    {
-                        if ((File.Exists(strDirectory + directoryName + fileName) && overWrite) || (!File.Exists(strDirectory + directoryName + fileName)))
+                        //检查当前项是否为文件
+                        if (ze.IsFile)
                         {
-                            using (FileStream streamWriter = File.Create(strDirectory + directoryName + fileName))
+                            //检查后缀名是否带有.db
+                            if (ze.Name.EndsWith(".db"))
                             {
-                                int size = 2048;
-                                byte[] data = new byte[2048];
-                                while (true)
-                                {
-                                    size = s.Read(data, 0, data.Length);
+                                //获得该文件输入流
+                                Stream s = zip.GetInputStream(ze);
 
-                                    if (size > 0)
+                                try
+                                {
+                                    //写文件
+                                    using (FileStream streamWriter = File.Create(destPath))
                                     {
-                                        streamWriter.Write(data, 0, size);
-                                    }
-                                    else
-                                    {
-                                        break;
+                                        int size = 2048;
+                                        byte[] data = new byte[2048];
+                                        try
+                                        {
+                                            while (true)
+                                            {
+                                                size = s.Read(data, 0, data.Length);
+
+                                                if (size > 0)
+                                                {
+                                                    streamWriter.Write(data, 0, size);
+                                                }
+                                                else
+                                                {
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        finally
+                                        {
+                                            streamWriter.Close();
+                                        }
                                     }
                                 }
-                                streamWriter.Close();
+                                finally
+                                {
+                                    s.Close();
+                                }
                             }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                Directory.CreateDirectory(Path.Combine(strDirectory, ze.Name));
+                            }
+                            catch (Exception ex) { }
                         }
                     }
                 }
-
-                s.Close();
+                catch (Exception ex)
+                {
+                    //Error
+                }
+                finally
+                {
+                    zip.Close();
+                }
             }
         }
     }
