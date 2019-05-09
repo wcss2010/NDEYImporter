@@ -16,6 +16,11 @@ namespace NDEYImporter
     public partial class MainForm : Form
     {
         /// <summary>
+        /// 程序配置
+        /// </summary>
+        public static MainConfig Config { get; set; }
+
+        /// <summary>
         /// NDEY上报包目录
         /// </summary>
         public static string PackageDir = System.IO.Path.Combine(Application.StartupPath, "PackageDir");
@@ -25,9 +30,20 @@ namespace NDEYImporter
         /// </summary>
         public static string DBTempDir = System.IO.Path.Combine(Application.StartupPath, "DBTempDir");
 
+        /// <summary>
+        /// 主窗体实例
+        /// </summary>
+        public static MainForm Instance { get; set; }
+
         public MainForm()
         {
             InitializeComponent();
+
+            //设置运行实例
+            MainForm.Instance = this;
+
+            //载入配置
+            MainForm.Instance.loadConfig();
 
             //创建NDEY上报包目录
             try
@@ -126,6 +142,49 @@ namespace NDEYImporter
         private void MainForm_Load(object sender, EventArgs e)
         {
             reloadCatalogList();
+        }
+
+        /// <summary>
+        /// 载入配置
+        /// </summary>
+        public void loadConfig()
+        {
+            string xmlFile = Path.Combine(Application.StartupPath, "config.xml");
+            if (File.Exists(xmlFile))
+            {
+                try
+                {
+                    //读取配置
+                    MainForm.Config = XmlSerializeTool.deserialize<MainConfig>(File.ReadAllText(xmlFile));
+                }
+                catch (Exception ex)
+                {
+                    //设置默认的配置项
+                    MainForm.Config = new MainConfig();
+                    MainForm.Config.TotalDir = PackageDir;
+                    saveConfig();
+                }
+            }
+            else
+            {
+                //设置默认的配置项
+                MainForm.Config = new MainConfig();
+                MainForm.Config.TotalDir = PackageDir;
+                saveConfig();
+            }
+        }
+
+        /// <summary>
+        /// 保存配置
+        /// </summary>
+        public void saveConfig()
+        {
+            string xmlFile = Path.Combine(Application.StartupPath, "config.xml");
+            if (MainForm.Config != null)
+            {
+                //写配置文件
+                File.WriteAllText(xmlFile, XmlSerializeTool.serializer<MainConfig>(MainForm.Config));
+            }
         }
 
         /// <summary>
@@ -568,5 +627,16 @@ namespace NDEYImporter
             }
             return text;
         }
+    }
+
+    /// <summary>
+    /// 程序配置文件
+    /// </summary>
+    public class MainConfig
+    {
+        /// <summary>
+        /// 申报包总目录
+        /// </summary>
+        public string TotalDir { get; set; }
     }
 }
