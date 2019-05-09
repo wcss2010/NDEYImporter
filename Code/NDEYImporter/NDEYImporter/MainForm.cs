@@ -1,4 +1,5 @@
 ﻿using NDEYImporter.DB;
+using NDEYImporter.Forms;
 using NDEYImporter.Util;
 using Noear.Weed;
 using System;
@@ -141,7 +142,19 @@ namespace NDEYImporter
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            //载入Catalog列表
             reloadCatalogList();
+
+            //刷新状态栏中的总目录
+            refreshTotalDir();
+        }
+
+        /// <summary>
+        /// 刷新状态栏中的总目录
+        /// </summary>
+        private void refreshTotalDir()
+        {
+            tsslHintText.Text = "总目录：" + MainForm.Config.TotalDir;
         }
 
         /// <summary>
@@ -460,19 +473,34 @@ namespace NDEYImporter
             fbdTotalDirSelect.SelectedPath = MainForm.Config.TotalDir;
             if (fbdTotalDirSelect.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                //设置总目录
                 MainForm.Config.TotalDir = fbdTotalDirSelect.SelectedPath;
+                //保存配置
                 saveConfig();
+
+                //显示总目录
+                refreshTotalDir();
             }
         }
 
         private void btnImportAll_Click(object sender, EventArgs e)
         {
+            //显示导入窗体
+            CheckNeedReplaceForm form = new CheckNeedReplaceForm(true);
+            form.ShowDialog();
 
+            //刷新Catalog列表
+            reloadCatalogList();
         }
 
         private void btnImportWithSelectedList_Click(object sender, EventArgs e)
         {
+            //显示导入窗体
+            CheckNeedReplaceForm form = new CheckNeedReplaceForm(false);
+            form.ShowDialog();
 
+            //刷新Catalog列表
+            reloadCatalogList();
         }
     }
 

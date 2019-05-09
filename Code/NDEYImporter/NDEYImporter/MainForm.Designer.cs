@@ -48,6 +48,8 @@
             this.colDel = new System.Windows.Forms.DataGridViewButtonColumn();
             this.ofdPackages = new System.Windows.Forms.OpenFileDialog();
             this.fbdTotalDirSelect = new System.Windows.Forms.FolderBrowserDialog();
+            this.tsslHintText = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ssStatus.SuspendLayout();
             this.tsToolBar.SuspendLayout();
             this.plContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCatalogs)).BeginInit();
@@ -55,6 +57,8 @@
             // 
             // ssStatus
             // 
+            this.ssStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsslHintText});
             this.ssStatus.Location = new System.Drawing.Point(0, 498);
             this.ssStatus.Name = "ssStatus";
             this.ssStatus.Size = new System.Drawing.Size(1067, 22);
@@ -223,6 +227,12 @@
             // 
             this.ofdPackages.Filter = "*.zip|*.zip";
             // 
+            // tsslHintText
+            // 
+            this.tsslHintText.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tsslHintText.Name = "tsslHintText";
+            this.tsslHintText.Size = new System.Drawing.Size(0, 17);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -235,6 +245,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "国防科技卓越青年科学基金申报系统汇总版";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.ssStatus.ResumeLayout(false);
+            this.ssStatus.PerformLayout();
             this.tsToolBar.ResumeLayout(false);
             this.tsToolBar.PerformLayout();
             this.plContent.ResumeLayout(false);
@@ -265,6 +277,7 @@
         private System.Windows.Forms.ToolStripButton btnImportWithSelectedList;
         private System.Windows.Forms.ToolStripButton btnSelectTotalDir;
         private System.Windows.Forms.ToolStripButton btnImportAll;
+        private System.Windows.Forms.ToolStripStatusLabel tsslHintText;
 
     }
 }
