@@ -28,9 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // CheckNeedReplaceForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(333, 159);
+            this.Name = "CheckNeedReplaceForm";
             this.Text = "IsNeedReplaceForm";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
