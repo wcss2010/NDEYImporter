@@ -82,7 +82,7 @@ namespace NDEYImporter
                 //生成一个临时路径
                 string destDir = System.IO.Path.Combine(DBTempDir, DateTime.Now.Ticks.ToString());
                 //解压ZIP包
-                ZipTool fzo = new ZipTool();
+                NdeyUnZipTool fzo = new NdeyUnZipTool();
                 fzo.UnZipFile(ofdPackages.FileName, destDir, string.Empty, true);
 
                 //判断申报包是否有效

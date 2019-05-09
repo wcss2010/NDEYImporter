@@ -141,7 +141,7 @@ namespace NDEYImporter.Forms
                             //生成一个临时路径
                             string destDir = System.IO.Path.Combine(MainForm.DBTempDir, DateTime.Now.Ticks.ToString());
                             //解压ZIP包
-                            ZipTool fzo = new ZipTool();
+                            NdeyUnZipTool fzo = new NdeyUnZipTool();
                             fzo.UnZipFile(subFiles[0], destDir, string.Empty, true);
 
                             //判断申报包是否有效
