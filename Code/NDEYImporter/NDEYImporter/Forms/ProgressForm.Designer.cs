@@ -37,7 +37,7 @@
             this.pbProgress.Dock = System.Windows.Forms.DockStyle.Top;
             this.pbProgress.Location = new System.Drawing.Point(0, 0);
             this.pbProgress.Name = "pbProgress";
-            this.pbProgress.Size = new System.Drawing.Size(412, 23);
+            this.pbProgress.Size = new System.Drawing.Size(408, 23);
             this.pbProgress.TabIndex = 0;
             // 
             // lblProgressText
@@ -46,7 +46,7 @@
             this.lblProgressText.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblProgressText.Location = new System.Drawing.Point(0, 23);
             this.lblProgressText.Name = "lblProgressText";
-            this.lblProgressText.Size = new System.Drawing.Size(412, 23);
+            this.lblProgressText.Size = new System.Drawing.Size(408, 19);
             this.lblProgressText.TabIndex = 1;
             this.lblProgressText.Text = "...";
             this.lblProgressText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -55,14 +55,17 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(412, 46);
+            this.ClientSize = new System.Drawing.Size(408, 42);
+            this.ControlBox = false;
             this.Controls.Add(this.lblProgressText);
             this.Controls.Add(this.pbProgress);
             this.DoubleBuffered = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ProgressForm";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ProgressForm";
+            this.TopMost = true;
             this.ResumeLayout(false);
 
         }

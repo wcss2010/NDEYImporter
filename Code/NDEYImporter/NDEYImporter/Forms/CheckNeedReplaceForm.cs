@@ -168,9 +168,9 @@ namespace NDEYImporter.Forms
                     }
 
                     //检查是否已创建句柄，并调用委托执行UI方法
-                    if (IsHandleCreated)
+                    if (pf.IsHandleCreated)
                     {
-                        Invoke(new MethodInvoker(delegate()
+                        pf.Invoke(new MethodInvoker(delegate()
                             {
                                 //刷新Catalog列表
                                 MainForm.Instance.reloadCatalogList();
@@ -179,8 +179,6 @@ namespace NDEYImporter.Forms
                                 pf.Close();
                             }));
                     }
-
-
                 }));
 
             //关闭窗口
