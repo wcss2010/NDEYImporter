@@ -20,16 +20,8 @@ namespace NDEYImporter.Util
     /// <summary>
     /// 文件解压缩操作类库
     /// </summary>
-    public class FileZipOpr
+    public class ZipTool
     {
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public FileZipOpr()
-        {
-
-        }
-
         /// <summary>
         /// 压缩单个文件
         /// </summary>
