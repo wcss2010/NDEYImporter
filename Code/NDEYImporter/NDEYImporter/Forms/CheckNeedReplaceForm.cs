@@ -216,12 +216,23 @@ namespace NDEYImporter.Forms
             //读取目录名称中的项目编号
             string projectNumber = e.Node.Text.Substring(0, 11);
 
-            //根据项目编号查询项目数量
-            long projectCount = ConnectionManager.Context.table("Catalog").where("ProjectNumber='" + projectNumber + "'").select("count(*)").getValue<long>(0);
-            //判断这个项目是否被导入过
-            if (projectCount >= 1)
+            //判断当前项目是否需要导入
+            if (e.Node.Checked)
             {
-                replaceDict[projectNumber] = true;
+                //需要导入
+
+                //根据项目编号查询项目数量
+                long projectCount = ConnectionManager.Context.table("Catalog").where("ProjectNumber='" + projectNumber + "'").select("count(*)").getValue<long>(0);
+                //判断这个项目是否被导入过
+                if (projectCount >= 1)
+                {
+                    replaceDict[projectNumber] = true;
+                }
+            }
+            else
+            {
+                //不需要导入
+                replaceDict.Remove(projectNumber);
             }
 
             //刷新替换列表
