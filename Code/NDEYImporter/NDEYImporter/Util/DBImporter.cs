@@ -14,9 +14,10 @@ namespace NDEYImporter.Util
         /// <summary>
         /// 导入数据库
         /// </summary>
+        /// <param name="projectNumber">项目编号</param>
         /// <param name="sourceFile">NDEY数据文件</param>
-        /// <returns>ProjectID</returns>
-        public static string importDB(string sourceFile)
+        /// <returns>项目ID</returns>
+        public static string importDB(string projectNumber, string sourceFile)
         {
             //项目ID
             string projectID = string.Empty;
@@ -76,7 +77,7 @@ namespace NDEYImporter.Util
                         //创建索引
                         DataItem diCatalog = new DataItem();
                         diCatalog.set("ProjectID", projectID);
-                        diCatalog.set("ProjectNumber", getProjectNumbers());
+                        diCatalog.set("ProjectNumber", string.IsNullOrEmpty(projectNumber) ? getProjectNumbers() : projectNumber);
                         diCatalog.set("ProjectName", projectName);
                         diCatalog.set("ProjectCreater", projectCreater);
                         diCatalog.set("ProjectCreaterUnitID", projectCreaterUnitID);
