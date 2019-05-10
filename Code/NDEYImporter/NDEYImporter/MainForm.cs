@@ -394,7 +394,7 @@ namespace NDEYImporter
                         projectItem.Add(new KeyValuePair<string, object>("成果形式", new ResultConfigRecord(dlProjects.getRow(0).getString("ResultConfig")).getDescription()));
 
                         //第一年任务
-                        projectItem.Add(new KeyValuePair<string, object>("第一年任务", string.Empty));
+                        projectItem.Add(new KeyValuePair<string, object>("第一年任务", getFirstTaskText(projectNumber)));
 
                         //判断推荐方式
                         if (dlProjects.getRow(0).get("ApplicationType") == null || string.IsNullOrEmpty(dlProjects.getRow(0).get("ApplicationType").ToString()) || dlProjects.getRow(0).get("ApplicationType").Equals("单位推荐"))
@@ -523,6 +523,84 @@ namespace NDEYImporter
             {
                 MessageBox.Show("对不起，导出失败！Ex:" + ex.ToString());
             }
+        }
+
+        /// <summary>
+        /// 获得第一年任务的纯文本
+        /// </summary>
+        /// <param name="projectNumber">项目编号</param>
+        /// <returns></returns>
+        private object getFirstTaskText(string projectNumber)
+        {
+            //RTF文本
+            string rtfText = string.Empty;
+
+            //查找指定申报包
+            string[] subDirs = Directory.GetDirectories(MainForm.Config.TotalDir);
+            if (subDirs != null)
+            {
+                //循环子目录,查找与项目编号相符的目录名称
+                foreach (string s in subDirs)
+                {
+                    //获得目录信息
+                    DirectoryInfo di = new DirectoryInfo(s);
+
+                    //判断目录是否符合条件
+                    if (di.Name.Contains(projectNumber) && di.Name.Length >= 12)
+                    {
+                        //查找子文件
+                        string[] subFiles = Directory.GetFiles(s);
+                        if (subFiles != null && subFiles.Length >= 1)
+                        {
+                           //解压这个Zip包
+                           string destDir = Path.Combine(DBTempDir, projectNumber);
+
+                           //判断第一年研究任务.rtf这个文件是否存在,如果存在则说明之前解压过
+                           if (File.Exists(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf"))))
+                           {
+                               //存在这个文件,直接读取
+                               rtfText = File.ReadAllText(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf")));
+                               break;
+                           }
+                           else
+                           {
+                               //不存在这个文件,先解压再读取
+
+                               //创建临时目录
+                               try
+                               {
+                                   Directory.CreateDirectory(destDir);
+                               }
+                               catch (Exception ex) { }
+
+                               //解压这个包
+                               new NdeyUnZipTool().UnZipFile(subFiles[0], destDir, string.Empty, true);
+
+                               //判断第一年研究任务.rtf这个文件是否存在
+                               if (File.Exists(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf"))))
+                               {
+                                   //存在这个文件,直接读取
+                                   rtfText = File.ReadAllText(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf")));
+                                   break;
+                               }
+                           }
+                        }
+                    }
+                }
+
+                //如果RTF内容非空,则需要获得纯文本
+                if (!string.IsNullOrEmpty(rtfText))
+                {
+                    //将RTF文本设置到RichTextBox对象
+                    RichTextBox rtb = new RichTextBox();
+                    rtb.Rtf = rtfText;
+
+                    //获得纯文本
+                    rtfText = rtb.Text;
+                }
+            }
+
+            return rtfText;
         }
 
         private void btnSelectTotalDir_Click(object sender, EventArgs e)
