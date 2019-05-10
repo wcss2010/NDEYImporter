@@ -289,6 +289,7 @@ namespace NDEYImporter
                 cellStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
                 cellStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
                 cellStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyle.WrapText = true;
 
                 //创建设置字体对象
                 NPOI.SS.UserModel.IFont font = workbook.CreateFont();
@@ -354,14 +355,19 @@ namespace NDEYImporter
                         projectItem.Add(new KeyValuePair<string, object>("研究周期", "五年"));
                         projectItem.Add(new KeyValuePair<string, object>("密级", dlProjects.getRow(0).get("ProjectSecret")));
 
+                        //研究目标，研究内容，主要创建点，预期军事价值
+                        string muBiaoNeiRongChuangXinDianJieZhi = string.Empty;
+                        //资助对象简介
+                        string ziZhuDuiXiang = string.Empty;
+
                         //处理摘要
                         string projectBrief = dlProjects.getRow(0).getString("ProjectBrief");
                         if (projectBrief != string.Empty)
                         {
-                            string[] array = projectBrief.Split(new char[]
-					{
-						'|'
-					});
+                            //拆分摘要内容
+                            string[] array = projectBrief.Split(new string[] { "|" }, StringSplitOptions.None);
+                            
+                            //判断字符数组长度是否为6
                             if (array.Length == 6)
                             {
                                 projectItem.Add(new KeyValuePair<string, object>("入选人才计划情况", array[0]));
@@ -370,6 +376,17 @@ namespace NDEYImporter
                                 projectItem.Add(new KeyValuePair<string, object>("研究内容", array[3]));
                                 projectItem.Add(new KeyValuePair<string, object>("主要创新点", array[4]));
                                 projectItem.Add(new KeyValuePair<string, object>("预期军事价值", array[5]));
+
+                                //拼装研究目标，研究内容，主要创建点，预期军事价值
+                                muBiaoNeiRongChuangXinDianJieZhi += "研究目标:" + array[2] + "\n";
+                                muBiaoNeiRongChuangXinDianJieZhi += "研究内容:" + array[3] + "\n";
+                                muBiaoNeiRongChuangXinDianJieZhi += "主要创新点:" + array[4] + "\n";
+                                muBiaoNeiRongChuangXinDianJieZhi += "预期军事价值:" + array[5] + "\n";
+
+                                //拼装资助对象简介
+                                ziZhuDuiXiang += "基本信息:" + dlProjects.getRow(0).getString("UserName") + "," + dlProjects.getRow(0).getString("Sex") + "," + (DateTime.Now.Year - long.Parse(dlProjects.getRow(0).getString("Birthdate").Substring(0, 4))).ToString() + "," + dlProjects.getRow(0).getString("Degree") + "," + dlProjects.getRow(0).getString("UnitName") + "," + dlProjects.getRow(0).getString("JobTitle") + "," + dlProjects.getRow(0).getString("MainResearch") + "\n";
+                                ziZhuDuiXiang += "入选人才计划情况:" + array[0] + "\n";
+                                ziZhuDuiXiang += "代表性成果或贡献:" + array[1] + "\n";
                             }
                         }
 
@@ -407,10 +424,10 @@ namespace NDEYImporter
                         projectItem.Add(new KeyValuePair<string, object>("专家三工作单位", dlProjects.getRow(0).get("ExpertUnit3")));
 
                         //研究目标，研究内容，主要创新点，预期军事目标
-                        projectItem.Add(new KeyValuePair<string, object>("研究目标，研究内容，主要创新点，预期军事目标", ""));
+                        projectItem.Add(new KeyValuePair<string, object>("研究目标，研究内容，主要创新点，预期军事目标", muBiaoNeiRongChuangXinDianJieZhi));
 
                         //资助对象简介
-                        projectItem.Add(new KeyValuePair<string, object>("资助对象简介", ""));
+                        projectItem.Add(new KeyValuePair<string, object>("资助对象简介", ziZhuDuiXiang));
                     }
 
                     //列号
