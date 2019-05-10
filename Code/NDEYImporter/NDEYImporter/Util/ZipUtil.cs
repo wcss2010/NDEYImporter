@@ -276,8 +276,8 @@ namespace NDEYImporter.Util
                         //检查当前项是否为文件
                         if (ze.IsFile)
                         {
-                            //检查后缀名是否带有.db
-                            if (ze.Name.EndsWith(".db"))
+                            //检查后缀名是否带有.db或.rtf
+                            if (ze.Name.EndsWith(".db") || ze.Name.EndsWith(".rtf"))
                             {
                                 //获得该文件输入流
                                 Stream s = zip.GetInputStream(ze);

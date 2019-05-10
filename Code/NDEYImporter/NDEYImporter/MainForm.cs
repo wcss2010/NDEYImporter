@@ -376,7 +376,22 @@ namespace NDEYImporter
                         //处理成果形式
                         projectItem.Add(new KeyValuePair<string, object>("成果形式", new ResultConfigRecord(dlProjects.getRow(0).getString("ResultConfig")).getDescription()));
 
-                        projectItem.Add(new KeyValuePair<string, object>("推荐方式", dlProjects.getRow(0).get("ApplicationType") == null ? "单位推荐" : dlProjects.getRow(0).get("ApplicationType")));
+                        //第一年任务
+                        projectItem.Add(new KeyValuePair<string, object>("第一年任务", ""));
+
+                        //判断推荐方式
+                        if (dlProjects.getRow(0).get("ApplicationType") == null || string.IsNullOrEmpty(dlProjects.getRow(0).get("ApplicationType").ToString()) || dlProjects.getRow(0).get("ApplicationType").Equals("单位推荐"))
+                        {
+                            //"单位推荐"
+                            projectItem.Add(new KeyValuePair<string, object>("推荐方式", "单位推荐"));
+                            projectItem.Add(new KeyValuePair<string, object>("推荐单位", dlProjects.getRow(0).get("UnitForORG")));
+                        }
+                        else
+                        {
+                            //"专家提名"
+                            projectItem.Add(new KeyValuePair<string, object>("推荐方式", "专家提名"));
+                            projectItem.Add(new KeyValuePair<string, object>("推荐单位", string.Empty));
+                        }                        
 
                         projectItem.Add(new KeyValuePair<string, object>("专家一姓名", dlProjects.getRow(0).get("ExpertName1")));
                         projectItem.Add(new KeyValuePair<string, object>("专家一研究领域", dlProjects.getRow(0).get("ExpertArea1")));
@@ -390,6 +405,12 @@ namespace NDEYImporter
                         projectItem.Add(new KeyValuePair<string, object>("专家三研究领域", dlProjects.getRow(0).get("ExpertArea3")));
                         projectItem.Add(new KeyValuePair<string, object>("专家三职务职称", dlProjects.getRow(0).get("ExpertUnitPosition3")));
                         projectItem.Add(new KeyValuePair<string, object>("专家三工作单位", dlProjects.getRow(0).get("ExpertUnit3")));
+
+                        //研究目标，研究内容，主要创新点，预期军事目标
+                        projectItem.Add(new KeyValuePair<string, object>("研究目标，研究内容，主要创新点，预期军事目标", ""));
+
+                        //资助对象简介
+                        projectItem.Add(new KeyValuePair<string, object>("资助对象简介", ""));
                     }
 
                     //列号
