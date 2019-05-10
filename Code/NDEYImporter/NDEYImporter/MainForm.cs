@@ -377,7 +377,7 @@ namespace NDEYImporter
                         projectItem.Add(new KeyValuePair<string, object>("成果形式", new ResultConfigRecord(dlProjects.getRow(0).getString("ResultConfig")).getDescription()));
 
                         //第一年任务
-                        projectItem.Add(new KeyValuePair<string, object>("第一年任务", ""));
+                        projectItem.Add(new KeyValuePair<string, object>("第一年任务", string.Empty));
 
                         //判断推荐方式
                         if (dlProjects.getRow(0).get("ApplicationType") == null || string.IsNullOrEmpty(dlProjects.getRow(0).get("ApplicationType").ToString()) || dlProjects.getRow(0).get("ApplicationType").Equals("单位推荐"))
@@ -462,7 +462,27 @@ namespace NDEYImporter
                         //设置样式
                         cell.CellStyle = cellStyle;
                         //设置数据
-                        cell.SetCellValue(kvp.Value != null ? kvp.Value.ToString() : string.Empty);
+                        //判断是否为空
+                        if (kvp.Value != null)
+                        {
+                            //不为空
+                            //判断是否为RTF内容
+                            if (kvp.Value.GetType().Name.Equals(typeof(NPOI.XSSF.UserModel.XSSFRichTextString).Name))
+                            {
+                                //RTF内容
+                                cell.SetCellValue((NPOI.XSSF.UserModel.XSSFRichTextString)kvp.Value);
+                            }
+                            else
+                            {
+                                //文本内容
+                                cell.SetCellValue(kvp.Value.ToString());
+                            }
+                        }
+                        else
+                        {
+                            //为空
+                            cell.SetCellValue(string.Empty);
+                        }
                         colIndex++;
                     }
                     rowIndex++;
