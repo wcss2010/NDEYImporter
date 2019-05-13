@@ -340,7 +340,7 @@ namespace NDEYImporter.Util
     }
 
     /// <summary>
-    /// NDEY数据包释放工具（只释放*.doc和附件文件其它文件不管）
+    /// NDEY数据包释放工具（只释放*.db,*.doc和附件文件其它文件不管）
     /// </summary>
     public class NdeyDocFilesUnZip
     {
@@ -377,7 +377,7 @@ namespace NDEYImporter.Util
                         if (ze.IsFile)
                         {
                             //检查后缀名是否带有.db或.rtf,如果是则跳过
-                            if (!ze.Name.EndsWith(".db") && !ze.Name.EndsWith(".rtf"))
+                            if (!ze.Name.EndsWith(".rtf"))
                             {
                                 //获得该文件输入流
                                 Stream s = zip.GetInputStream(ze);
