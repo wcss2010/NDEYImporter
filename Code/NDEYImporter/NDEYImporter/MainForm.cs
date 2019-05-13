@@ -82,7 +82,7 @@ namespace NDEYImporter
                 //生成一个临时路径
                 string destDir = System.IO.Path.Combine(DBTempDir, DateTime.Now.Ticks.ToString());
                 //解压ZIP包
-                NdeyUnZipTool fzo = new NdeyUnZipTool();
+                NdeyMyDataUnZip fzo = new NdeyMyDataUnZip();
                 fzo.UnZipFile(ofdPackages.FileName, destDir, string.Empty, true);
 
                 //判断申报包是否有效
@@ -574,7 +574,7 @@ namespace NDEYImporter
                                catch (Exception ex) { }
 
                                //解压这个包
-                               new NdeyUnZipTool().UnZipFile(subFiles[0], destDir, string.Empty, true);
+                               new NdeyMyDataUnZip().UnZipFile(subFiles[0], destDir, string.Empty, true);
 
                                //判断第一年研究任务.rtf这个文件是否存在
                                if (File.Exists(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf"))))
@@ -637,6 +637,21 @@ namespace NDEYImporter
 
             //刷新Catalog列表
             reloadCatalogList();
+        }
+
+        private void btnSelectUnZipDir_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnUnZipAll_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnUnZipWithSelectedList_Click(object sender, EventArgs e)
+        {
+
         }
     }
 
@@ -823,5 +838,10 @@ namespace NDEYImporter
         /// 申报包总目录
         /// </summary>
         public string TotalDir { get; set; }
+
+        /// <summary>
+        /// 文档解压目录
+        /// </summary>
+        public string UnZipDir { get; set; }
     }
 }

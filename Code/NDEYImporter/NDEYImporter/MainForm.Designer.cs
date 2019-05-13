@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.ssStatus = new System.Windows.Forms.StatusStrip();
+            this.tsslHintText = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsToolBar = new System.Windows.Forms.ToolStrip();
             this.btnImport = new System.Windows.Forms.ToolStripButton();
             this.btnSelectTotalDir = new System.Windows.Forms.ToolStripButton();
@@ -48,7 +49,9 @@
             this.colDel = new System.Windows.Forms.DataGridViewButtonColumn();
             this.ofdPackages = new System.Windows.Forms.OpenFileDialog();
             this.fbdTotalDirSelect = new System.Windows.Forms.FolderBrowserDialog();
-            this.tsslHintText = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnUnZipWithSelectedList = new System.Windows.Forms.ToolStripButton();
+            this.btnSelectUnZipDir = new System.Windows.Forms.ToolStripButton();
+            this.btnUnZipAll = new System.Windows.Forms.ToolStripButton();
             this.ssStatus.SuspendLayout();
             this.tsToolBar.SuspendLayout();
             this.plContent.SuspendLayout();
@@ -65,6 +68,12 @@
             this.ssStatus.TabIndex = 0;
             this.ssStatus.Text = "statusStrip1";
             // 
+            // tsslHintText
+            // 
+            this.tsslHintText.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tsslHintText.Name = "tsslHintText";
+            this.tsslHintText.Size = new System.Drawing.Size(0, 17);
+            // 
             // tsToolBar
             // 
             this.tsToolBar.ImageScalingSize = new System.Drawing.Size(32, 32);
@@ -74,6 +83,9 @@
             this.btnImportAll,
             this.btnImportWithSelectedList,
             this.btnExportExcel,
+            this.btnSelectUnZipDir,
+            this.btnUnZipAll,
+            this.btnUnZipWithSelectedList,
             this.btnExit});
             this.tsToolBar.Location = new System.Drawing.Point(0, 0);
             this.tsToolBar.Name = "tsToolBar";
@@ -127,8 +139,8 @@
             this.btnExportExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExportExcel.Image")));
             this.btnExportExcel.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnExportExcel.Name = "btnExportExcel";
-            this.btnExportExcel.Size = new System.Drawing.Size(106, 36);
-            this.btnExportExcel.Text = "导出Excel";
+            this.btnExportExcel.Size = new System.Drawing.Size(148, 36);
+            this.btnExportExcel.Text = "导出列表到Excel";
             this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
             // 
             // btnExit
@@ -227,11 +239,35 @@
             // 
             this.ofdPackages.Filter = "*.zip|*.zip";
             // 
-            // tsslHintText
+            // btnUnZipWithSelectedList
             // 
-            this.tsslHintText.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tsslHintText.Name = "tsslHintText";
-            this.tsslHintText.Size = new System.Drawing.Size(0, 17);
+            this.btnUnZipWithSelectedList.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnUnZipWithSelectedList.Image = ((System.Drawing.Image)(resources.GetObject("btnUnZipWithSelectedList.Image")));
+            this.btnUnZipWithSelectedList.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUnZipWithSelectedList.Name = "btnUnZipWithSelectedList";
+            this.btnUnZipWithSelectedList.Size = new System.Drawing.Size(113, 36);
+            this.btnUnZipWithSelectedList.Text = "选择性解压";
+            this.btnUnZipWithSelectedList.Click += new System.EventHandler(this.btnUnZipWithSelectedList_Click);
+            // 
+            // btnSelectUnZipDir
+            // 
+            this.btnSelectUnZipDir.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSelectUnZipDir.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectUnZipDir.Image")));
+            this.btnSelectUnZipDir.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSelectUnZipDir.Name = "btnSelectUnZipDir";
+            this.btnSelectUnZipDir.Size = new System.Drawing.Size(127, 36);
+            this.btnSelectUnZipDir.Text = "选择解包目录";
+            this.btnSelectUnZipDir.Click += new System.EventHandler(this.btnSelectUnZipDir_Click);
+            // 
+            // btnUnZipAll
+            // 
+            this.btnUnZipAll.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnUnZipAll.Image = ((System.Drawing.Image)(resources.GetObject("btnUnZipAll.Image")));
+            this.btnUnZipAll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUnZipAll.Name = "btnUnZipAll";
+            this.btnUnZipAll.Size = new System.Drawing.Size(99, 36);
+            this.btnUnZipAll.Text = "全部解压";
+            this.btnUnZipAll.Click += new System.EventHandler(this.btnUnZipAll_Click);
             // 
             // MainForm
             // 
@@ -278,6 +314,9 @@
         private System.Windows.Forms.ToolStripButton btnSelectTotalDir;
         private System.Windows.Forms.ToolStripButton btnImportAll;
         private System.Windows.Forms.ToolStripStatusLabel tsslHintText;
+        private System.Windows.Forms.ToolStripButton btnUnZipWithSelectedList;
+        private System.Windows.Forms.ToolStripButton btnSelectUnZipDir;
+        private System.Windows.Forms.ToolStripButton btnUnZipAll;
 
     }
 }

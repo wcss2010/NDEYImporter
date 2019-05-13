@@ -242,7 +242,7 @@ namespace NDEYImporter.Util
     /// <summary>
     /// NDEY数据包释放工具（只释放*.db文件其它文件不管）
     /// </summary>
-    public class NdeyUnZipTool
+    public class NdeyMyDataUnZip
     {
         /// <summary>
         /// 解压缩一个 NDEY数据包(ZIP) 文件（只释放*.db文件其它文件不管）
