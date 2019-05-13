@@ -1,4 +1,5 @@
 ﻿using NDEYImporter.Util;
+using Noear.Weed;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -155,17 +156,72 @@ namespace NDEYImporter.Forms
                         if (subFiles != null && subFiles.Length >= 1)
                         {
                             //解压这个Zip包
-                            string destDir = Path.Combine(MainForm.Config.UnZipDir, projectNumber);
+                            string pkgDir = Path.Combine(MainForm.Config.UnZipDir, projectNumber);
 
                             //创建临时目录
                             try
                             {
-                                Directory.CreateDirectory(destDir);
+                                Directory.CreateDirectory(pkgDir);
                             }
                             catch (Exception ex) { }
 
                             //解压这个包
-                            new NdeyDocFilesUnZip().UnZipFile(subFiles[0], destDir, string.Empty, true);
+                            new NdeyDocFilesUnZip().UnZipFile(subFiles[0], pkgDir, string.Empty, true);
+
+                            //文件目录
+                            string fileDir = System.IO.Path.Combine(pkgDir, "Files");
+
+                            //判断申报包是否有效
+                            //生成DB文件路径
+                            string dbFile = System.IO.Path.Combine(fileDir, "myData.db");
+                            //判断文件是否存在
+                            if (System.IO.File.Exists(dbFile))
+                            {
+                                try
+                                {
+                                    //SQLite数据库工厂
+                                    System.Data.SQLite.SQLiteFactory factory = new System.Data.SQLite.SQLiteFactory();
+
+                                    //NDEY数据库连接
+                                    Noear.Weed.DbContext context = new Noear.Weed.DbContext("main", "Data Source = " + dbFile, factory);
+
+                                    //提取论文详细
+                                    DataList dlRTreatises = context.table("RTreatises").select("RTreatisesName,RTreatisesPDF").getDataList();
+                                    //提取科技奖项
+                                    DataList dlTechnologyAwards = context.table("TechnologyAwards").select("TechnologyAwardsPName,TechnologyAwardsPDFOName").getDataList();
+                                    //提取专利情况
+                                    DataList dlNDPatent = context.table("NDPatent").select("NDPatentName,NDPatentPDFOName").getDataList();
+
+                                    //附件序号
+                                    int fileIndex = 0;
+
+                                    //整理附件名称
+                                    foreach (DataItem item in dlRTreatises.getRows())
+                                    {
+                                        string extName = new FileInfo(Path.Combine(fileDir, item.getString("RTreatisesPDF"))).Extension;
+
+                                        fileIndex++;
+                                        try
+                                        {
+                                            File.Move(Path.Combine(fileDir, item.getString("RTreatisesPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("RTreatisesName") + extName));
+                                        }
+                                        catch (Exception ex) { }                                        
+                                    }
+                                    foreach (DataItem item in dlTechnologyAwards.getRows())
+                                    {
+                                        fileIndex++;
+                                    }
+                                    foreach (DataItem item in dlNDPatent.getRows())
+                                    {
+                                        fileIndex++;
+                                    }
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Console.WriteLine(ex.ToString());
+                                }
+                            }
                         }
                     }
                 }
