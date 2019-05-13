@@ -188,9 +188,9 @@ namespace NDEYImporter.Forms
                                     //提取论文详细
                                     DataList dlRTreatises = context.table("RTreatises").select("RTreatisesName,RTreatisesPDF").getDataList();
                                     //提取科技奖项
-                                    DataList dlTechnologyAwards = context.table("TechnologyAwards").select("TechnologyAwardsPName,TechnologyAwardsPDFOName").getDataList();
+                                    DataList dlTechnologyAwards = context.table("TechnologyAwards").select("TechnologyAwardsPName,TechnologyAwardsPDFName").getDataList();
                                     //提取专利情况
-                                    DataList dlNDPatent = context.table("NDPatent").select("NDPatentName,NDPatentPDFOName").getDataList();
+                                    DataList dlNDPatent = context.table("NDPatent").select("NDPatentName,NDPatentPDFName").getDataList();
 
                                     //附件序号
                                     int fileIndex = 0;
@@ -198,9 +198,13 @@ namespace NDEYImporter.Forms
                                     //整理附件名称
                                     foreach (DataItem item in dlRTreatises.getRows())
                                     {
+                                        //获得文件扩展名
                                         string extName = new FileInfo(Path.Combine(fileDir, item.getString("RTreatisesPDF"))).Extension;
 
+                                        //文件序号+1
                                         fileIndex++;
+
+                                        //文件重命名
                                         try
                                         {
                                             File.Move(Path.Combine(fileDir, item.getString("RTreatisesPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("RTreatisesName") + extName));
@@ -209,13 +213,51 @@ namespace NDEYImporter.Forms
                                     }
                                     foreach (DataItem item in dlTechnologyAwards.getRows())
                                     {
+                                        //获得文件扩展名
+                                        string extName = new FileInfo(Path.Combine(fileDir, item.getString("TechnologyAwardsPDFName"))).Extension;
+
+                                        //文件序号+1
                                         fileIndex++;
+
+                                        //文件重命名
+                                        try
+                                        {
+                                            File.Move(Path.Combine(fileDir, item.getString("TechnologyAwardsPDFName")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("TechnologyAwardsPName") + extName));
+                                        }
+                                        catch (Exception ex) { }
                                     }
                                     foreach (DataItem item in dlNDPatent.getRows())
                                     {
+                                        //获得文件扩展名
+                                        string extName = new FileInfo(Path.Combine(fileDir, item.getString("NDPatentPDFName"))).Extension;
+
+                                        //文件序号+1
                                         fileIndex++;
+
+                                        //文件重命名
+                                        try
+                                        {
+                                            File.Move(Path.Combine(fileDir, item.getString("NDPatentPDFName")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("NDPatentName") + extName));
+                                        }
+                                        catch (Exception ex) { }
                                     }
 
+                                    //整理保密资质命名
+                                    string[] extFiles = Directory.GetFiles(fileDir);
+                                    foreach (string sss in extFiles)
+                                    {
+                                        if (new FileInfo(sss).Name.StartsWith("extFile_"))
+                                        {
+                                            try
+                                            {
+                                                File.Move(sss, Path.Combine(fileDir, "保密资质复印件.png"));
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                System.Console.WriteLine(ex.ToString());
+                                            }
+                                        }
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
