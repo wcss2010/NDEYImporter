@@ -279,24 +279,39 @@ namespace NDEYImporter
                 NPOI.XSSF.UserModel.XSSFWorkbook workbook = new NPOI.XSSF.UserModel.XSSFWorkbook();
                 //创建Sheet
                 NPOI.SS.UserModel.ISheet sheet = workbook.CreateSheet();
-                //创建单元格设置对象
-                NPOI.SS.UserModel.ICellStyle cellStyle = workbook.CreateCellStyle();
-                //设置水平、垂直居中
-                cellStyle.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
-                cellStyle.VerticalAlignment = NPOI.SS.UserModel.VerticalAlignment.Center;
-                //设置边框
-                cellStyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
-                cellStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
-                cellStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
-                cellStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
-                cellStyle.WrapText = true;
 
-                //创建设置字体对象
-                NPOI.SS.UserModel.IFont font = workbook.CreateFont();
-                font.FontHeightInPoints = 16;//设置字体大小
-                font.Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Normal;
-                font.FontName = "宋体";
-                cellStyle.SetFont(font);
+                //创建单元格设置对象(普通内容)
+                NPOI.SS.UserModel.ICellStyle cellStyleA = workbook.CreateCellStyle();
+                cellStyleA.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Left;
+                cellStyleA.VerticalAlignment = NPOI.SS.UserModel.VerticalAlignment.Center;
+                cellStyleA.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleA.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleA.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleA.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleA.WrapText = true;
+
+                //创建单元格设置对象(普通内容)
+                NPOI.SS.UserModel.ICellStyle cellStyleB = workbook.CreateCellStyle();
+                cellStyleB.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
+                cellStyleB.VerticalAlignment = NPOI.SS.UserModel.VerticalAlignment.Center;
+                cellStyleB.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleB.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleB.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleB.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleB.WrapText = true;
+
+                //创建设置字体对象(内容字体)
+                NPOI.SS.UserModel.IFont fontA = workbook.CreateFont();
+                fontA.FontHeightInPoints = 16;//设置字体大小
+                fontA.FontName = "宋体";
+                cellStyleA.SetFont(fontA);
+
+                //创建设置字体对象(标题字体)
+                NPOI.SS.UserModel.IFont fontB = workbook.CreateFont();
+                fontB.FontHeightInPoints = 16;//设置字体大小
+                fontB.FontName = "宋体";
+                fontB.Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Bold;
+                cellStyleB.SetFont(fontB);
 
                 //是否需要输出表头
                 bool isNeedCreateHeader = true;
@@ -370,28 +385,38 @@ namespace NDEYImporter
                             //判断字符数组长度是否为6
                             if (array.Length == 6)
                             {
-                                projectItem.Add(new KeyValuePair<string, object>("入选人才计划情况", array[0]));
-                                projectItem.Add(new KeyValuePair<string, object>("代表性成果或贡献", array[1]));
-                                projectItem.Add(new KeyValuePair<string, object>("研究目标", array[2]));
-                                projectItem.Add(new KeyValuePair<string, object>("研究内容", array[3]));
-                                projectItem.Add(new KeyValuePair<string, object>("主要创新点", array[4]));
-                                projectItem.Add(new KeyValuePair<string, object>("预期军事价值", array[5]));
+                                //处理某些字段没有值，只显示一个句号的情况
+                                for (int k = 0; k < array.Length; k++)
+                                {
+                                    if (array[k] != null && array[k].Trim().Length < 2)
+                                    {
+                                        array[k] = string.Empty;
+                                    }
+                                }
+
+                                //向列表中添加数据
+                                projectItem.Add(new KeyValuePair<string, object>("入选人才计划情况", array[0].Trim()));
+                                projectItem.Add(new KeyValuePair<string, object>("代表性成果或贡献", array[1].Trim()));
+                                projectItem.Add(new KeyValuePair<string, object>("研究目标", array[2].Trim()));
+                                projectItem.Add(new KeyValuePair<string, object>("研究内容", array[3].Trim()));
+                                projectItem.Add(new KeyValuePair<string, object>("主要创新点", array[4].Trim()));
+                                projectItem.Add(new KeyValuePair<string, object>("预期军事价值", array[5].Trim()));
 
                                 //拼装研究目标，研究内容，主要创建点，预期军事价值
-                                muBiaoNeiRongChuangXinDianJieZhi += "研究目标:" + array[2] + "\n";
-                                muBiaoNeiRongChuangXinDianJieZhi += "研究内容:" + array[3] + "\n";
-                                muBiaoNeiRongChuangXinDianJieZhi += "主要创新点:" + array[4] + "\n";
-                                muBiaoNeiRongChuangXinDianJieZhi += "预期军事价值:" + array[5] + "\n";
+                                muBiaoNeiRongChuangXinDianJieZhi += "研究目标:" + array[2].Trim() + "\n";
+                                muBiaoNeiRongChuangXinDianJieZhi += "研究内容:" + array[3].Trim() + "\n";
+                                muBiaoNeiRongChuangXinDianJieZhi += "主要创新点:" + array[4].Trim() + "\n";
+                                muBiaoNeiRongChuangXinDianJieZhi += "预期军事价值:" + array[5].Trim() + "\n";
 
                                 //拼装资助对象简介
                                 ziZhuDuiXiang += "基本信息:" + dlProjects.getRow(0).getString("UserName") + "," + dlProjects.getRow(0).getString("Sex") + "," + (DateTime.Now.Year - long.Parse(dlProjects.getRow(0).getString("Birthdate").Substring(0, 4))).ToString() + "," + dlProjects.getRow(0).getString("Degree") + "," + dlProjects.getRow(0).getString("UnitName") + "," + dlProjects.getRow(0).getString("JobTitle") + "," + dlProjects.getRow(0).getString("MainResearch") + "\n";
-                                ziZhuDuiXiang += "入选人才计划情况:" + array[0] + "\n";
-                                ziZhuDuiXiang += "代表性成果或贡献:" + array[1] + "\n";
+                                ziZhuDuiXiang += "入选人才计划情况:" + array[0].Trim() + "\n";
+                                ziZhuDuiXiang += "代表性成果或贡献:" + array[1].Trim() + "\n";
                             }
                         }
 
                         //处理成果形式
-                        projectItem.Add(new KeyValuePair<string, object>("成果形式", new ResultConfigRecord(dlProjects.getRow(0).getString("ResultConfig")).getDescription()));
+                        projectItem.Add(new KeyValuePair<string, object>("成果形式", new ResultConfigRecord(dlProjects.getRow(0).getString("ResultConfig")).getDescription().Replace("。", string.Empty)));
 
                         //第一年任务
                         projectItem.Add(new KeyValuePair<string, object>("第一年任务", getFirstTaskText(projectNumber)));
@@ -441,10 +466,6 @@ namespace NDEYImporter
                     {
                         isNeedCreateHeader = false;
 
-                        //字休加粗
-                        font.Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Bold;
-                        cellStyle.SetFont(font);
-
                         //创建行
                         row = sheet.CreateRow(rowIndex);
                         //输出列名到Excel
@@ -455,16 +476,12 @@ namespace NDEYImporter
                             //创建列
                             NPOI.SS.UserModel.ICell cell = row.CreateCell(colIndex);
                             //设置样式
-                            cell.CellStyle = cellStyle;
+                            cell.CellStyle = cellStyleB;
                             //设置数据
                             cell.SetCellValue(kvp.Key);
                             colIndex++;
                         }
                         rowIndex++;
-
-                        //字体恢复为普通
-                        font.Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Normal;
-                        cellStyle.SetFont(font);
                     }
 
                     //创建行
@@ -477,7 +494,7 @@ namespace NDEYImporter
                         //创建列
                         NPOI.SS.UserModel.ICell cell = row.CreateCell(colIndex);
                         //设置样式
-                        cell.CellStyle = cellStyle;
+                        cell.CellStyle = cellStyleA;
                         //设置数据
                         //判断是否为空
                         if (kvp.Value != null)
