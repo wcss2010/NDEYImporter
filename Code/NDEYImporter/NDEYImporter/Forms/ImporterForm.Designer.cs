@@ -1,6 +1,6 @@
 ﻿namespace NDEYImporter.Forms
 {
-    partial class CheckNeedReplaceForm
+    partial class ImporterForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CheckNeedReplaceForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImporterForm));
             this.tvSubDirs = new System.Windows.Forms.TreeView();
             this.ilDirIcon = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();

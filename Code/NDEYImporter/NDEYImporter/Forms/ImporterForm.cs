@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace NDEYImporter.Forms
 {
-    public partial class CheckNeedReplaceForm : Form
+    public partial class ImporterForm : Form
     {
         /// <summary>
         /// 是否需要更新替换字典在改变替换列表中项目状态时
@@ -28,7 +28,7 @@ namespace NDEYImporter.Forms
         /// </summary>
         public bool IsImportAllPackage { get; private set; }
 
-        public CheckNeedReplaceForm(bool isImportAll)
+        public ImporterForm(bool isImportAll)
         {
             InitializeComponent();
 

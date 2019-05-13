@@ -622,7 +622,7 @@ namespace NDEYImporter
         private void btnImportAll_Click(object sender, EventArgs e)
         {
             //显示导入窗体
-            CheckNeedReplaceForm form = new CheckNeedReplaceForm(true);
+            ImporterForm form = new ImporterForm(true);
             form.ShowDialog();
 
             //刷新Catalog列表
@@ -632,7 +632,7 @@ namespace NDEYImporter
         private void btnImportWithSelectedList_Click(object sender, EventArgs e)
         {
             //显示导入窗体
-            CheckNeedReplaceForm form = new CheckNeedReplaceForm(false);
+            ImporterForm form = new ImporterForm(false);
             form.ShowDialog();
 
             //刷新Catalog列表
@@ -641,7 +641,16 @@ namespace NDEYImporter
 
         private void btnSelectUnZipDir_Click(object sender, EventArgs e)
         {
+            //显示目录选择对话框
+            fbdTotalDirSelect.SelectedPath = MainForm.Config.UnZipDir;
+            if (fbdTotalDirSelect.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                //设置解压目录
+                MainForm.Config.UnZipDir = fbdTotalDirSelect.SelectedPath;
 
+                //保存配置
+                saveConfig();
+            }
         }
 
         private void btnUnZipAll_Click(object sender, EventArgs e)

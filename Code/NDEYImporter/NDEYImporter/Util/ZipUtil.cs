@@ -240,7 +240,7 @@ namespace NDEYImporter.Util
     }
 
     /// <summary>
-    /// NDEY数据包释放工具（只释放*.db文件其它文件不管）
+    /// NDEY数据包释放工具（只释放*.db和*.rtf文件其它文件不管）
     /// </summary>
     public class NdeyMyDataUnZip
     {
@@ -278,6 +278,106 @@ namespace NDEYImporter.Util
                         {
                             //检查后缀名是否带有.db或.rtf
                             if (ze.Name.EndsWith(".db") || ze.Name.EndsWith(".rtf"))
+                            {
+                                //获得该文件输入流
+                                Stream s = zip.GetInputStream(ze);
+
+                                try
+                                {
+                                    //写文件
+                                    using (FileStream streamWriter = File.Create(destPath))
+                                    {
+                                        int size = 2048;
+                                        byte[] data = new byte[2048];
+                                        try
+                                        {
+                                            while (true)
+                                            {
+                                                size = s.Read(data, 0, data.Length);
+
+                                                if (size > 0)
+                                                {
+                                                    streamWriter.Write(data, 0, size);
+                                                }
+                                                else
+                                                {
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        finally
+                                        {
+                                            streamWriter.Close();
+                                        }
+                                    }
+                                }
+                                finally
+                                {
+                                    s.Close();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                Directory.CreateDirectory(Path.Combine(strDirectory, ze.Name));
+                            }
+                            catch (Exception ex) { }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Error
+                }
+                finally
+                {
+                    zip.Close();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// NDEY数据包释放工具（只释放*.doc和附件文件其它文件不管）
+    /// </summary>
+    public class NdeyDocFilesUnZip
+    {
+        /// <summary>
+        /// 解压缩一个 NDEY数据包(ZIP) 文件（只释放*.db文件其它文件不管）
+        /// </summary>
+        /// <param name="zipedFile">The ziped file.</param>
+        /// <param name="strDirectory">The STR directory.</param>
+        /// <param name="password">zip 文件的密码。</param>
+        /// <param name="overWrite">是否覆盖已存在的文件。</param>
+        public void UnZipFile(string zipedFile, string strDirectory, string password, bool overWrite)
+        {
+            //判断目标是否为空
+            if (string.IsNullOrEmpty(strDirectory))
+            {
+                return;
+            }
+
+            //判断压缩文件是否存在
+            if (File.Exists(zipedFile))
+            {
+                //载入ZIP文件
+                ZipFile zip = new ZipFile(zipedFile);
+
+                //解压myData.db文件
+                try
+                {
+                    foreach (ZipEntry ze in zip)
+                    {
+                        //目标路径
+                        string destPath = Path.Combine(strDirectory, ze.Name);
+
+                        //检查当前项是否为文件
+                        if (ze.IsFile)
+                        {
+                            //检查后缀名是否带有.db或.rtf,如果是则跳过
+                            if (!ze.Name.EndsWith(".db") && !ze.Name.EndsWith(".rtf"))
                             {
                                 //获得该文件输入流
                                 Stream s = zip.GetInputStream(ze);
