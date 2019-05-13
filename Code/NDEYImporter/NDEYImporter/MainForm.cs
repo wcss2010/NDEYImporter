@@ -661,7 +661,7 @@ namespace NDEYImporter
                 return;
             }
 
-            UnZipDocsForm zdf = new UnZipDocsForm();
+            UnZipDocsForm zdf = new UnZipDocsForm(true);
             zdf.ShowDialog();
         }
 
@@ -673,7 +673,7 @@ namespace NDEYImporter
                 return;
             }
 
-            UnZipDocsForm zdf = new UnZipDocsForm();
+            UnZipDocsForm zdf = new UnZipDocsForm(false);
             zdf.ShowDialog();
         }
     }
