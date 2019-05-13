@@ -82,17 +82,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DB\ConnectionManager.cs" />
-    <Compile Include="Forms\CheckNeedReplaceForm.cs">
+    <Compile Include="Forms\ImporterForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\CheckNeedReplaceForm.Designer.cs">
-      <DependentUpon>CheckNeedReplaceForm.cs</DependentUpon>
+    <Compile Include="Forms\ImporterForm.Designer.cs">
+      <DependentUpon>ImporterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ProgressForm.Designer.cs">
       <DependentUpon>ProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UnZipDocsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UnZipDocsForm.Designer.cs">
+      <DependentUpon>UnZipDocsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -106,8 +112,8 @@
     <Compile Include="Util\SerializableDictionary.cs" />
     <Compile Include="Util\XmlSerializeTool.cs" />
     <Compile Include="Util\ZipUtil.cs" />
-    <EmbeddedResource Include="Forms\CheckNeedReplaceForm.resx">
-      <DependentUpon>CheckNeedReplaceForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ImporterForm.resx">
+      <DependentUpon>ImporterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>

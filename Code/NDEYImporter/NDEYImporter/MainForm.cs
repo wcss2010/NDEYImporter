@@ -655,12 +655,26 @@ namespace NDEYImporter
 
         private void btnUnZipAll_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(MainForm.Config.UnZipDir))
+            {
+                MessageBox.Show("对不起,请先选择解压目录!");
+                return;
+            }
 
+            UnZipDocsForm zdf = new UnZipDocsForm();
+            zdf.ShowDialog();
         }
 
         private void btnUnZipWithSelectedList_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(MainForm.Config.UnZipDir))
+            {
+                MessageBox.Show("对不起,请先选择解压目录!");
+                return;
+            }
 
+            UnZipDocsForm zdf = new UnZipDocsForm();
+            zdf.ShowDialog();
         }
     }
 
