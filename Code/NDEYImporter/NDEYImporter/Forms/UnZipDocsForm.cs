@@ -163,7 +163,7 @@ namespace NDEYImporter.Forms
                             {
                                 Directory.CreateDirectory(pkgDir);
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
 
                             //解压这个包
                             new NdeyDocFilesUnZip().UnZipFile(subFiles[0], pkgDir, string.Empty, true);
@@ -212,7 +212,7 @@ namespace NDEYImporter.Forms
                                         {
                                             File.Move(Path.Combine(fileDir, item.getString("RTreatisesPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("RTreatisesName") + extName));
                                         }
-                                        catch (Exception ex) { }                                        
+                                        catch (Exception ex) { MainForm.writeLog(ex.ToString()); }                                        
                                     }
                                     foreach (DataItem item in dlTechnologyAwards.getRows())
                                     {
@@ -227,7 +227,7 @@ namespace NDEYImporter.Forms
                                         {
                                             File.Move(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("TechnologyAwardsPName") + extName));
                                         }
-                                        catch (Exception ex) { }
+                                        catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
                                     }
                                     foreach (DataItem item in dlNDPatent.getRows())
                                     {
@@ -242,7 +242,7 @@ namespace NDEYImporter.Forms
                                         {
                                             File.Move(Path.Combine(fileDir, item.getString("NDPatentPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("NDPatentName") + extName));
                                         }
-                                        catch (Exception ex) { }
+                                        catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
                                     }
 
                                     //整理保密资质命名,查找Doc文件
@@ -258,7 +258,7 @@ namespace NDEYImporter.Forms
                                             }
                                             catch (Exception ex)
                                             {
-                                                System.Console.WriteLine(ex.ToString());
+                                                MainForm.writeLog(ex.ToString());
                                             }
                                         }
                                         else if (fii.Name.EndsWith(".doc"))
@@ -273,7 +273,7 @@ namespace NDEYImporter.Forms
                                                 {
                                                     File.Move(sss, destDocFile);
                                                 }
-                                                catch (Exception ex) { }
+                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
 
                                                 //转换成PDF
                                                 convertToPDF(destDocFile);
@@ -286,7 +286,7 @@ namespace NDEYImporter.Forms
                                                     {
                                                         File.Delete(sss);
                                                     }
-                                                    catch (Exception ex) { }
+                                                    catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
                                                 }
                                             }
                                         }
@@ -294,7 +294,7 @@ namespace NDEYImporter.Forms
                                 }
                                 catch (Exception ex)
                                 {
-                                    System.Console.WriteLine(ex.ToString());
+                                    MainForm.writeLog(ex.ToString());
                                 }
                             }
                         }

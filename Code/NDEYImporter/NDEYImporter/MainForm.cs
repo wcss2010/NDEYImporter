@@ -51,21 +51,21 @@ namespace NDEYImporter
             {
                 System.IO.Directory.CreateDirectory(PackageDir);
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
 
             //清空NDEY上报包解压目录
             try
             {
                 System.IO.Directory.Delete(DBTempDir, true);
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
 
             //创建NDEY上报包解压目录
             try
             {
                 System.IO.Directory.CreateDirectory(DBTempDir);
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -191,7 +191,7 @@ namespace NDEYImporter
                     {
                         System.IO.Directory.Delete(System.IO.Path.Combine(PackageDir, projectNumber), true);
                     }
-                    catch (Exception ex) { }
+                    catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
 
                     //刷新GridView
                     reloadCatalogList();
@@ -521,7 +521,7 @@ namespace NDEYImporter
                                 {
                                     Directory.CreateDirectory(destDir);
                                 }
-                                catch (Exception ex) { }
+                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
 
                                 //解压这个包
                                 new NdeyMyDataUnZip().UnZipFile(subFiles[0], destDir, string.Empty, true);

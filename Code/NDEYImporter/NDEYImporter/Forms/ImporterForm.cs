@@ -146,7 +146,7 @@ namespace NDEYImporter.Forms
                             {
                                 Directory.Delete(destDir, true);
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
 
                             //解压ZIP包
                             NdeyMyDataUnZip fzo = new NdeyMyDataUnZip();
@@ -170,7 +170,7 @@ namespace NDEYImporter.Forms
                                     //报告进度
                                     pf.reportProgress(progressVal, projectNumber + "_结束导入");
                                 }
-                                catch (Exception ex) { }                                
+                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }                                
                             }
                         }
                     }

@@ -323,13 +323,13 @@ namespace NDEYImporter.Util
                             {
                                 Directory.CreateDirectory(Path.Combine(strDirectory, ze.Name));
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    //Error
+                    MainForm.writeLog(ex.ToString());
                 }
                 finally
                 {
@@ -429,7 +429,7 @@ namespace NDEYImporter.Util
                 }
                 catch (Exception ex)
                 {
-                    //Error
+                    MainForm.writeLog(ex.ToString());
                 }
                 finally
                 {
