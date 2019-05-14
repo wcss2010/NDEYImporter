@@ -186,7 +186,7 @@ namespace NDEYImporter.Forms
                                 new NdeyDocFilesUnZip().UnZipFile(pkgZipFile, pkgDir, string.Empty, true);
 
                                 //文件目录
-                                string fileDir = System.IO.Path.Combine(pkgDir, new DirectoryInfo(Directory.GetDirectories(pkgDir)[0]).Name);
+                                string fileDir = pkgDir;
 
                                 //判断申报包是否有效
                                 //生成DB文件路径

@@ -174,7 +174,7 @@ namespace NDEYImporter.Forms
 
                             //判断申报包是否有效
                             //生成DB文件路径
-                            string dbFile = System.IO.Path.Combine(destDir, Path.Combine(new DirectoryInfo(Directory.GetDirectories(destDir)[0]).Name, "myData.db"));
+                            string dbFile = System.IO.Path.Combine(destDir, "myData.db");
                             //判断文件是否存在
                             if (System.IO.File.Exists(dbFile))
                             {
