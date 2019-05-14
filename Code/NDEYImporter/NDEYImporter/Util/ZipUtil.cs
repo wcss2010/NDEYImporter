@@ -270,12 +270,12 @@ namespace NDEYImporter.Util
                 {
                     foreach (ZipEntry ze in zip)
                     {
-                        //目标路径
-                        string destPath = Path.Combine(strDirectory, ze.Name);
-
                         //检查当前项是否为文件
                         if (ze.IsFile)
                         {
+                            //目标文件路径
+                            string destPath = Path.Combine(strDirectory, new FileInfo(ze.Name).Name);
+
                             //创建目标目录
                             try
                             {
@@ -369,12 +369,12 @@ namespace NDEYImporter.Util
                 {
                     foreach (ZipEntry ze in zip)
                     {
-                        //目标路径
-                        string destPath = Path.Combine(strDirectory, ze.Name);
-
                         //检查当前项是否为文件
                         if (ze.IsFile)
                         {
+                            //目标文件路径
+                            string destPath = Path.Combine(strDirectory, new FileInfo(ze.Name).Name);
+
                             //创建目标目录
                             try
                             {
