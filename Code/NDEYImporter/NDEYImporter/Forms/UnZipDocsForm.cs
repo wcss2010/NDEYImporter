@@ -152,8 +152,8 @@ namespace NDEYImporter.Forms
                     if (di.Name.Contains(projectNumber) && di.Name.Length >= 12)
                     {
                         //查找子文件
-                        string[] subFiles = Directory.GetFiles(s);
-                        if (subFiles != null && subFiles.Length >= 1)
+                        string[] subFiless = Directory.GetFiles(s);
+                        if (subFiless != null && subFiless.Length >= 1)
                         {
                             //解压这个Zip包
                             string pkgDir = Path.Combine(MainForm.Config.UnZipDir, projectNumber);
@@ -165,136 +165,154 @@ namespace NDEYImporter.Forms
                             }
                             catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
 
-                            //解压这个包
-                            new NdeyDocFilesUnZip().UnZipFile(subFiles[0], pkgDir, string.Empty, true);
+                            //ZIP文件
+                            string pkgZipFile = string.Empty;
 
-                            //文件目录
-                            string fileDir = System.IO.Path.Combine(pkgDir, "Files");
-
-                            //判断申报包是否有效
-                            //生成DB文件路径
-                            string dbFile = System.IO.Path.Combine(fileDir, "myData.db");
-                            //判断文件是否存在
-                            if (System.IO.File.Exists(dbFile))
+                            //查找ZIP文件
+                            foreach (string sssss in subFiless)
                             {
-                                try
+                                if (sssss.EndsWith(".zip"))
                                 {
-                                    //SQLite数据库工厂
-                                    System.Data.SQLite.SQLiteFactory factory = new System.Data.SQLite.SQLiteFactory();
+                                    pkgZipFile = sssss;
+                                    break;
+                                }
+                            }
 
-                                    //NDEY数据库连接
-                                    Noear.Weed.DbContext context = new Noear.Weed.DbContext("main", "Data Source = " + dbFile, factory);
+                            //判断ZIP文件是否存在
+                            if (pkgZipFile != null && pkgZipFile.EndsWith(".zip"))
+                            {
 
-                                    //提取论文详细
-                                    DataList dlRTreatises = context.table("RTreatises").select("RTreatisesName,RTreatisesPDF").getDataList();
-                                    //提取科技奖项
-                                    DataList dlTechnologyAwards = context.table("TechnologyAwards").select("TechnologyAwardsPName,TechnologyAwardsPDF").getDataList();
-                                    //提取专利情况
-                                    DataList dlNDPatent = context.table("NDPatent").select("NDPatentName,NDPatentPDF").getDataList();
+                                //解压这个包
+                                new NdeyDocFilesUnZip().UnZipFile(pkgZipFile, pkgDir, string.Empty, true);
 
-                                    //提取UnitID
-                                    string unitID = context.table("BaseInfor").select("UnitID").getValue<string>(string.Empty);
+                                //文件目录
+                                string fileDir = System.IO.Path.Combine(pkgDir, new DirectoryInfo(Directory.GetDirectories(pkgDir)[0]).Name);
 
-                                    //附件序号
-                                    int fileIndex = 0;
-
-                                    //整理附件名称
-                                    foreach (DataItem item in dlRTreatises.getRows())
+                                //判断申报包是否有效
+                                //生成DB文件路径
+                                string dbFile = System.IO.Path.Combine(fileDir, "myData.db");
+                                //判断文件是否存在
+                                if (System.IO.File.Exists(dbFile))
+                                {
+                                    try
                                     {
-                                        //获得文件扩展名
-                                        string extName = new FileInfo(Path.Combine(fileDir, item.getString("RTreatisesPDF"))).Extension;
+                                        //SQLite数据库工厂
+                                        System.Data.SQLite.SQLiteFactory factory = new System.Data.SQLite.SQLiteFactory();
 
-                                        //文件序号+1
-                                        fileIndex++;
+                                        //NDEY数据库连接
+                                        Noear.Weed.DbContext context = new Noear.Weed.DbContext("main", "Data Source = " + dbFile, factory);
 
-                                        //文件重命名
-                                        try
+                                        //提取论文详细
+                                        DataList dlRTreatises = context.table("RTreatises").select("RTreatisesName,RTreatisesPDF").getDataList();
+                                        //提取科技奖项
+                                        DataList dlTechnologyAwards = context.table("TechnologyAwards").select("TechnologyAwardsPName,TechnologyAwardsPDF").getDataList();
+                                        //提取专利情况
+                                        DataList dlNDPatent = context.table("NDPatent").select("NDPatentName,NDPatentPDF").getDataList();
+
+                                        //提取UnitID
+                                        string unitID = context.table("BaseInfor").select("UnitID").getValue<string>(string.Empty);
+
+                                        //附件序号
+                                        int fileIndex = 0;
+
+                                        //整理附件名称
+                                        foreach (DataItem item in dlRTreatises.getRows())
                                         {
-                                            File.Move(Path.Combine(fileDir, item.getString("RTreatisesPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("RTreatisesName") + extName));
-                                        }
-                                        catch (Exception ex) { MainForm.writeLog(ex.ToString()); }                                        
-                                    }
-                                    foreach (DataItem item in dlTechnologyAwards.getRows())
-                                    {
-                                        //获得文件扩展名
-                                        string extName = new FileInfo(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF"))).Extension;
+                                            //获得文件扩展名
+                                            string extName = new FileInfo(Path.Combine(fileDir, item.getString("RTreatisesPDF"))).Extension;
 
-                                        //文件序号+1
-                                        fileIndex++;
+                                            //文件序号+1
+                                            fileIndex++;
 
-                                        //文件重命名
-                                        try
-                                        {
-                                            File.Move(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("TechnologyAwardsPName") + extName));
-                                        }
-                                        catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
-                                    }
-                                    foreach (DataItem item in dlNDPatent.getRows())
-                                    {
-                                        //获得文件扩展名
-                                        string extName = new FileInfo(Path.Combine(fileDir, item.getString("NDPatentPDF"))).Extension;
-
-                                        //文件序号+1
-                                        fileIndex++;
-
-                                        //文件重命名
-                                        try
-                                        {
-                                            File.Move(Path.Combine(fileDir, item.getString("NDPatentPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("NDPatentName") + extName));
-                                        }
-                                        catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
-                                    }
-
-                                    //整理保密资质命名,查找Doc文件
-                                    string[] extFiles = Directory.GetFiles(fileDir);
-                                    foreach (string sss in extFiles)
-                                    {
-                                        FileInfo fii = new FileInfo(sss);
-                                        if (fii.Name.StartsWith("extFile_"))
-                                        {
+                                            //文件重命名
                                             try
                                             {
-                                                File.Move(sss, Path.Combine(fileDir, "保密资质复印件.png"));
+                                                File.Move(Path.Combine(fileDir, item.getString("RTreatisesPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("RTreatisesName") + extName));
                                             }
-                                            catch (Exception ex)
-                                            {
-                                                MainForm.writeLog(ex.ToString());
-                                            }
+                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
                                         }
-                                        else if (fii.Name.EndsWith(".doc"))
+                                        foreach (DataItem item in dlTechnologyAwards.getRows())
                                         {
-                                            if (fii.Name.StartsWith(unitID))
-                                            {
-                                                //真实的申报书路径
-                                                string destDocFile = Path.Combine(fii.DirectoryName, "项目申报书.doc");
+                                            //获得文件扩展名
+                                            string extName = new FileInfo(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF"))).Extension;
 
-                                                //文件改名
+                                            //文件序号+1
+                                            fileIndex++;
+
+                                            //文件重命名
+                                            try
+                                            {
+                                                File.Move(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("TechnologyAwardsPName") + extName));
+                                            }
+                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                        }
+                                        foreach (DataItem item in dlNDPatent.getRows())
+                                        {
+                                            //获得文件扩展名
+                                            string extName = new FileInfo(Path.Combine(fileDir, item.getString("NDPatentPDF"))).Extension;
+
+                                            //文件序号+1
+                                            fileIndex++;
+
+                                            //文件重命名
+                                            try
+                                            {
+                                                File.Move(Path.Combine(fileDir, item.getString("NDPatentPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("NDPatentName") + extName));
+                                            }
+                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                        }
+
+                                        //整理保密资质命名,查找Doc文件
+                                        string[] extFiles = Directory.GetFiles(fileDir);
+                                        foreach (string sss in extFiles)
+                                        {
+                                            FileInfo fii = new FileInfo(sss);
+                                            if (fii.Name.StartsWith("extFile_"))
+                                            {
                                                 try
                                                 {
-                                                    File.Move(sss, destDocFile);
+                                                    File.Move(sss, Path.Combine(fileDir, "保密资质复印件.png"));
                                                 }
-                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
-
-                                                //转换成PDF
-                                                convertToPDF(destDocFile);
-                                            }
-                                            else
-                                            {
-                                                if (fii.Name.EndsWith("项目申报书.doc"))
+                                                catch (Exception ex)
                                                 {
+                                                    MainForm.writeLog(ex.ToString());
+                                                }
+                                            }
+                                            else if (fii.Name.EndsWith(".doc"))
+                                            {
+                                                if (fii.Name.StartsWith(unitID))
+                                                {
+                                                    //真实的申报书路径
+                                                    string destDocFile = Path.Combine(fii.DirectoryName, "项目申报书.doc");
+
+                                                    //文件改名
                                                     try
                                                     {
-                                                        File.Delete(sss);
+                                                        File.Move(sss, destDocFile);
                                                     }
                                                     catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+
+                                                    //转换成PDF
+                                                    convertToPDF(destDocFile);
+                                                }
+                                                else
+                                                {
+                                                    if (fii.Name.EndsWith("项目申报书.doc"))
+                                                    {
+                                                        try
+                                                        {
+                                                            File.Delete(sss);
+                                                        }
+                                                        catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                                catch (Exception ex)
-                                {
-                                    MainForm.writeLog(ex.ToString());
+                                    catch (Exception ex)
+                                    {
+                                        MainForm.writeLog(ex.ToString());
+                                    }
                                 }
                             }
                         }
