@@ -139,7 +139,15 @@ namespace NDEYImporter.Forms
                             pf.reportProgress(progressVal, string.Empty);
 
                             //生成一个临时路径
-                            string destDir = System.IO.Path.Combine(MainForm.DBTempDir, DateTime.Now.Ticks.ToString());
+                            string destDir = System.IO.Path.Combine(MainForm.DBTempDir, projectNumber);
+
+                            //删除旧的目录
+                            try
+                            {
+                                Directory.Delete(destDir, true);
+                            }
+                            catch (Exception ex) { }
+
                             //解压ZIP包
                             NdeyMyDataUnZip fzo = new NdeyMyDataUnZip();
                             fzo.UnZipFile(subFiles[0], destDir, string.Empty, true);
