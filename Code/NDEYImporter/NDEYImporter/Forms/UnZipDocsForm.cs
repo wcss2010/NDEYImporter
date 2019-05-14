@@ -314,7 +314,19 @@ namespace NDEYImporter.Forms
                                         MainForm.writeLog(ex.ToString());
                                     }
                                 }
+                                else
+                                {
+                                    MainForm.writeLog("没有找到DB文件__" + projectNumber);
+                                }
                             }
+                            else
+                            {
+                                MainForm.writeLog("没有找到ZIP文件__" + projectNumber);
+                            }
+                        }
+                        else
+                        {
+                            MainForm.writeLog("没有找到ZIP文件__" + projectNumber);
                         }
                     }
                 }

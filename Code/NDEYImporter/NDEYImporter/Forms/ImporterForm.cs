@@ -194,8 +194,16 @@ namespace NDEYImporter.Forms
                                     //报告进度
                                     pf.reportProgress(progressVal, projectNumber + "_结束导入");
                                 }
-                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }                                
+                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
                             }
+                            else
+                            {
+                                MainForm.writeLog("没有找到DB文件__" + projectNumber);
+                            }
+                        }
+                        else
+                        {
+                            MainForm.writeLog("没有找到ZIP文件__" + projectNumber);
                         }
 
                         MainForm.writeLog("结束解析__" + projectNumber);
