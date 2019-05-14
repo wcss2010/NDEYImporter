@@ -267,10 +267,10 @@ namespace NDEYImporter.Forms
                                         }
 
                                         //整理推荐意见附件
-                                        string unitFileA = dlBaseInfor.getRow(0).getString("UnitRecommend");
-                                        string personFileA = dlBaseInfor.getRow(0).getString("ExpertRecommend1");
-                                        string personFileB = dlBaseInfor.getRow(0).getString("ExpertRecommend2");
-                                        string personFileC = dlBaseInfor.getRow(0).getString("ExpertRecommend3");
+                                        string unitFileA = dlBaseInfor.getRow(0).get("UnitRecommend") != null ? dlBaseInfor.getRow(0).get("UnitRecommend").ToString() : string.Empty;
+                                        string personFileA = dlBaseInfor.getRow(0).get("ExpertRecommend1") != null ? dlBaseInfor.getRow(0).get("ExpertRecommend1").ToString() : string.Empty;
+                                        string personFileB = dlBaseInfor.getRow(0).get("ExpertRecommend2") != null ? dlBaseInfor.getRow(0).get("ExpertRecommend2").ToString() : string.Empty;
+                                        string personFileC = dlBaseInfor.getRow(0).get("ExpertRecommend3") != null ? dlBaseInfor.getRow(0).get("ExpertRecommend3").ToString() : string.Empty;
 
                                         //查找单位推荐意见附件
                                         if (File.Exists(Path.Combine(fileDir, unitFileA)))
