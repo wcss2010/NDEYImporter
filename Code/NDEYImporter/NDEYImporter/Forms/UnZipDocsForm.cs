@@ -212,6 +212,8 @@ namespace NDEYImporter.Forms
                                         //提取UnitID
                                         string unitID = context.table("BaseInfor").select("UnitID").getValue<string>(string.Empty);
 
+                                        string personName = context.table("BaseInfor").select("UserName").getValue<string>(string.Empty);
+
                                         //附件序号
                                         int fileIndex = 0;
 
@@ -280,7 +282,7 @@ namespace NDEYImporter.Forms
                                             }
                                             else if (fii.Name.EndsWith(".doc"))
                                             {
-                                                if (fii.Name.StartsWith(unitID))
+                                                if (fii.Name.StartsWith(unitID) && fii.Name.Contains(personName))
                                                 {
                                                     //真实的申报书路径
                                                     string destDocFile = Path.Combine(fii.DirectoryName, "项目申报书.doc");
