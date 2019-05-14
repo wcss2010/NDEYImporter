@@ -130,6 +130,8 @@ namespace NDEYImporter.Forms
                         //读取项目ID
                         string projectNumber = new DirectoryInfo(pDir).Name.Substring(0, 11);
 
+                        MainForm.writeLog("开始解析__" + projectNumber);
+
                         //获取文件列表
                         string[] subFiles = Directory.GetFiles(pDir);
                         //判断是否存在申报包
@@ -146,11 +148,15 @@ namespace NDEYImporter.Forms
                             {
                                 Directory.Delete(destDir, true);
                             }
-                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                            catch (Exception ex) { }
+
+                            MainForm.writeLog("开始解压__" + projectNumber);
 
                             //解压ZIP包
                             NdeyMyDataUnZip fzo = new NdeyMyDataUnZip();
                             fzo.UnZipFile(subFiles[0], destDir, string.Empty, true);
+
+                            MainForm.writeLog("结束解压__" + projectNumber);
 
                             //判断申报包是否有效
                             //生成DB文件路径
@@ -164,8 +170,12 @@ namespace NDEYImporter.Forms
                                     //报告进度
                                     pf.reportProgress(progressVal, projectNumber + "_开始导入");
 
+                                    MainForm.writeLog("开始导入__" + projectNumber);
+
                                     //导入数据并返回项目Id
                                     DBImporter.importDB(projectNumber, dbFile);
+
+                                    MainForm.writeLog("结束导入__" + projectNumber);
 
                                     //报告进度
                                     pf.reportProgress(progressVal, projectNumber + "_结束导入");
@@ -173,6 +183,8 @@ namespace NDEYImporter.Forms
                                 catch (Exception ex) { MainForm.writeLog(ex.ToString()); }                                
                             }
                         }
+
+                        MainForm.writeLog("结束解析__" + projectNumber);
                     }
 
                     //检查是否已创建句柄，并调用委托执行UI方法
