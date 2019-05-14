@@ -506,10 +506,10 @@ namespace NDEYImporter
                             string destDir = Path.Combine(DBTempDir, projectNumber);
 
                             //判断第一年研究任务.rtf这个文件是否存在,如果存在则说明之前解压过
-                            if (File.Exists(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf"))))
+                            if (File.Exists(Path.Combine(destDir, Path.Combine(new DirectoryInfo(Directory.GetDirectories(destDir)[0]).Name, "第一年研究任务.rtf"))))
                             {
                                 //存在这个文件,直接读取
-                                rtfText = File.ReadAllText(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf")));
+                                rtfText = File.ReadAllText(Path.Combine(destDir, Path.Combine(new DirectoryInfo(Directory.GetDirectories(destDir)[0]).Name, "第一年研究任务.rtf")));
                                 break;
                             }
                             else
@@ -527,10 +527,10 @@ namespace NDEYImporter
                                 new NdeyMyDataUnZip().UnZipFile(subFiles[0], destDir, string.Empty, true);
 
                                 //判断第一年研究任务.rtf这个文件是否存在
-                                if (File.Exists(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf"))))
+                                if (File.Exists(Path.Combine(destDir, Path.Combine(new DirectoryInfo(Directory.GetDirectories(destDir)[0]).Name, "第一年研究任务.rtf"))))
                                 {
                                     //存在这个文件,直接读取
-                                    rtfText = File.ReadAllText(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf")));
+                                    rtfText = File.ReadAllText(Path.Combine(destDir, Path.Combine(new DirectoryInfo(Directory.GetDirectories(destDir)[0]).Name, "第一年研究任务.rtf")));
                                     break;
                                 }
                             }
