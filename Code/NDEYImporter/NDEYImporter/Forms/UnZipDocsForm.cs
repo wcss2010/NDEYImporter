@@ -192,6 +192,9 @@ namespace NDEYImporter.Forms
                                     //提取专利情况
                                     DataList dlNDPatent = context.table("NDPatent").select("NDPatentName,NDPatentPDF").getDataList();
 
+                                    //提取UnitID
+                                    string unitID = context.table("BaseInfor").select("UnitID").getValue<string>(string.Empty);
+
                                     //附件序号
                                     int fileIndex = 0;
 
@@ -242,11 +245,12 @@ namespace NDEYImporter.Forms
                                         catch (Exception ex) { }
                                     }
 
-                                    //整理保密资质命名
+                                    //整理保密资质命名,查找Doc文件
                                     string[] extFiles = Directory.GetFiles(fileDir);
                                     foreach (string sss in extFiles)
                                     {
-                                        if (new FileInfo(sss).Name.StartsWith("extFile_"))
+                                        FileInfo fii = new FileInfo(sss);
+                                        if (fii.Name.StartsWith("extFile_"))
                                         {
                                             try
                                             {
@@ -255,6 +259,35 @@ namespace NDEYImporter.Forms
                                             catch (Exception ex)
                                             {
                                                 System.Console.WriteLine(ex.ToString());
+                                            }
+                                        }
+                                        else if (fii.Name.EndsWith(".doc"))
+                                        {
+                                            if (fii.Name.StartsWith(unitID))
+                                            {
+                                                //真实的申报书路径
+                                                string destDocFile = Path.Combine(fii.DirectoryName, "项目申报书.doc");
+
+                                                //文件改名
+                                                try
+                                                {
+                                                    File.Move(sss, destDocFile);
+                                                }
+                                                catch (Exception ex) { }
+
+                                                //转换成PDF
+                                                convertToPDF(destDocFile);
+                                            }
+                                            else
+                                            {
+                                                if (fii.Name.EndsWith("项目申报书.doc"))
+                                                {
+                                                    try
+                                                    {
+                                                        File.Delete(sss);
+                                                    }
+                                                    catch (Exception ex) { }
+                                                }
                                             }
                                         }
                                     }
@@ -268,6 +301,15 @@ namespace NDEYImporter.Forms
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// 转换到PDF文件
+        /// </summary>
+        /// <param name="destDocFile"></param>
+        private void convertToPDF(string destDocFile)
+        {
+            
         }
     }
 }
