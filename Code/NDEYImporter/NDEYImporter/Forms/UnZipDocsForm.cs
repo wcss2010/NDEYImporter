@@ -208,6 +208,8 @@ namespace NDEYImporter.Forms
                                         DataList dlTechnologyAwards = context.table("TechnologyAwards").select("TechnologyAwardsPName,TechnologyAwardsPDF").getDataList();
                                         //提取专利情况
                                         DataList dlNDPatent = context.table("NDPatent").select("NDPatentName,NDPatentPDF").getDataList();
+                                        //提取推荐意见
+                                        DataList dlBaseInfor = context.table("BaseInfor").select("UnitRecommend,ExpertRecommend1,ExpertRecommend2,ExpertRecommend3").getDataList();
 
                                         //提取UnitID
                                         string unitID = context.table("BaseInfor").select("UnitID").getValue<string>(string.Empty);
@@ -264,6 +266,68 @@ namespace NDEYImporter.Forms
                                             catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
                                         }
 
+                                        //整理推荐意见附件
+                                        string unitFileA = dlBaseInfor.getRow(0).getString("UnitRecommend");
+                                        string personFileA = dlBaseInfor.getRow(0).getString("ExpertRecommend1");
+                                        string personFileB = dlBaseInfor.getRow(0).getString("ExpertRecommend2");
+                                        string personFileC = dlBaseInfor.getRow(0).getString("ExpertRecommend3");
+
+                                        //查找单位推荐意见附件
+                                        if (File.Exists(Path.Combine(fileDir, unitFileA)))
+                                        {
+                                            //文件序号+1
+                                            fileIndex++;
+
+                                            //文件重命名
+                                            try
+                                            {
+                                                File.Move(Path.Combine(fileDir, unitFileA), Path.Combine(fileDir, "附件" + fileIndex + "_单位推荐意见" + new FileInfo(Path.Combine(fileDir, unitFileA)).Extension));
+                                            }
+                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                        }
+
+                                        //查找专家提名附件
+                                        if (File.Exists(Path.Combine(fileDir, personFileA)))
+                                        {
+                                            //文件序号+1
+                                            fileIndex++;
+
+                                            //文件重命名
+                                            try
+                                            {
+                                                File.Move(Path.Combine(fileDir, personFileA), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileA)).Extension));
+                                            }
+                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                        }
+
+                                        //查找专家提名附件
+                                        if (File.Exists(Path.Combine(fileDir, personFileB)))
+                                        {
+                                            //文件序号+1
+                                            fileIndex++;
+
+                                            //文件重命名
+                                            try
+                                            {
+                                                File.Move(Path.Combine(fileDir, personFileB), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileB)).Extension));
+                                            }
+                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                        }
+
+                                        //查找专家提名附件
+                                        if (File.Exists(Path.Combine(fileDir, personFileC)))
+                                        {
+                                            //文件序号+1
+                                            fileIndex++;
+
+                                            //文件重命名
+                                            try
+                                            {
+                                                File.Move(Path.Combine(fileDir, personFileC), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileC)).Extension));
+                                            }
+                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                        }
+
                                         //整理保密资质命名,查找Doc文件
                                         string[] extFiles = Directory.GetFiles(fileDir);
                                         foreach (string sss in extFiles)
@@ -273,7 +337,11 @@ namespace NDEYImporter.Forms
                                             {
                                                 try
                                                 {
-                                                    File.Move(sss, Path.Combine(fileDir, "保密资质复印件.png"));
+                                                    //文件序号+1
+                                                    fileIndex++;
+
+                                                    //移动文件
+                                                    File.Move(sss, Path.Combine(fileDir, "附件" + fileIndex + "_" + "保密资质复印件.png"));
                                                 }
                                                 catch (Exception ex)
                                                 {
