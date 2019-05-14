@@ -134,8 +134,22 @@ namespace NDEYImporter.Forms
 
                         //获取文件列表
                         string[] subFiles = Directory.GetFiles(pDir);
+
+                        //ZIP文件
+                        string pkgZipFile = string.Empty;
+
+                        //查找ZIP文件
+                        foreach (string sssss in subFiles)
+                        {
+                            if (sssss.EndsWith(".zip"))
+                            {
+                                pkgZipFile = sssss;
+                                break;
+                            }
+                        }
+
                         //判断是否存在申报包
-                        if (subFiles != null && subFiles.Length >= 1 && subFiles[0].EndsWith(".zip"))
+                        if (pkgZipFile != null && pkgZipFile.EndsWith(".zip"))
                         {
                             //报告进度
                             pf.reportProgress(progressVal, string.Empty);
@@ -154,13 +168,13 @@ namespace NDEYImporter.Forms
 
                             //解压ZIP包
                             NdeyMyDataUnZip fzo = new NdeyMyDataUnZip();
-                            fzo.UnZipFile(subFiles[0], destDir, string.Empty, true);
+                            fzo.UnZipFile(pkgZipFile, destDir, string.Empty, true);
 
                             MainForm.writeLog("结束解压__" + projectNumber);
 
                             //判断申报包是否有效
                             //生成DB文件路径
-                            string dbFile = System.IO.Path.Combine(destDir, @"Files\myData.db");
+                            string dbFile = System.IO.Path.Combine(destDir, Path.Combine(new DirectoryInfo(Directory.GetDirectories(destDir)[0]).Name, "myData.db"));
                             //判断文件是否存在
                             if (System.IO.File.Exists(dbFile))
                             {
