@@ -633,18 +633,28 @@ namespace NDEYImporter
         /// <param name="text"></param>
         public static void writeLog(string text)
         {
+            //程序目录
             string path = AppDomain.CurrentDomain.BaseDirectory;
+
+            //日志目录
             path = System.IO.Path.Combine(path, "Logs\\");
 
+            //判断是否需要创建目录
             if (!System.IO.Directory.Exists(path))
             {
                 System.IO.Directory.CreateDirectory(path);
             }
-            string fileFullName = System.IO.Path.Combine(path, string.Format("{0}.txt", DateTime.Now.ToString("yyyyMMdd-HHmm")));
+
+            //生成日志文件名称
+            string fileFullName = System.IO.Path.Combine(path, string.Format("{0}.txt", DateTime.Now.ToString("yyyyMMdd-HH")));
             
+            //写日志
             using (StreamWriter output = System.IO.File.AppendText(fileFullName))
             {
-                output.WriteLine(text);
+                //写日志
+                output.WriteLine(DateTime.Now.ToString() + ":" + text);
+
+                //关闭文件
                 output.Close();
             }
         }
