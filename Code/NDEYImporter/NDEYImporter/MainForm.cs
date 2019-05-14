@@ -59,7 +59,7 @@ namespace NDEYImporter
                 System.IO.Directory.Delete(DBTempDir, true);
             }
             catch (Exception ex) { }
-            
+
             //创建NDEY上报包解压目录
             try
             {
@@ -72,7 +72,7 @@ namespace NDEYImporter
         {
             Application.Exit();
         }
-                
+
         private void MainForm_Load(object sender, EventArgs e)
         {
             //载入Catalog列表
@@ -168,7 +168,7 @@ namespace NDEYImporter
                 //添加行数据，并获得行号
                 int rowIndex = dgvCatalogs.Rows.Add(cells.ToArray());
                 dgvCatalogs.Rows[rowIndex].Tag = di;
-            }            
+            }
         }
 
         private void dgvCatalogs_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -314,7 +314,7 @@ namespace NDEYImporter
                         {
                             //拆分摘要内容
                             string[] array = projectBrief.Split(new string[] { "|" }, StringSplitOptions.None);
-                            
+
                             //判断字符数组长度是否为6
                             if (array.Length == 6)
                             {
@@ -366,7 +366,7 @@ namespace NDEYImporter
                             //"专家提名"
                             projectItem.Add(new KeyValuePair<string, object>("推荐方式", "专家提名"));
                             projectItem.Add(new KeyValuePair<string, object>("推荐单位", string.Empty));
-                        }                        
+                        }
 
                         projectItem.Add(new KeyValuePair<string, object>("专家一姓名", dlProjects.getRow(0).get("ExpertName1")));
                         projectItem.Add(new KeyValuePair<string, object>("专家一研究领域", dlProjects.getRow(0).get("ExpertArea1")));
@@ -502,38 +502,38 @@ namespace NDEYImporter
                         string[] subFiles = Directory.GetFiles(s);
                         if (subFiles != null && subFiles.Length >= 1)
                         {
-                           //解压这个Zip包
-                           string destDir = Path.Combine(DBTempDir, projectNumber);
+                            //解压这个Zip包
+                            string destDir = Path.Combine(DBTempDir, projectNumber);
 
-                           //判断第一年研究任务.rtf这个文件是否存在,如果存在则说明之前解压过
-                           if (File.Exists(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf"))))
-                           {
-                               //存在这个文件,直接读取
-                               rtfText = File.ReadAllText(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf")));
-                               break;
-                           }
-                           else
-                           {
-                               //不存在这个文件,先解压再读取
+                            //判断第一年研究任务.rtf这个文件是否存在,如果存在则说明之前解压过
+                            if (File.Exists(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf"))))
+                            {
+                                //存在这个文件,直接读取
+                                rtfText = File.ReadAllText(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf")));
+                                break;
+                            }
+                            else
+                            {
+                                //不存在这个文件,先解压再读取
 
-                               //创建临时目录
-                               try
-                               {
-                                   Directory.CreateDirectory(destDir);
-                               }
-                               catch (Exception ex) { }
+                                //创建临时目录
+                                try
+                                {
+                                    Directory.CreateDirectory(destDir);
+                                }
+                                catch (Exception ex) { }
 
-                               //解压这个包
-                               new NdeyMyDataUnZip().UnZipFile(subFiles[0], destDir, string.Empty, true);
+                                //解压这个包
+                                new NdeyMyDataUnZip().UnZipFile(subFiles[0], destDir, string.Empty, true);
 
-                               //判断第一年研究任务.rtf这个文件是否存在
-                               if (File.Exists(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf"))))
-                               {
-                                   //存在这个文件,直接读取
-                                   rtfText = File.ReadAllText(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf")));
-                                   break;
-                               }
-                           }
+                                //判断第一年研究任务.rtf这个文件是否存在
+                                if (File.Exists(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf"))))
+                                {
+                                    //存在这个文件,直接读取
+                                    rtfText = File.ReadAllText(Path.Combine(destDir, Path.Combine("Files", "第一年研究任务.rtf")));
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
@@ -625,6 +625,28 @@ namespace NDEYImporter
 
             UnZipDocsForm zdf = new UnZipDocsForm(false);
             zdf.ShowDialog();
+        }
+
+        /// <summary>
+        /// 写入日志
+        /// </summary>
+        /// <param name="text"></param>
+        public static void writeLog(string text)
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory;
+            path = System.IO.Path.Combine(path, "Logs\\");
+
+            if (!System.IO.Directory.Exists(path))
+            {
+                System.IO.Directory.CreateDirectory(path);
+            }
+            string fileFullName = System.IO.Path.Combine(path, string.Format("{0}.txt", DateTime.Now.ToString("yyyyMMdd-HHmm")));
+            
+            using (StreamWriter output = System.IO.File.AppendText(fileFullName))
+            {
+                output.WriteLine(text);
+                output.Close();
+            }
         }
     }
 
