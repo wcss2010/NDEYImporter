@@ -32,11 +32,13 @@
             this.ssStatus = new System.Windows.Forms.StatusStrip();
             this.tsslHintText = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsToolBar = new System.Windows.Forms.ToolStrip();
-            this.btnImport = new System.Windows.Forms.ToolStripButton();
             this.btnSelectTotalDir = new System.Windows.Forms.ToolStripButton();
             this.btnImportAll = new System.Windows.Forms.ToolStripButton();
             this.btnImportWithSelectedList = new System.Windows.Forms.ToolStripButton();
             this.btnExportExcel = new System.Windows.Forms.ToolStripButton();
+            this.btnSelectUnZipDir = new System.Windows.Forms.ToolStripButton();
+            this.btnUnZipAll = new System.Windows.Forms.ToolStripButton();
+            this.btnUnZipWithSelectedList = new System.Windows.Forms.ToolStripButton();
             this.btnExit = new System.Windows.Forms.ToolStripButton();
             this.plContent = new System.Windows.Forms.Panel();
             this.dgvCatalogs = new System.Windows.Forms.DataGridView();
@@ -49,9 +51,6 @@
             this.colDel = new System.Windows.Forms.DataGridViewButtonColumn();
             this.ofdPackages = new System.Windows.Forms.OpenFileDialog();
             this.fbdTotalDirSelect = new System.Windows.Forms.FolderBrowserDialog();
-            this.btnUnZipWithSelectedList = new System.Windows.Forms.ToolStripButton();
-            this.btnSelectUnZipDir = new System.Windows.Forms.ToolStripButton();
-            this.btnUnZipAll = new System.Windows.Forms.ToolStripButton();
             this.ssStatus.SuspendLayout();
             this.tsToolBar.SuspendLayout();
             this.plContent.SuspendLayout();
@@ -78,7 +77,6 @@
             // 
             this.tsToolBar.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.tsToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnImport,
             this.btnSelectTotalDir,
             this.btnImportAll,
             this.btnImportWithSelectedList,
@@ -91,17 +89,6 @@
             this.tsToolBar.Name = "tsToolBar";
             this.tsToolBar.Size = new System.Drawing.Size(1067, 39);
             this.tsToolBar.TabIndex = 1;
-            // 
-            // btnImport
-            // 
-            this.btnImport.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnImport.Image = ((System.Drawing.Image)(resources.GetObject("btnImport.Image")));
-            this.btnImport.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(71, 36);
-            this.btnImport.Text = "导入";
-            this.btnImport.Visible = false;
-            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // btnSelectTotalDir
             // 
@@ -142,6 +129,36 @@
             this.btnExportExcel.Size = new System.Drawing.Size(148, 36);
             this.btnExportExcel.Text = "导出列表到Excel";
             this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
+            // 
+            // btnSelectUnZipDir
+            // 
+            this.btnSelectUnZipDir.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSelectUnZipDir.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectUnZipDir.Image")));
+            this.btnSelectUnZipDir.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSelectUnZipDir.Name = "btnSelectUnZipDir";
+            this.btnSelectUnZipDir.Size = new System.Drawing.Size(127, 36);
+            this.btnSelectUnZipDir.Text = "选择解包目录";
+            this.btnSelectUnZipDir.Click += new System.EventHandler(this.btnSelectUnZipDir_Click);
+            // 
+            // btnUnZipAll
+            // 
+            this.btnUnZipAll.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnUnZipAll.Image = ((System.Drawing.Image)(resources.GetObject("btnUnZipAll.Image")));
+            this.btnUnZipAll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUnZipAll.Name = "btnUnZipAll";
+            this.btnUnZipAll.Size = new System.Drawing.Size(99, 36);
+            this.btnUnZipAll.Text = "全部解压";
+            this.btnUnZipAll.Click += new System.EventHandler(this.btnUnZipAll_Click);
+            // 
+            // btnUnZipWithSelectedList
+            // 
+            this.btnUnZipWithSelectedList.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnUnZipWithSelectedList.Image = ((System.Drawing.Image)(resources.GetObject("btnUnZipWithSelectedList.Image")));
+            this.btnUnZipWithSelectedList.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUnZipWithSelectedList.Name = "btnUnZipWithSelectedList";
+            this.btnUnZipWithSelectedList.Size = new System.Drawing.Size(113, 36);
+            this.btnUnZipWithSelectedList.Text = "选择性解压";
+            this.btnUnZipWithSelectedList.Click += new System.EventHandler(this.btnUnZipWithSelectedList_Click);
             // 
             // btnExit
             // 
@@ -239,36 +256,6 @@
             // 
             this.ofdPackages.Filter = "*.zip|*.zip";
             // 
-            // btnUnZipWithSelectedList
-            // 
-            this.btnUnZipWithSelectedList.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnUnZipWithSelectedList.Image = ((System.Drawing.Image)(resources.GetObject("btnUnZipWithSelectedList.Image")));
-            this.btnUnZipWithSelectedList.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnUnZipWithSelectedList.Name = "btnUnZipWithSelectedList";
-            this.btnUnZipWithSelectedList.Size = new System.Drawing.Size(113, 36);
-            this.btnUnZipWithSelectedList.Text = "选择性解压";
-            this.btnUnZipWithSelectedList.Click += new System.EventHandler(this.btnUnZipWithSelectedList_Click);
-            // 
-            // btnSelectUnZipDir
-            // 
-            this.btnSelectUnZipDir.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnSelectUnZipDir.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectUnZipDir.Image")));
-            this.btnSelectUnZipDir.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnSelectUnZipDir.Name = "btnSelectUnZipDir";
-            this.btnSelectUnZipDir.Size = new System.Drawing.Size(127, 36);
-            this.btnSelectUnZipDir.Text = "选择解包目录";
-            this.btnSelectUnZipDir.Click += new System.EventHandler(this.btnSelectUnZipDir_Click);
-            // 
-            // btnUnZipAll
-            // 
-            this.btnUnZipAll.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnUnZipAll.Image = ((System.Drawing.Image)(resources.GetObject("btnUnZipAll.Image")));
-            this.btnUnZipAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnUnZipAll.Name = "btnUnZipAll";
-            this.btnUnZipAll.Size = new System.Drawing.Size(99, 36);
-            this.btnUnZipAll.Text = "全部解压";
-            this.btnUnZipAll.Click += new System.EventHandler(this.btnUnZipAll_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -298,7 +285,6 @@
         private System.Windows.Forms.ToolStrip tsToolBar;
         private System.Windows.Forms.Panel plContent;
         private System.Windows.Forms.DataGridView dgvCatalogs;
-        private System.Windows.Forms.ToolStripButton btnImport;
         private System.Windows.Forms.ToolStripButton btnExit;
         private System.Windows.Forms.OpenFileDialog ofdPackages;
         private System.Windows.Forms.ToolStripButton btnExportExcel;

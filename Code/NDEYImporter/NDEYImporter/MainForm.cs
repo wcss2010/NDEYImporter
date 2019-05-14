@@ -72,74 +72,7 @@ namespace NDEYImporter
         {
             Application.Exit();
         }
-
-        private void btnImport_Click(object sender, EventArgs e)
-        {
-            //显示选择申报包的对话框
-            if (ofdPackages.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                //将压缩包解压到临时目录
-                //生成一个临时路径
-                string destDir = System.IO.Path.Combine(DBTempDir, DateTime.Now.Ticks.ToString());
-                //解压ZIP包
-                NdeyMyDataUnZip fzo = new NdeyMyDataUnZip();
-                fzo.UnZipFile(ofdPackages.FileName, destDir, string.Empty, true);
-
-                //判断申报包是否有效
-                //生成DB文件路径
-                string dbFile = System.IO.Path.Combine(destDir, @"Files\myData.db");
-                //判断文件是否存在
-                if (System.IO.File.Exists(dbFile))
-                {
-                    //有效的申报包
-                    try
-                    {
-                        //导入数据并返回项目Id
-                        string projectId = DBImporter.importDB(string.Empty, dbFile);
-
-                        //获取项目编号
-                        string projectNumber = ConnectionManager.Context.table("Catalog").where("ProjectID='" + projectId + "'").select("ProjectNumber").getValue<string>(string.Empty);
-
-                        //清理申报包保存路径
-                        if (System.IO.Directory.Exists(System.IO.Path.Combine(PackageDir, projectNumber)))
-                        {
-                            try
-                            {
-                                System.IO.Directory.Delete(System.IO.Path.Combine(PackageDir, projectNumber), true);
-                            }
-                            catch (Exception ex) { }
-                        }
-
-                        //创建申报包保存目录
-                        try
-                        {
-                            System.IO.Directory.CreateDirectory(System.IO.Path.Combine(PackageDir, projectNumber));
-                        }
-                        catch (Exception ex) { }
-
-                        //生成申报包保存路径
-                        string packageDestPath = System.IO.Path.Combine(System.IO.Path.Combine(PackageDir, projectNumber), new System.IO.FileInfo(ofdPackages.FileName).Name);
-
-                        //将申报包Copy到保存路径
-                        System.IO.File.Copy(ofdPackages.FileName, packageDestPath, true);
-
-                        //刷新列表
-                        reloadCatalogList();
-
-                        MessageBox.Show("申报数据包导入完成！", "提示");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("对不起,申报数据包导入失败！", "提示");
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("对不起,无效的申报数据包！", "提示");
-                }
-            }
-        }
-
+                
         private void MainForm_Load(object sender, EventArgs e)
         {
             //载入Catalog列表
