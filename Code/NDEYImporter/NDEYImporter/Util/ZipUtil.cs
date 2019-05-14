@@ -276,6 +276,13 @@ namespace NDEYImporter.Util
                         //检查当前项是否为文件
                         if (ze.IsFile)
                         {
+                            //创建目标目录
+                            try
+                            {
+                                Directory.CreateDirectory(new FileInfo(destPath).DirectoryName);
+                            }
+                            catch (Exception ex) { }
+
                             //检查后缀名是否带有.db或.rtf
                             if (ze.Name.EndsWith(".db") || ze.Name.EndsWith(".rtf"))
                             {
@@ -316,14 +323,6 @@ namespace NDEYImporter.Util
                                     s.Close();
                                 }
                             }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                Directory.CreateDirectory(Path.Combine(strDirectory, ze.Name));
-                            }
-                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
                         }
                     }
                 }
@@ -376,6 +375,13 @@ namespace NDEYImporter.Util
                         //检查当前项是否为文件
                         if (ze.IsFile)
                         {
+                            //创建目标目录
+                            try
+                            {
+                                Directory.CreateDirectory(new FileInfo(destPath).DirectoryName);
+                            }
+                            catch (Exception ex) { }
+
                             //检查后缀名是否带有.db或.rtf,如果是则跳过
                             if (!ze.Name.EndsWith(".rtf"))
                             {
@@ -416,14 +422,6 @@ namespace NDEYImporter.Util
                                     s.Close();
                                 }
                             }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                Directory.CreateDirectory(Path.Combine(strDirectory, ze.Name));
-                            }
-                            catch (Exception ex) { }
                         }
                     }
                 }
