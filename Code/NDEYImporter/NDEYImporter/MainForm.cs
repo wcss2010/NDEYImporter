@@ -536,6 +536,12 @@ namespace NDEYImporter
             //输出数据到Excel
             foreach (List<KeyValuePair<string, object>> rowData in table)
             {
+                //忽略空数据行
+                if (rowData.Count == 0)
+                {
+                    continue;
+                }
+
                 //列号
                 int colIndex = 0;
 
