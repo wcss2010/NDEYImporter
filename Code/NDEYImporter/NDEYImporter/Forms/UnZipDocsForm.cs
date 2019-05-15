@@ -388,8 +388,16 @@ namespace NDEYImporter.Forms
                                         context.Dispose();
                                         context = null;
 
+                                        //**链接close（）和dispose（）之后任然不能释放与db文件的连接,原因是sqlite在执行SQLiteConnectionHandle.Dispose()操作时候，其实并没有真正的释放连接，只有显式调用 CLR垃圾回收之后才能真正释放连接
+                                        GC.Collect();
+                                        GC.WaitForPendingFinalizers();
+
                                         //删除数据库文件
-                                        File.Delete(dbFile);
+                                        try
+                                        {
+                                            File.Delete(dbFile);
+                                        }
+                                        catch (Exception ex) { }
                                     }
                                 }
                                 else
