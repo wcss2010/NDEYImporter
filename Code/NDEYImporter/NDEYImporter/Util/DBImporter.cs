@@ -578,6 +578,7 @@ namespace NDEYImporter.Util
             finally
             {
                 factory.Dispose();
+                context.Dispose();
                 context = null;
             }
 

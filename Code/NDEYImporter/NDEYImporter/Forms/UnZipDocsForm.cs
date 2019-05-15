@@ -194,14 +194,13 @@ namespace NDEYImporter.Forms
                                 //判断文件是否存在
                                 if (System.IO.File.Exists(dbFile))
                                 {
+                                    //SQLite数据库工厂
+                                    System.Data.SQLite.SQLiteFactory factory = new System.Data.SQLite.SQLiteFactory();
+                                    //NDEY数据库连接
+                                    Noear.Weed.DbContext context = new Noear.Weed.DbContext("main", "Data Source = " + dbFile, factory);
+
                                     try
                                     {
-                                        //SQLite数据库工厂
-                                        System.Data.SQLite.SQLiteFactory factory = new System.Data.SQLite.SQLiteFactory();
-
-                                        //NDEY数据库连接
-                                        Noear.Weed.DbContext context = new Noear.Weed.DbContext("main", "Data Source = " + dbFile, factory);
-
                                         //提取论文详细
                                         DataList dlRTreatises = context.table("RTreatises").select("RTreatisesName,RTreatisesPDF").getDataList();
                                         //提取科技奖项
@@ -382,6 +381,12 @@ namespace NDEYImporter.Forms
                                     catch (Exception ex)
                                     {
                                         MainForm.writeLog(ex.ToString());
+                                    }
+                                    finally
+                                    {
+                                        factory.Dispose();
+                                        context.Dispose();
+                                        context = null;
                                     }
                                 }
                                 else
