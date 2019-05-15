@@ -470,15 +470,15 @@ namespace NDEYImporter
                     outputData.Add(rowData);
 
                     //查找科技奖励
-                    DataList dlTalentsPlanList = ConnectionManager.Context.table("TechnologyAwardsExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
+                    DataList dlTechnologyAwardsList = ConnectionManager.Context.table("TechnologyAwardsExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
                     //判断是否存在科技奖励
-                    if (dlTalentsPlanList != null)
+                    if (dlTechnologyAwardsList != null)
                     {
                         //将数据输出到outputData列表中
-                        foreach (DataItem diTalent in dlTalentsPlanList.getRows())
+                        foreach (DataItem diTech in dlTechnologyAwardsList.getRows())
                         {
                             //判断当前项是否为其它，如果是则忽略
-                            if (diTalent.get("TypeLevel") != null && diTalent.get("TypeLevel").ToString().StartsWith("其它:"))
+                            if (diTech.get("TypeLevel") != null && diTech.get("TypeLevel").ToString().StartsWith("其它:"))
                             {
                                 //忽略这个项
                                 continue;
@@ -487,10 +487,10 @@ namespace NDEYImporter
                             {
                                 //输出这个项
                                 rowData.Add(new KeyValuePair<string, object>("姓名", projectCreater));
-                                rowData.Add(new KeyValuePair<string, object>("获奖时间", diTalent.get("Date")));
-                                rowData.Add(new KeyValuePair<string, object>("项目名称", diTalent.get("Name")));
-                                rowData.Add(new KeyValuePair<string, object>("奖励类别及等级", diTalent.get("TypeLevel")));
-                                rowData.Add(new KeyValuePair<string, object>("排名", diTalent.get("Ranking")));
+                                rowData.Add(new KeyValuePair<string, object>("获奖时间", diTech.get("Date")));
+                                rowData.Add(new KeyValuePair<string, object>("项目名称", diTech.get("Name")));
+                                rowData.Add(new KeyValuePair<string, object>("奖励类别及等级", diTech.get("TypeLevel")));
+                                rowData.Add(new KeyValuePair<string, object>("排名", diTech.get("Ranking")));
                             }
                         }
                     }
