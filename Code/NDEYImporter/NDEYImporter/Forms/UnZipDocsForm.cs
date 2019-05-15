@@ -158,7 +158,14 @@ namespace NDEYImporter.Forms
                             //解压这个Zip包
                             string pkgDir = Path.Combine(MainForm.Config.UnZipDir, projectNumber);
 
-                            //创建临时目录
+                            //删除解压目录
+                            try
+                            {
+                                Directory.Delete(pkgDir, true);
+                            }
+                            catch (Exception ex) { }
+
+                            //创建解压目录
                             try
                             {
                                 Directory.CreateDirectory(pkgDir);
@@ -425,19 +432,42 @@ namespace NDEYImporter.Forms
         /// <param name="destDocFile"></param>
         private void convertToPDF(string destDocFile)
         {
+            //Document文档对象
             Aspose.Words.Document xDoc = new Aspose.Words.Document(destDocFile);
+
+            //获得附件表格
             Aspose.Words.Tables.Table tablee = (Aspose.Words.Tables.Table)xDoc.GetChild(Aspose.Words.NodeType.Table, xDoc.GetChildNodes(Aspose.Words.NodeType.Table, true).Count - 1, true);
+
+            //行与
+            int rowIndex = 0;
+
+            //查找需要替换位置
             foreach (Aspose.Words.Tables.Row row in tablee.Rows)
             {
-                if (row.Cells[0].GetText() == "序号")
+                //行号+1
+                rowIndex++;
+
+                if (row.Cells[0].GetText().Contains("序号"))
                 {
                     continue;
                 }
                 else
                 {
+                    //清理单位格内容
                     row.Cells[0].Paragraphs.Clear();
+
+                    //写行号
+                    Aspose.Words.Paragraph p = new Aspose.Words.Paragraph(xDoc);
+                    p.AppendChild(new Aspose.Words.Run(xDoc,rowIndex.ToString()));
+                    row.Cells[0].AppendChild(p);
                 }
             }
+
+            //保存文档
+            xDoc.Save(destDocFile);
+
+            //保存为PDF
+            xDoc.Save(Path.Combine(new FileInfo(destDocFile).DirectoryName,"项目申报书.pdf"), Aspose.Words.SaveFormat.Pdf);
         }
     }
 }
