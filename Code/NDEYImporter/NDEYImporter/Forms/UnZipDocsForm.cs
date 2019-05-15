@@ -425,7 +425,19 @@ namespace NDEYImporter.Forms
         /// <param name="destDocFile"></param>
         private void convertToPDF(string destDocFile)
         {
-            
+            Aspose.Words.Document xDoc = new Aspose.Words.Document(destDocFile);
+            Aspose.Words.Tables.Table tablee = (Aspose.Words.Tables.Table)xDoc.GetChild(Aspose.Words.NodeType.Table, xDoc.GetChildNodes(Aspose.Words.NodeType.Table, true).Count - 1, true);
+            foreach (Aspose.Words.Tables.Row row in tablee.Rows)
+            {
+                if (row.Cells[0].GetText() == "序号")
+                {
+                    continue;
+                }
+                else
+                {
+                    row.Cells[0].Paragraphs.Clear();
+                }
+            }
         }
     }
 }
