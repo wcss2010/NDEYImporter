@@ -387,6 +387,9 @@ namespace NDEYImporter.Forms
                                         factory.Dispose();
                                         context.Dispose();
                                         context = null;
+
+                                        //删除数据库文件
+                                        File.Delete(dbFile);
                                     }
                                 }
                                 else
