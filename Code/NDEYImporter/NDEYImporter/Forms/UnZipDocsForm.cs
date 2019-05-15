@@ -444,15 +444,15 @@ namespace NDEYImporter.Forms
             //查找需要替换位置
             foreach (Aspose.Words.Tables.Row row in tablee.Rows)
             {
-                //行号+1
-                rowIndex++;
-
                 if (row.Cells[0].GetText().Contains("序号"))
                 {
                     continue;
                 }
                 else
                 {
+                    //行号+1
+                    rowIndex++;
+
                     //清理单位格内容
                     row.Cells[0].Paragraphs.Clear();
 
