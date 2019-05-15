@@ -311,7 +311,7 @@ namespace NDEYImporter
                         string ziZhuDuiXiang = string.Empty;
 
                         //处理摘要
-                        string projectBrief = dlProjects.getRow(0).getString("ProjectBrief");
+                        string projectBrief = dlProjects.getRow(0).getString("ProjectBrief").Replace(";;", ";");
                         if (projectBrief != string.Empty)
                         {
                             //拆分摘要内容
@@ -396,7 +396,7 @@ namespace NDEYImporter
 
                 #endregion
 
-                #region 创建从表
+                #region 创建从表(人才计划)
 
                 //需要输出的数据
                 outputData = new List<List<KeyValuePair<string, object>>>();
@@ -438,6 +438,59 @@ namespace NDEYImporter
                                 rowData.Add(new KeyValuePair<string, object>("入选年份", diTalent.get("Date")));
                                 rowData.Add(new KeyValuePair<string, object>("人才计划名称", diTalent.get("Name")));
                                 rowData.Add(new KeyValuePair<string, object>("研究方向", diTalent.get("RA")));                                
+                            }
+                        }
+                    }
+                }
+
+                //写表格数据
+                writeSheet(workbook, cellStyleA, cellStyleB, outputData);
+
+                #endregion
+
+                #region 创建从表(科技奖励)
+
+                //需要输出的数据
+                outputData = new List<List<KeyValuePair<string, object>>>();
+
+                //输出Excel数据
+                foreach (DataItem diCatalogItem in dlCatalogs.getRows())
+                {
+                    //项目ID
+                    string projectID = diCatalogItem.getString("ProjectID");
+                    //项目编号
+                    string projectNumber = diCatalogItem.getString("ProjectNumber");
+                    //项目申请人
+                    string projectCreater = diCatalogItem.getString("ProjectCreater");
+                    //项目申请单位ID
+                    string projectUnitID = diCatalogItem.getString("ProjectCreaterUnitID");
+
+                    //需要输出的数据行
+                    List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
+                    outputData.Add(rowData);
+
+                    //查找科技奖励
+                    DataList dlTalentsPlanList = ConnectionManager.Context.table("TechnologyAwardsExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
+                    //判断是否存在科技奖励
+                    if (dlTalentsPlanList != null)
+                    {
+                        //将数据输出到outputData列表中
+                        foreach (DataItem diTalent in dlTalentsPlanList.getRows())
+                        {
+                            //判断当前项是否为其它，如果是则忽略
+                            if (diTalent.get("TypeLevel") != null && diTalent.get("TypeLevel").ToString().StartsWith("其它:"))
+                            {
+                                //忽略这个项
+                                continue;
+                            }
+                            else
+                            {
+                                //输出这个项
+                                rowData.Add(new KeyValuePair<string, object>("姓名", projectCreater));
+                                rowData.Add(new KeyValuePair<string, object>("获奖时间", diTalent.get("Date")));
+                                rowData.Add(new KeyValuePair<string, object>("项目名称", diTalent.get("Name")));
+                                rowData.Add(new KeyValuePair<string, object>("奖励类别及等级", diTalent.get("TypeLevel")));
+                                rowData.Add(new KeyValuePair<string, object>("排名", diTalent.get("Ranking")));
                             }
                         }
                     }
