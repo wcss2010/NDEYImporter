@@ -434,10 +434,10 @@ namespace NDEYImporter
                             else
                             {
                                 //输出这个项
+                                rowData.Add(new KeyValuePair<string, object>("姓名", projectCreater));
                                 rowData.Add(new KeyValuePair<string, object>("入选年份", diTalent.get("Date")));
                                 rowData.Add(new KeyValuePair<string, object>("人才计划名称", diTalent.get("Name")));
-                                rowData.Add(new KeyValuePair<string, object>("研究方向", diTalent.get("RA")));
-                                rowData.Add(new KeyValuePair<string, object>("姓名", projectCreater));
+                                rowData.Add(new KeyValuePair<string, object>("研究方向", diTalent.get("RA")));                                
                             }
                         }
                     }
