@@ -210,9 +210,7 @@ namespace NDEYImporter
                 MemoryStream memoryStream = new MemoryStream();
                 //创建Workbook
                 NPOI.XSSF.UserModel.XSSFWorkbook workbook = new NPOI.XSSF.UserModel.XSSFWorkbook();
-                //创建Sheet
-                NPOI.SS.UserModel.ISheet sheet = workbook.CreateSheet();
-
+ 
                 //创建单元格设置对象(普通内容)
                 NPOI.SS.UserModel.ICellStyle cellStyleA = workbook.CreateCellStyle();
                 cellStyleA.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Left;
@@ -246,11 +244,16 @@ namespace NDEYImporter
                 fontB.Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Bold;
                 cellStyleB.SetFont(fontB);
 
-                //是否需要输出表头
-                bool isNeedCreateHeader = true;
-
                 //读取索引数据
                 DataList dlCatalogs = ConnectionManager.Context.table("Catalog").select("*").getDataList();
+
+                #region 创建主表
+                //创建Sheet
+                NPOI.SS.UserModel.ISheet sheet = workbook.CreateSheet();
+
+                //是否需要输出表头
+                bool isNeedCreateHeader = true;
+                
                 //行号
                 int rowIndex = 0;
                 //输出Excel数据
@@ -460,6 +463,11 @@ namespace NDEYImporter
                 {
                     sheet.AutoSizeColumn(k);
                 }
+                #endregion
+
+                #region 创建从表
+
+                #endregion
 
                 //输出到Excel文件
                 workbook.Write(memoryStream);
