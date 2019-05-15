@@ -417,7 +417,30 @@ namespace NDEYImporter
                     List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
                     outputData.Add(rowData);
 
-                    
+                    //查找人才计划
+                    DataList dlTalentsPlanList = ConnectionManager.Context.table("TalentsPlanExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
+                    //判断是否存在人才计划
+                    if (dlTalentsPlanList != null)
+                    {
+                        //将数据输出到outputData列表中
+                        foreach (DataItem diTalent in dlTalentsPlanList.getRows())
+                        {
+                            //判断当前项是否为其它，如果是则忽略
+                            if (diTalent.get("Name") != null && diTalent.get("Name").ToString().StartsWith("其它:"))
+                            {
+                                //忽略这个项
+                                continue;
+                            }
+                            else
+                            {
+                                //输出这个项
+                                rowData.Add(new KeyValuePair<string, object>("入选年份", diTalent.get("Date")));
+                                rowData.Add(new KeyValuePair<string, object>("人才计划名称", diTalent.get("Name")));
+                                rowData.Add(new KeyValuePair<string, object>("研究方向", diTalent.get("RA")));
+                                rowData.Add(new KeyValuePair<string, object>("姓名", projectCreater));
+                            }
+                        }
+                    }
                 }
 
                 //写表格数据
