@@ -125,88 +125,98 @@ namespace NDEYImporter.Forms
                     //导入
                     foreach (string pDir in importList)
                     {
-                        progressVal++;
-
-                        //读取项目ID
-                        string projectNumber = new DirectoryInfo(pDir).Name.Substring(0, 11);
-
-                        MainForm.writeLog("开始解析__" + projectNumber);
-
-                        //获取文件列表
-                        string[] subFiles = Directory.GetFiles(pDir);
-
-                        //ZIP文件
-                        string pkgZipFile = string.Empty;
-
-                        //查找ZIP文件
-                        foreach (string sssss in subFiles)
+                        try
                         {
-                            if (sssss.EndsWith(".zip"))
+                            progressVal++;
+
+                            //读取项目ID
+                            string projectNumber = new DirectoryInfo(pDir).Name.Substring(0, 11);
+
+                            MainForm.writeLog("开始解析__" + projectNumber);
+
+                            //获取文件列表
+                            string[] subFiles = Directory.GetFiles(pDir);
+
+                            //ZIP文件
+                            string pkgZipFile = string.Empty;
+
+                            //查找ZIP文件
+                            foreach (string sssss in subFiles)
                             {
-                                pkgZipFile = sssss;
-                                break;
+                                if (sssss.EndsWith(".zip"))
+                                {
+                                    pkgZipFile = sssss;
+                                    break;
+                                }
                             }
-                        }
 
-                        //判断是否存在申报包
-                        if (pkgZipFile != null && pkgZipFile.EndsWith(".zip"))
-                        {
-                            //报告进度
-                            pf.reportProgress(progressVal, string.Empty);
-
-                            //生成一个临时路径
-                            string destDir = System.IO.Path.Combine(MainForm.DBTempDir, projectNumber);
-
-                            //删除旧的目录
-                            try
+                            //判断是否存在申报包
+                            if (pkgZipFile != null && pkgZipFile.EndsWith(".zip"))
                             {
-                                Directory.Delete(destDir, true);
-                            }
-                            catch (Exception ex) { }
+                                //报告进度
+                                pf.reportProgress(progressVal, string.Empty);
 
-                            MainForm.writeLog("开始解压__" + projectNumber);
+                                //生成一个临时路径
+                                string destDir = System.IO.Path.Combine(MainForm.DBTempDir, projectNumber);
 
-                            //解压ZIP包
-                            NdeyMyDataUnZip fzo = new NdeyMyDataUnZip();
-                            fzo.UnZipFile(pkgZipFile, destDir, string.Empty, true);
-
-                            MainForm.writeLog("结束解压__" + projectNumber);
-
-                            //判断申报包是否有效
-                            //生成DB文件路径
-                            string dbFile = System.IO.Path.Combine(destDir, "myData.db");
-                            //判断文件是否存在
-                            if (System.IO.File.Exists(dbFile))
-                            {
-                                //有效的申报包
+                                //删除旧的目录
                                 try
                                 {
-                                    //报告进度
-                                    pf.reportProgress(progressVal, projectNumber + "_开始导入");
-
-                                    MainForm.writeLog("开始导入__" + projectNumber);
-
-                                    //导入数据并返回项目Id
-                                    DBImporter.importDB(projectNumber, dbFile);
-
-                                    MainForm.writeLog("结束导入__" + projectNumber);
-
-                                    //报告进度
-                                    pf.reportProgress(progressVal, projectNumber + "_结束导入");
+                                    Directory.Delete(destDir, true);
                                 }
-                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                catch (Exception ex) { }
+
+                                MainForm.writeLog("开始解压__" + projectNumber);
+
+                                //解压ZIP包
+                                NdeyMyDataUnZip fzo = new NdeyMyDataUnZip();
+                                fzo.UnZipFile(pkgZipFile, destDir, string.Empty, true);
+
+                                MainForm.writeLog("结束解压__" + projectNumber);
+
+                                //判断申报包是否有效
+                                //生成DB文件路径
+                                string dbFile = System.IO.Path.Combine(destDir, "myData.db");
+                                //判断文件是否存在
+                                if (System.IO.File.Exists(dbFile))
+                                {
+                                    //有效的申报包
+                                    try
+                                    {
+                                        //报告进度
+                                        pf.reportProgress(progressVal, projectNumber + "_开始导入");
+
+                                        MainForm.writeLog("开始导入__" + projectNumber);
+
+                                        //导入数据并返回项目Id
+                                        DBImporter.importDB(projectNumber, dbFile);
+
+                                        MainForm.writeLog("结束导入__" + projectNumber);
+
+                                        //报告进度
+                                        pf.reportProgress(progressVal, projectNumber + "_结束导入");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        MainForm.writeLog("项目编号" + projectNumber + "导入错误。Ex:" + ex.ToString());
+                                    }
+                                }
+                                else
+                                {
+                                    MainForm.writeLog("没有找到DB文件__" + projectNumber);
+                                }
                             }
                             else
                             {
-                                MainForm.writeLog("没有找到DB文件__" + projectNumber);
+                                MainForm.writeLog("没有找到ZIP文件__" + projectNumber);
                             }
-                        }
-                        else
-                        {
-                            MainForm.writeLog("没有找到ZIP文件__" + projectNumber);
-                        }
 
-                        MainForm.writeLog("结束解析__" + projectNumber);
+                            MainForm.writeLog("结束解析__" + projectNumber);
+                        }
+                        catch (Exception ex)
+                        {
+                            MainForm.writeLog(ex.ToString());
+                        }
                     }
 
                     //检查是否已创建句柄，并调用委托执行UI方法
