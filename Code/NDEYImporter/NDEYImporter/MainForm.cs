@@ -649,6 +649,19 @@ namespace NDEYImporter
                             //解压这个Zip包
                             string destDir = Path.Combine(DBTempDir, projectNumber);
 
+                            //ZIP文件
+                            string pkgZipFile = string.Empty;
+
+                            //查找ZIP文件
+                            foreach (string sssss in subFiles)
+                            {
+                                if (sssss.EndsWith(".zip"))
+                                {
+                                    pkgZipFile = sssss;
+                                    break;
+                                }
+                            }
+                            
                             //判断第一年研究任务.rtf这个文件是否存在,如果存在则说明之前解压过
                             if (File.Exists(Path.Combine(destDir, "第一年研究任务.rtf")))
                             {
@@ -668,7 +681,14 @@ namespace NDEYImporter
                                 catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
 
                                 //解压这个包
-                                new NdeyMyDataUnZip().UnZipFile(subFiles[0], destDir, string.Empty, true);
+                                try
+                                {
+                                    new NdeyMyDataUnZip().UnZipFile(pkgZipFile, destDir, string.Empty, true);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MainForm.writeLog("项目编号" + projectNumber + "的压缩包解压异常，文件路径:" + pkgZipFile + ",Ex:" + ex.ToString());
+                                }
 
                                 //判断第一年研究任务.rtf这个文件是否存在
                                 if (File.Exists(Path.Combine(destDir, "第一年研究任务.rtf")))
