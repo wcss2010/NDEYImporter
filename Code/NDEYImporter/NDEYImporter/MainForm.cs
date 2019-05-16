@@ -262,133 +262,141 @@ namespace NDEYImporter
                     //项目申请单位ID
                     string projectUnitID = diCatalogItem.getString("ProjectCreaterUnitID");
 
-                    //需要输出的数据行
-                    List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
-                    outputData.Add(rowData);
-
-                    //写入项目编号
-                    rowData.Add(new KeyValuePair<string, object>("项目编号", projectNumber));
-
-                    //读取项目数据
-                    DataList dlProjects = ConnectionManager.Context.table("Project").where("ID='" + projectID + "'").select("*").getDataList();
-                    //判断是否可以填充数据恢复
-                    if (dlProjects.getRowCount() >= 1)
+                    try
                     {
-                        rowData.Add(new KeyValuePair<string, object>("申请人", dlProjects.getRow(0).get("UserName")));
-                        rowData.Add(new KeyValuePair<string, object>("性别", dlProjects.getRow(0).get("Sex")));
-                        rowData.Add(new KeyValuePair<string, object>("出生年月", dlProjects.getRow(0).get("Birthdate")));
-                        rowData.Add(new KeyValuePair<string, object>("学位", dlProjects.getRow(0).get("Degree")));
-                        rowData.Add(new KeyValuePair<string, object>("职称", dlProjects.getRow(0).get("JobTitle")));
-                        rowData.Add(new KeyValuePair<string, object>("职务", dlProjects.getRow(0).get("UnitPosition")));
-                        rowData.Add(new KeyValuePair<string, object>("主要研究领域", dlProjects.getRow(0).get("MainResearch")));
-                        rowData.Add(new KeyValuePair<string, object>("身份证号码", dlProjects.getRow(0).get("CardNo")));
-                        rowData.Add(new KeyValuePair<string, object>("办公电话", dlProjects.getRow(0).get("OfficePhones")));
-                        rowData.Add(new KeyValuePair<string, object>("手机", dlProjects.getRow(0).get("MobilePhone")));
-                        rowData.Add(new KeyValuePair<string, object>("电子邮箱", dlProjects.getRow(0).get("EMail")));
-                        rowData.Add(new KeyValuePair<string, object>("单位名称", dlProjects.getRow(0).get("UnitName")));
 
-                        //读取开户帐号
-                        string unitBankNo = ConnectionManager.Context.table("Unit").where("ID='" + projectUnitID + "'").select("UnitBankNo").getValue<string>(string.Empty);
-                        rowData.Add(new KeyValuePair<string, object>("开户账号", unitBankNo));
+                        //需要输出的数据行
+                        List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
+                        outputData.Add(rowData);
 
-                        rowData.Add(new KeyValuePair<string, object>("单位常用名", dlProjects.getRow(0).get("UnitNormal")));
-                        rowData.Add(new KeyValuePair<string, object>("单位联系人", dlProjects.getRow(0).get("UnitContacts")));
-                        rowData.Add(new KeyValuePair<string, object>("隶属部门", dlProjects.getRow(0).get("UnitForORG")));
-                        rowData.Add(new KeyValuePair<string, object>("单位性质", dlProjects.getRow(0).get("UnitProperties")));
-                        rowData.Add(new KeyValuePair<string, object>("单位联系电话", dlProjects.getRow(0).get("UnitContactsPhone")));
-                        rowData.Add(new KeyValuePair<string, object>("机要地址", dlProjects.getRow(0).get("UnitAddress")));
-                        rowData.Add(new KeyValuePair<string, object>("项目名称", dlProjects.getRow(0).get("ProjectName")));
-                        rowData.Add(new KeyValuePair<string, object>("技术方向", dlProjects.getRow(0).get("ProjectTD")));
-                        rowData.Add(new KeyValuePair<string, object>("主要研究方向", dlProjects.getRow(0).get("ProjectMRD")));
-                        rowData.Add(new KeyValuePair<string, object>("基地类别", dlProjects.getRow(0).get("ProjectBaseT")));
-                        rowData.Add(new KeyValuePair<string, object>("申报类别", dlProjects.getRow(0).get("ApplicationArea")));
-                        rowData.Add(new KeyValuePair<string, object>("研究周期", "五年"));
-                        rowData.Add(new KeyValuePair<string, object>("密级", dlProjects.getRow(0).get("ProjectSecret")));
+                        //写入项目编号
+                        rowData.Add(new KeyValuePair<string, object>("项目编号", projectNumber));
 
-                        //研究目标，研究内容，主要创建点，预期军事价值
-                        string muBiaoNeiRongChuangXinDianJieZhi = string.Empty;
-                        //资助对象简介
-                        string ziZhuDuiXiang = string.Empty;
-
-                        //处理摘要
-                        string projectBrief = dlProjects.getRow(0).getString("ProjectBrief").Replace(";;", ";");
-                        if (projectBrief != string.Empty)
+                        //读取项目数据
+                        DataList dlProjects = ConnectionManager.Context.table("Project").where("ID='" + projectID + "'").select("*").getDataList();
+                        //判断是否可以填充数据恢复
+                        if (dlProjects.getRowCount() >= 1)
                         {
-                            //拆分摘要内容
-                            string[] array = projectBrief.Split(new string[] { "|" }, StringSplitOptions.None);
+                            rowData.Add(new KeyValuePair<string, object>("申请人", dlProjects.getRow(0).get("UserName")));
+                            rowData.Add(new KeyValuePair<string, object>("性别", dlProjects.getRow(0).get("Sex")));
+                            rowData.Add(new KeyValuePair<string, object>("出生年月", dlProjects.getRow(0).get("Birthdate")));
+                            rowData.Add(new KeyValuePair<string, object>("学位", dlProjects.getRow(0).get("Degree")));
+                            rowData.Add(new KeyValuePair<string, object>("职称", dlProjects.getRow(0).get("JobTitle")));
+                            rowData.Add(new KeyValuePair<string, object>("职务", dlProjects.getRow(0).get("UnitPosition")));
+                            rowData.Add(new KeyValuePair<string, object>("主要研究领域", dlProjects.getRow(0).get("MainResearch")));
+                            rowData.Add(new KeyValuePair<string, object>("身份证号码", dlProjects.getRow(0).get("CardNo")));
+                            rowData.Add(new KeyValuePair<string, object>("办公电话", dlProjects.getRow(0).get("OfficePhones")));
+                            rowData.Add(new KeyValuePair<string, object>("手机", dlProjects.getRow(0).get("MobilePhone")));
+                            rowData.Add(new KeyValuePair<string, object>("电子邮箱", dlProjects.getRow(0).get("EMail")));
+                            rowData.Add(new KeyValuePair<string, object>("单位名称", dlProjects.getRow(0).get("UnitName")));
 
-                            //判断字符数组长度是否为6
-                            if (array.Length == 6)
+                            //读取开户帐号
+                            string unitBankNo = ConnectionManager.Context.table("Unit").where("ID='" + projectUnitID + "'").select("UnitBankNo").getValue<string>(string.Empty);
+                            rowData.Add(new KeyValuePair<string, object>("开户账号", unitBankNo));
+
+                            rowData.Add(new KeyValuePair<string, object>("单位常用名", dlProjects.getRow(0).get("UnitNormal")));
+                            rowData.Add(new KeyValuePair<string, object>("单位联系人", dlProjects.getRow(0).get("UnitContacts")));
+                            rowData.Add(new KeyValuePair<string, object>("隶属部门", dlProjects.getRow(0).get("UnitForORG")));
+                            rowData.Add(new KeyValuePair<string, object>("单位性质", dlProjects.getRow(0).get("UnitProperties")));
+                            rowData.Add(new KeyValuePair<string, object>("单位联系电话", dlProjects.getRow(0).get("UnitContactsPhone")));
+                            rowData.Add(new KeyValuePair<string, object>("机要地址", dlProjects.getRow(0).get("UnitAddress")));
+                            rowData.Add(new KeyValuePair<string, object>("项目名称", dlProjects.getRow(0).get("ProjectName")));
+                            rowData.Add(new KeyValuePair<string, object>("技术方向", dlProjects.getRow(0).get("ProjectTD")));
+                            rowData.Add(new KeyValuePair<string, object>("主要研究方向", dlProjects.getRow(0).get("ProjectMRD")));
+                            rowData.Add(new KeyValuePair<string, object>("基地类别", dlProjects.getRow(0).get("ProjectBaseT")));
+                            rowData.Add(new KeyValuePair<string, object>("申报类别", dlProjects.getRow(0).get("ApplicationArea")));
+                            rowData.Add(new KeyValuePair<string, object>("研究周期", "五年"));
+                            rowData.Add(new KeyValuePair<string, object>("密级", dlProjects.getRow(0).get("ProjectSecret")));
+
+                            //研究目标，研究内容，主要创建点，预期军事价值
+                            string muBiaoNeiRongChuangXinDianJieZhi = string.Empty;
+                            //资助对象简介
+                            string ziZhuDuiXiang = string.Empty;
+
+                            //处理摘要
+                            string projectBrief = dlProjects.getRow(0).getString("ProjectBrief").Replace(";;", ";");
+                            if (projectBrief != string.Empty)
                             {
-                                //处理某些字段没有值，只显示一个句号的情况
-                                for (int k = 0; k < array.Length; k++)
+                                //拆分摘要内容
+                                string[] array = projectBrief.Split(new string[] { "|" }, StringSplitOptions.None);
+
+                                //判断字符数组长度是否为6
+                                if (array.Length == 6)
                                 {
-                                    if (array[k] != null && array[k].Trim().Length < 2)
+                                    //处理某些字段没有值，只显示一个句号的情况
+                                    for (int k = 0; k < array.Length; k++)
                                     {
-                                        array[k] = string.Empty;
+                                        if (array[k] != null && array[k].Trim().Length < 2)
+                                        {
+                                            array[k] = string.Empty;
+                                        }
                                     }
+
+                                    //向列表中添加数据
+                                    rowData.Add(new KeyValuePair<string, object>("入选人才计划情况", array[0].Trim()));
+                                    rowData.Add(new KeyValuePair<string, object>("代表性成果或贡献", array[1].Trim()));
+                                    rowData.Add(new KeyValuePair<string, object>("研究目标", array[2].Trim()));
+                                    rowData.Add(new KeyValuePair<string, object>("研究内容", array[3].Trim()));
+                                    rowData.Add(new KeyValuePair<string, object>("主要创新点", array[4].Trim()));
+                                    rowData.Add(new KeyValuePair<string, object>("预期军事价值", array[5].Trim()));
+
+                                    //拼装研究目标，研究内容，主要创建点，预期军事价值
+                                    muBiaoNeiRongChuangXinDianJieZhi += "研究目标:" + array[2].Trim() + "\n";
+                                    muBiaoNeiRongChuangXinDianJieZhi += "研究内容:" + array[3].Trim() + "\n";
+                                    muBiaoNeiRongChuangXinDianJieZhi += "主要创新点:" + array[4].Trim() + "\n";
+                                    muBiaoNeiRongChuangXinDianJieZhi += "预期军事价值:" + array[5].Trim() + "\n";
+
+                                    //拼装资助对象简介
+                                    ziZhuDuiXiang += "基本信息:" + dlProjects.getRow(0).getString("UserName") + "," + dlProjects.getRow(0).getString("Sex") + "," + (DateTime.Now.Year - long.Parse(dlProjects.getRow(0).getString("Birthdate").Substring(0, 4))).ToString() + "," + dlProjects.getRow(0).getString("Degree") + "," + dlProjects.getRow(0).getString("UnitName") + dlProjects.getRow(0).getString("JobTitle") + ",主要研究领域是" + dlProjects.getRow(0).getString("MainResearch") + "\n";
+                                    ziZhuDuiXiang += "入选人才计划情况:" + array[0].Trim() + "\n";
+                                    ziZhuDuiXiang += "代表性成果或贡献:" + array[1].Trim() + "\n";
                                 }
-
-                                //向列表中添加数据
-                                rowData.Add(new KeyValuePair<string, object>("入选人才计划情况", array[0].Trim()));
-                                rowData.Add(new KeyValuePair<string, object>("代表性成果或贡献", array[1].Trim()));
-                                rowData.Add(new KeyValuePair<string, object>("研究目标", array[2].Trim()));
-                                rowData.Add(new KeyValuePair<string, object>("研究内容", array[3].Trim()));
-                                rowData.Add(new KeyValuePair<string, object>("主要创新点", array[4].Trim()));
-                                rowData.Add(new KeyValuePair<string, object>("预期军事价值", array[5].Trim()));
-
-                                //拼装研究目标，研究内容，主要创建点，预期军事价值
-                                muBiaoNeiRongChuangXinDianJieZhi += "研究目标:" + array[2].Trim() + "\n";
-                                muBiaoNeiRongChuangXinDianJieZhi += "研究内容:" + array[3].Trim() + "\n";
-                                muBiaoNeiRongChuangXinDianJieZhi += "主要创新点:" + array[4].Trim() + "\n";
-                                muBiaoNeiRongChuangXinDianJieZhi += "预期军事价值:" + array[5].Trim() + "\n";
-
-                                //拼装资助对象简介
-                                ziZhuDuiXiang += "基本信息:" + dlProjects.getRow(0).getString("UserName") + "," + dlProjects.getRow(0).getString("Sex") + "," + (DateTime.Now.Year - long.Parse(dlProjects.getRow(0).getString("Birthdate").Substring(0, 4))).ToString() + "," + dlProjects.getRow(0).getString("Degree") + "," + dlProjects.getRow(0).getString("UnitName") + dlProjects.getRow(0).getString("JobTitle") + ",主要研究领域是" + dlProjects.getRow(0).getString("MainResearch") + "\n";
-                                ziZhuDuiXiang += "入选人才计划情况:" + array[0].Trim() + "\n";
-                                ziZhuDuiXiang += "代表性成果或贡献:" + array[1].Trim() + "\n";
                             }
+
+                            //处理成果形式
+                            rowData.Add(new KeyValuePair<string, object>("成果形式", new ResultConfigRecord(dlProjects.getRow(0).getString("ResultConfig")).getDescription().Replace("。", string.Empty)));
+
+                            //第一年任务
+                            rowData.Add(new KeyValuePair<string, object>("第一年任务", getFirstTaskText(projectNumber)));
+
+                            //判断推荐方式
+                            if (dlProjects.getRow(0).get("ApplicationType") == null || string.IsNullOrEmpty(dlProjects.getRow(0).get("ApplicationType").ToString()) || dlProjects.getRow(0).get("ApplicationType").Equals("单位推荐"))
+                            {
+                                //"单位推荐"
+                                rowData.Add(new KeyValuePair<string, object>("推荐方式", "单位推荐"));
+                                rowData.Add(new KeyValuePair<string, object>("推荐单位", dlProjects.getRow(0).get("UnitForORG")));
+                            }
+                            else
+                            {
+                                //"专家提名"
+                                rowData.Add(new KeyValuePair<string, object>("推荐方式", "专家提名"));
+                                rowData.Add(new KeyValuePair<string, object>("推荐单位", string.Empty));
+                            }
+
+                            rowData.Add(new KeyValuePair<string, object>("专家一姓名", dlProjects.getRow(0).get("ExpertName1")));
+                            rowData.Add(new KeyValuePair<string, object>("专家一研究领域", dlProjects.getRow(0).get("ExpertArea1")));
+                            rowData.Add(new KeyValuePair<string, object>("专家一职务职称", dlProjects.getRow(0).get("ExpertUnitPosition1")));
+                            rowData.Add(new KeyValuePair<string, object>("专家一工作单位", dlProjects.getRow(0).get("ExpertUnit1")));
+                            rowData.Add(new KeyValuePair<string, object>("专家二姓名", dlProjects.getRow(0).get("ExpertName2")));
+                            rowData.Add(new KeyValuePair<string, object>("专家二研究领域", dlProjects.getRow(0).get("ExpertArea2")));
+                            rowData.Add(new KeyValuePair<string, object>("专家二职务职称", dlProjects.getRow(0).get("ExpertUnitPosition2")));
+                            rowData.Add(new KeyValuePair<string, object>("专家二工作单位", dlProjects.getRow(0).get("ExpertUnit2")));
+                            rowData.Add(new KeyValuePair<string, object>("专家三姓名", dlProjects.getRow(0).get("ExpertName3")));
+                            rowData.Add(new KeyValuePair<string, object>("专家三研究领域", dlProjects.getRow(0).get("ExpertArea3")));
+                            rowData.Add(new KeyValuePair<string, object>("专家三职务职称", dlProjects.getRow(0).get("ExpertUnitPosition3")));
+                            rowData.Add(new KeyValuePair<string, object>("专家三工作单位", dlProjects.getRow(0).get("ExpertUnit3")));
+
+                            //研究目标，研究内容，主要创新点，预期军事目标
+                            rowData.Add(new KeyValuePair<string, object>("研究目标，研究内容，主要创新点，预期军事目标", muBiaoNeiRongChuangXinDianJieZhi));
+
+                            //资助对象简介
+                            rowData.Add(new KeyValuePair<string, object>("资助对象简介", ziZhuDuiXiang));
                         }
-
-                        //处理成果形式
-                        rowData.Add(new KeyValuePair<string, object>("成果形式", new ResultConfigRecord(dlProjects.getRow(0).getString("ResultConfig")).getDescription().Replace("。", string.Empty)));
-
-                        //第一年任务
-                        rowData.Add(new KeyValuePair<string, object>("第一年任务", getFirstTaskText(projectNumber)));
-
-                        //判断推荐方式
-                        if (dlProjects.getRow(0).get("ApplicationType") == null || string.IsNullOrEmpty(dlProjects.getRow(0).get("ApplicationType").ToString()) || dlProjects.getRow(0).get("ApplicationType").Equals("单位推荐"))
-                        {
-                            //"单位推荐"
-                            rowData.Add(new KeyValuePair<string, object>("推荐方式", "单位推荐"));
-                            rowData.Add(new KeyValuePair<string, object>("推荐单位", dlProjects.getRow(0).get("UnitForORG")));
-                        }
-                        else
-                        {
-                            //"专家提名"
-                            rowData.Add(new KeyValuePair<string, object>("推荐方式", "专家提名"));
-                            rowData.Add(new KeyValuePair<string, object>("推荐单位", string.Empty));
-                        }
-
-                        rowData.Add(new KeyValuePair<string, object>("专家一姓名", dlProjects.getRow(0).get("ExpertName1")));
-                        rowData.Add(new KeyValuePair<string, object>("专家一研究领域", dlProjects.getRow(0).get("ExpertArea1")));
-                        rowData.Add(new KeyValuePair<string, object>("专家一职务职称", dlProjects.getRow(0).get("ExpertUnitPosition1")));
-                        rowData.Add(new KeyValuePair<string, object>("专家一工作单位", dlProjects.getRow(0).get("ExpertUnit1")));
-                        rowData.Add(new KeyValuePair<string, object>("专家二姓名", dlProjects.getRow(0).get("ExpertName2")));
-                        rowData.Add(new KeyValuePair<string, object>("专家二研究领域", dlProjects.getRow(0).get("ExpertArea2")));
-                        rowData.Add(new KeyValuePair<string, object>("专家二职务职称", dlProjects.getRow(0).get("ExpertUnitPosition2")));
-                        rowData.Add(new KeyValuePair<string, object>("专家二工作单位", dlProjects.getRow(0).get("ExpertUnit2")));
-                        rowData.Add(new KeyValuePair<string, object>("专家三姓名", dlProjects.getRow(0).get("ExpertName3")));
-                        rowData.Add(new KeyValuePair<string, object>("专家三研究领域", dlProjects.getRow(0).get("ExpertArea3")));
-                        rowData.Add(new KeyValuePair<string, object>("专家三职务职称", dlProjects.getRow(0).get("ExpertUnitPosition3")));
-                        rowData.Add(new KeyValuePair<string, object>("专家三工作单位", dlProjects.getRow(0).get("ExpertUnit3")));
-
-                        //研究目标，研究内容，主要创新点，预期军事目标
-                        rowData.Add(new KeyValuePair<string, object>("研究目标，研究内容，主要创新点，预期军事目标", muBiaoNeiRongChuangXinDianJieZhi));
-
-                        //资助对象简介
-                        rowData.Add(new KeyValuePair<string, object>("资助对象简介", ziZhuDuiXiang));
-                    }                    
+                    }
+                    catch (Exception ex)
+                    {
+                        MainForm.writeLog("项目编号" + projectNumber + "的输出到Excel异常,Ex:" + ex.ToString());
+                    }
                 }
 
                 //写表格数据
@@ -413,33 +421,41 @@ namespace NDEYImporter
                     //项目申请单位ID
                     string projectUnitID = diCatalogItem.getString("ProjectCreaterUnitID");
 
-                    //需要输出的数据行
-                    List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
-                    outputData.Add(rowData);
-
-                    //查找人才计划
-                    DataList dlTalentsPlanList = ConnectionManager.Context.table("TalentsPlanExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
-                    //判断是否存在人才计划
-                    if (dlTalentsPlanList != null)
+                    try
                     {
-                        //将数据输出到outputData列表中
-                        foreach (DataItem diTalent in dlTalentsPlanList.getRows())
+
+                        //需要输出的数据行
+                        List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
+                        outputData.Add(rowData);
+
+                        //查找人才计划
+                        DataList dlTalentsPlanList = ConnectionManager.Context.table("TalentsPlanExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
+                        //判断是否存在人才计划
+                        if (dlTalentsPlanList != null)
                         {
-                            //判断当前项是否为其它，如果是则忽略
-                            if (diTalent.get("Name") != null && diTalent.get("Name").ToString().StartsWith("其它:"))
+                            //将数据输出到outputData列表中
+                            foreach (DataItem diTalent in dlTalentsPlanList.getRows())
                             {
-                                //忽略这个项
-                                continue;
-                            }
-                            else
-                            {
-                                //输出这个项
-                                rowData.Add(new KeyValuePair<string, object>("姓名", projectCreater));
-                                rowData.Add(new KeyValuePair<string, object>("入选年份", diTalent.get("Date")));
-                                rowData.Add(new KeyValuePair<string, object>("人才计划名称", diTalent.get("Name")));
-                                rowData.Add(new KeyValuePair<string, object>("研究方向", diTalent.get("RA")));                                
+                                //判断当前项是否为其它，如果是则忽略
+                                if (diTalent.get("Name") != null && diTalent.get("Name").ToString().StartsWith("其它:"))
+                                {
+                                    //忽略这个项
+                                    continue;
+                                }
+                                else
+                                {
+                                    //输出这个项
+                                    rowData.Add(new KeyValuePair<string, object>("姓名", projectCreater));
+                                    rowData.Add(new KeyValuePair<string, object>("入选年份", diTalent.get("Date")));
+                                    rowData.Add(new KeyValuePair<string, object>("人才计划名称", diTalent.get("Name")));
+                                    rowData.Add(new KeyValuePair<string, object>("研究方向", diTalent.get("RA")));
+                                }
                             }
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        MainForm.writeLog("项目编号" + projectNumber + "的输出到Excel异常,Ex:" + ex.ToString());
                     }
                 }
 
@@ -465,34 +481,42 @@ namespace NDEYImporter
                     //项目申请单位ID
                     string projectUnitID = diCatalogItem.getString("ProjectCreaterUnitID");
 
-                    //需要输出的数据行
-                    List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
-                    outputData.Add(rowData);
-
-                    //查找科技奖励
-                    DataList dlTechnologyAwardsList = ConnectionManager.Context.table("TechnologyAwardsExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
-                    //判断是否存在科技奖励
-                    if (dlTechnologyAwardsList != null)
+                    try
                     {
-                        //将数据输出到outputData列表中
-                        foreach (DataItem diTech in dlTechnologyAwardsList.getRows())
+
+                        //需要输出的数据行
+                        List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
+                        outputData.Add(rowData);
+
+                        //查找科技奖励
+                        DataList dlTechnologyAwardsList = ConnectionManager.Context.table("TechnologyAwardsExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
+                        //判断是否存在科技奖励
+                        if (dlTechnologyAwardsList != null)
                         {
-                            //判断当前项是否为其它，如果是则忽略
-                            if (diTech.get("TypeLevel") != null && diTech.get("TypeLevel").ToString().StartsWith("其它:"))
+                            //将数据输出到outputData列表中
+                            foreach (DataItem diTech in dlTechnologyAwardsList.getRows())
                             {
-                                //忽略这个项
-                                continue;
-                            }
-                            else
-                            {
-                                //输出这个项
-                                rowData.Add(new KeyValuePair<string, object>("姓名", projectCreater));
-                                rowData.Add(new KeyValuePair<string, object>("获奖时间", diTech.get("Date")));
-                                rowData.Add(new KeyValuePair<string, object>("项目名称", diTech.get("Name")));
-                                rowData.Add(new KeyValuePair<string, object>("奖励类别及等级", diTech.get("TypeLevel")));
-                                rowData.Add(new KeyValuePair<string, object>("排名", diTech.get("Ranking")));
+                                //判断当前项是否为其它，如果是则忽略
+                                if (diTech.get("TypeLevel") != null && diTech.get("TypeLevel").ToString().StartsWith("其它:"))
+                                {
+                                    //忽略这个项
+                                    continue;
+                                }
+                                else
+                                {
+                                    //输出这个项
+                                    rowData.Add(new KeyValuePair<string, object>("姓名", projectCreater));
+                                    rowData.Add(new KeyValuePair<string, object>("获奖时间", diTech.get("Date")));
+                                    rowData.Add(new KeyValuePair<string, object>("项目名称", diTech.get("Name")));
+                                    rowData.Add(new KeyValuePair<string, object>("奖励类别及等级", diTech.get("TypeLevel")));
+                                    rowData.Add(new KeyValuePair<string, object>("排名", diTech.get("Ranking")));
+                                }
                             }
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        MainForm.writeLog("项目编号" + projectNumber + "的输出到Excel异常,Ex:" + ex.ToString());
                     }
                 }
 
@@ -629,89 +653,96 @@ namespace NDEYImporter
             //RTF文本
             string rtfText = string.Empty;
 
-            //查找指定申报包
-            string[] subDirs = Directory.GetDirectories(MainForm.Config.TotalDir);
-            if (subDirs != null)
+            try
             {
-                //循环子目录,查找与项目编号相符的目录名称
-                foreach (string s in subDirs)
+                //查找指定申报包
+                string[] subDirs = Directory.GetDirectories(MainForm.Config.TotalDir);
+                if (subDirs != null)
                 {
-                    //获得目录信息
-                    DirectoryInfo di = new DirectoryInfo(s);
-
-                    //判断目录是否符合条件
-                    if (di.Name.Contains(projectNumber) && di.Name.Length >= 12)
+                    //循环子目录,查找与项目编号相符的目录名称
+                    foreach (string s in subDirs)
                     {
-                        //查找子文件
-                        string[] subFiles = Directory.GetFiles(s);
-                        if (subFiles != null && subFiles.Length >= 1)
+                        //获得目录信息
+                        DirectoryInfo di = new DirectoryInfo(s);
+
+                        //判断目录是否符合条件
+                        if (di.Name.Contains(projectNumber) && di.Name.Length >= 12)
                         {
-                            //解压这个Zip包
-                            string destDir = Path.Combine(DBTempDir, projectNumber);
-
-                            //ZIP文件
-                            string pkgZipFile = string.Empty;
-
-                            //查找ZIP文件
-                            foreach (string sssss in subFiles)
+                            //查找子文件
+                            string[] subFiles = Directory.GetFiles(s);
+                            if (subFiles != null && subFiles.Length >= 1)
                             {
-                                if (sssss.EndsWith(".zip"))
-                                {
-                                    pkgZipFile = sssss;
-                                    break;
-                                }
-                            }
-                            
-                            //判断第一年研究任务.rtf这个文件是否存在,如果存在则说明之前解压过
-                            if (File.Exists(Path.Combine(destDir, "第一年研究任务.rtf")))
-                            {
-                                //存在这个文件,直接读取
-                                rtfText = File.ReadAllText(Path.Combine(destDir, "第一年研究任务.rtf"));
-                                break;
-                            }
-                            else
-                            {
-                                //不存在这个文件,先解压再读取
+                                //解压这个Zip包
+                                string destDir = Path.Combine(DBTempDir, projectNumber);
 
-                                //创建临时目录
-                                try
-                                {
-                                    Directory.CreateDirectory(destDir);
-                                }
-                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                //ZIP文件
+                                string pkgZipFile = string.Empty;
 
-                                //解压这个包
-                                try
+                                //查找ZIP文件
+                                foreach (string sssss in subFiles)
                                 {
-                                    new NdeyMyDataUnZip().UnZipFile(pkgZipFile, destDir, string.Empty, true);
-                                }
-                                catch (Exception ex)
-                                {
-                                    MainForm.writeLog("项目编号" + projectNumber + "的压缩包解压异常，文件路径:" + pkgZipFile + ",Ex:" + ex.ToString());
+                                    if (sssss.EndsWith(".zip"))
+                                    {
+                                        pkgZipFile = sssss;
+                                        break;
+                                    }
                                 }
 
-                                //判断第一年研究任务.rtf这个文件是否存在
+                                //判断第一年研究任务.rtf这个文件是否存在,如果存在则说明之前解压过
                                 if (File.Exists(Path.Combine(destDir, "第一年研究任务.rtf")))
                                 {
                                     //存在这个文件,直接读取
                                     rtfText = File.ReadAllText(Path.Combine(destDir, "第一年研究任务.rtf"));
                                     break;
                                 }
+                                else
+                                {
+                                    //不存在这个文件,先解压再读取
+
+                                    //创建临时目录
+                                    try
+                                    {
+                                        Directory.CreateDirectory(destDir);
+                                    }
+                                    catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+
+                                    //解压这个包
+                                    try
+                                    {
+                                        new NdeyMyDataUnZip().UnZipFile(pkgZipFile, destDir, string.Empty, true);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        MainForm.writeLog("项目编号" + projectNumber + "的压缩包解压异常，文件路径:" + pkgZipFile + ",Ex:" + ex.ToString());
+                                    }
+
+                                    //判断第一年研究任务.rtf这个文件是否存在
+                                    if (File.Exists(Path.Combine(destDir, "第一年研究任务.rtf")))
+                                    {
+                                        //存在这个文件,直接读取
+                                        rtfText = File.ReadAllText(Path.Combine(destDir, "第一年研究任务.rtf"));
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
-                }
 
-                //如果RTF内容非空,则需要获得纯文本
-                if (!string.IsNullOrEmpty(rtfText))
-                {
-                    //将RTF文本设置到RichTextBox对象
-                    RichTextBox rtb = new RichTextBox();
-                    rtb.Rtf = rtfText;
+                    //如果RTF内容非空,则需要获得纯文本
+                    if (!string.IsNullOrEmpty(rtfText))
+                    {
+                        //将RTF文本设置到RichTextBox对象
+                        RichTextBox rtb = new RichTextBox();
+                        rtb.Rtf = rtfText;
 
-                    //获得纯文本
-                    rtfText = rtb.Text;
+                        //获得纯文本
+                        rtfText = rtb.Text;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MainForm.writeLog("项目编号" + projectNumber + "的压缩包解压异常。Ex:" + ex.ToString());
             }
 
             return rtfText;
