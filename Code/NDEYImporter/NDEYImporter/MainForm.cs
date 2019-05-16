@@ -610,9 +610,12 @@ namespace NDEYImporter
             }
 
             //Excel列宽自动适应
-            for (int k = 0; k < sheet.GetRow(0).Cells.Count; k++)
+            if (table.Count >= 1)
             {
-                sheet.AutoSizeColumn(k);
+                for (int k = 0; k < sheet.GetRow(0).Cells.Count; k++)
+                {
+                    sheet.AutoSizeColumn(k);
+                }
             }
         }
 
