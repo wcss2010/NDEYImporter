@@ -96,22 +96,29 @@ namespace NDEYImporter.Forms
                 //导入
                 foreach (string pDir in importList)
                 {
-                    progressVal++;
+                    try
+                    {
+                        progressVal++;
 
-                    //读取项目ID
-                    string projectNumber = new DirectoryInfo(pDir).Name.Substring(0, 11);
+                        //读取项目ID
+                        string projectNumber = new DirectoryInfo(pDir).Name.Substring(0, 11);
 
-                    //报告进度
-                    pf.reportProgress(progressVal, string.Empty);
+                        //报告进度
+                        pf.reportProgress(progressVal, string.Empty);
 
-                    //报告进度
-                    pf.reportProgress(progressVal, projectNumber + "_开始解压");
+                        //报告进度
+                        pf.reportProgress(progressVal, projectNumber + "_开始解压");
 
-                    //解压ZIP包
-                    unZipDocFiles(projectNumber);
+                        //解压ZIP包
+                        unZipDocFiles(projectNumber);
 
-                    //报告进度
-                    pf.reportProgress(progressVal, projectNumber + "_结束解压");
+                        //报告进度
+                        pf.reportProgress(progressVal, projectNumber + "_结束解压");
+                    }
+                    catch (Exception ex)
+                    {
+                        MainForm.writeLog(ex.ToString());
+                    }
                 }
 
                 //检查是否已创建句柄，并调用委托执行UI方法
@@ -119,11 +126,18 @@ namespace NDEYImporter.Forms
                 {
                     pf.Invoke(new MethodInvoker(delegate()
                     {
-                        //刷新Catalog列表
-                        MainForm.Instance.reloadCatalogList();
+                        try
+                        {
+                            //刷新Catalog列表
+                            MainForm.Instance.reloadCatalogList();
 
-                        //关闭进度窗口
-                        pf.Close();
+                            //关闭进度窗口
+                            pf.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            MainForm.writeLog(ex.ToString());
+                        }
                     }));
                 }
             }));
@@ -439,49 +453,56 @@ namespace NDEYImporter.Forms
         /// <param name="destDocFile"></param>
         private void convertToPDF(string destDocFile)
         {
-            //Document文档对象
-            Aspose.Words.Document xDoc = new Aspose.Words.Document(destDocFile);
-
-            //获得附件表格
-            Aspose.Words.Tables.Table tablee = (Aspose.Words.Tables.Table)xDoc.GetChild(Aspose.Words.NodeType.Table, xDoc.GetChildNodes(Aspose.Words.NodeType.Table, true).Count - 1, true);
-
-            //行与
-            int rowIndex = 0;
-
-            //查找需要替换位置
-            foreach (Aspose.Words.Tables.Row row in tablee.Rows)
-            {
-                if (row.Cells[0].GetText().Contains("序号"))
-                {
-                    continue;
-                }
-                else
-                {
-                    //行号+1
-                    rowIndex++;
-
-                    //清理单位格内容
-                    row.Cells[0].Paragraphs.Clear();
-
-                    //写行号
-                    Aspose.Words.Paragraph p = new Aspose.Words.Paragraph(xDoc);
-                    p.AppendChild(new Aspose.Words.Run(xDoc,rowIndex.ToString()));
-                    row.Cells[0].AppendChild(p);
-                }
-            }
-
-            //保存文档
-            //xDoc.Save(destDocFile);
-
-            //删除Doc文档
             try
             {
-                File.Delete(destDocFile);
-            }
-            catch (Exception ex) { }
+                //Document文档对象
+                Aspose.Words.Document xDoc = new Aspose.Words.Document(destDocFile);
 
-            //保存为PDF
-            xDoc.Save(Path.Combine(new FileInfo(destDocFile).DirectoryName,"项目申报书.pdf"), Aspose.Words.SaveFormat.Pdf);
+                //获得附件表格
+                Aspose.Words.Tables.Table tablee = (Aspose.Words.Tables.Table)xDoc.GetChild(Aspose.Words.NodeType.Table, xDoc.GetChildNodes(Aspose.Words.NodeType.Table, true).Count - 1, true);
+
+                //行与
+                int rowIndex = 0;
+
+                //查找需要替换位置
+                foreach (Aspose.Words.Tables.Row row in tablee.Rows)
+                {
+                    if (row.Cells[0].GetText().Contains("序号"))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        //行号+1
+                        rowIndex++;
+
+                        //清理单位格内容
+                        row.Cells[0].Paragraphs.Clear();
+
+                        //写行号
+                        Aspose.Words.Paragraph p = new Aspose.Words.Paragraph(xDoc);
+                        p.AppendChild(new Aspose.Words.Run(xDoc, rowIndex.ToString()));
+                        row.Cells[0].AppendChild(p);
+                    }
+                }
+
+                //保存文档
+                //xDoc.Save(destDocFile);
+
+                //删除Doc文档
+                try
+                {
+                    File.Delete(destDocFile);
+                }
+                catch (Exception ex) { }
+
+                //保存为PDF
+                xDoc.Save(Path.Combine(new FileInfo(destDocFile).DirectoryName, "项目申报书.pdf"), Aspose.Words.SaveFormat.Pdf);
+            }
+            catch (Exception ex)
+            {
+                MainForm.writeLog(ex.ToString());
+            }
         }
     }
 }

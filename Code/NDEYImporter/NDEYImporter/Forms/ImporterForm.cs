@@ -224,11 +224,18 @@ namespace NDEYImporter.Forms
                     {
                         pf.Invoke(new MethodInvoker(delegate()
                             {
-                                //刷新Catalog列表
-                                MainForm.Instance.reloadCatalogList();
+                                try
+                                {
+                                    //刷新Catalog列表
+                                    MainForm.Instance.reloadCatalogList();
 
-                                //关闭进度窗口
-                                pf.Close();
+                                    //关闭进度窗口
+                                    pf.Close();
+                                }
+                                catch (Exception ex)
+                                {
+                                    MainForm.writeLog(ex.ToString());
+                                }
                             }));
                     }
                 }));
