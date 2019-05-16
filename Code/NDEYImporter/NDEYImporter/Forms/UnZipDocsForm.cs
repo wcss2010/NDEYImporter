@@ -138,278 +138,285 @@ namespace NDEYImporter.Forms
         /// <param name="projectNumber">项目编号</param>
         private void unZipDocFiles(string projectNumber)
         {
-            //查找指定申报包
-            string[] subDirs = Directory.GetDirectories(MainForm.Config.TotalDir);
-            if (subDirs != null)
+            try
             {
-                //循环子目录,查找与项目编号相符的目录名称
-                foreach (string s in subDirs)
+                //查找指定申报包
+                string[] subDirs = Directory.GetDirectories(MainForm.Config.TotalDir);
+                if (subDirs != null)
                 {
-                    //获得目录信息
-                    DirectoryInfo di = new DirectoryInfo(s);
-
-                    //判断目录是否符合条件
-                    if (di.Name.Contains(projectNumber) && di.Name.Length >= 12)
+                    //循环子目录,查找与项目编号相符的目录名称
+                    foreach (string s in subDirs)
                     {
-                        //查找子文件
-                        string[] subFiless = Directory.GetFiles(s);
-                        if (subFiless != null && subFiless.Length >= 1)
+                        //获得目录信息
+                        DirectoryInfo di = new DirectoryInfo(s);
+
+                        //判断目录是否符合条件
+                        if (di.Name.Contains(projectNumber) && di.Name.Length >= 12)
                         {
-                            //解压这个Zip包
-                            string pkgDir = Path.Combine(MainForm.Config.UnZipDir, projectNumber);
-
-                            //删除解压目录
-                            try
+                            //查找子文件
+                            string[] subFiless = Directory.GetFiles(s);
+                            if (subFiless != null && subFiless.Length >= 1)
                             {
-                                Directory.Delete(pkgDir, true);
-                            }
-                            catch (Exception ex) { }
+                                //解压这个Zip包
+                                string pkgDir = Path.Combine(MainForm.Config.UnZipDir, projectNumber);
 
-                            //创建解压目录
-                            try
-                            {
-                                Directory.CreateDirectory(pkgDir);
-                            }
-                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
-
-                            //ZIP文件
-                            string pkgZipFile = string.Empty;
-
-                            //查找ZIP文件
-                            foreach (string sssss in subFiless)
-                            {
-                                if (sssss.EndsWith(".zip"))
+                                //删除解压目录
+                                try
                                 {
-                                    pkgZipFile = sssss;
-                                    break;
+                                    Directory.Delete(pkgDir, true);
                                 }
-                            }
+                                catch (Exception ex) { }
 
-                            //判断ZIP文件是否存在
-                            if (pkgZipFile != null && pkgZipFile.EndsWith(".zip"))
-                            {
-
-                                //解压这个包
-                                new NdeyDocFilesUnZip().UnZipFile(pkgZipFile, pkgDir, string.Empty, true);
-
-                                //文件目录
-                                string fileDir = pkgDir;
-
-                                //判断申报包是否有效
-                                //生成DB文件路径
-                                string dbFile = System.IO.Path.Combine(fileDir, "myData.db");
-                                //判断文件是否存在
-                                if (System.IO.File.Exists(dbFile))
+                                //创建解压目录
+                                try
                                 {
-                                    //SQLite数据库工厂
-                                    System.Data.SQLite.SQLiteFactory factory = new System.Data.SQLite.SQLiteFactory();
-                                    //NDEY数据库连接
-                                    Noear.Weed.DbContext context = new Noear.Weed.DbContext("main", "Data Source = " + dbFile, factory);
+                                    Directory.CreateDirectory(pkgDir);
+                                }
+                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
 
-                                    try
+                                //ZIP文件
+                                string pkgZipFile = string.Empty;
+
+                                //查找ZIP文件
+                                foreach (string sssss in subFiless)
+                                {
+                                    if (sssss.EndsWith(".zip"))
                                     {
-                                        //提取论文详细
-                                        DataList dlRTreatises = context.table("RTreatises").select("RTreatisesName,RTreatisesPDF").getDataList();
-                                        //提取科技奖项
-                                        DataList dlTechnologyAwards = context.table("TechnologyAwards").select("TechnologyAwardsPName,TechnologyAwardsPDF").getDataList();
-                                        //提取专利情况
-                                        DataList dlNDPatent = context.table("NDPatent").select("NDPatentName,NDPatentPDF").getDataList();
-                                        //提取推荐意见
-                                        DataList dlBaseInfor = context.table("BaseInfor").select("UnitRecommend,ExpertRecommend1,ExpertRecommend2,ExpertRecommend3").getDataList();
-
-                                        //提取UnitID
-                                        string unitID = context.table("BaseInfor").select("UnitID").getValue<string>(string.Empty);
-
-                                        string personName = context.table("BaseInfor").select("UserName").getValue<string>(string.Empty);
-
-                                        //附件序号
-                                        int fileIndex = 0;
-
-                                        //整理附件名称
-                                        foreach (DataItem item in dlRTreatises.getRows())
-                                        {
-                                            //获得文件扩展名
-                                            string extName = new FileInfo(Path.Combine(fileDir, item.getString("RTreatisesPDF"))).Extension;
-
-                                            //文件序号+1
-                                            fileIndex++;
-
-                                            //文件重命名
-                                            try
-                                            {
-                                                File.Move(Path.Combine(fileDir, item.getString("RTreatisesPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("RTreatisesName") + extName));
-                                            }
-                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
-                                        }
-                                        foreach (DataItem item in dlTechnologyAwards.getRows())
-                                        {
-                                            //获得文件扩展名
-                                            string extName = new FileInfo(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF"))).Extension;
-
-                                            //文件序号+1
-                                            fileIndex++;
-
-                                            //文件重命名
-                                            try
-                                            {
-                                                File.Move(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("TechnologyAwardsPName") + extName));
-                                            }
-                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
-                                        }
-                                        foreach (DataItem item in dlNDPatent.getRows())
-                                        {
-                                            //获得文件扩展名
-                                            string extName = new FileInfo(Path.Combine(fileDir, item.getString("NDPatentPDF"))).Extension;
-
-                                            //文件序号+1
-                                            fileIndex++;
-
-                                            //文件重命名
-                                            try
-                                            {
-                                                File.Move(Path.Combine(fileDir, item.getString("NDPatentPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("NDPatentName") + extName));
-                                            }
-                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
-                                        }
-
-                                        //整理推荐意见附件
-                                        string unitFileA = dlBaseInfor.getRow(0).get("UnitRecommend") != null ? dlBaseInfor.getRow(0).get("UnitRecommend").ToString() : string.Empty;
-                                        string personFileA = dlBaseInfor.getRow(0).get("ExpertRecommend1") != null ? dlBaseInfor.getRow(0).get("ExpertRecommend1").ToString() : string.Empty;
-                                        string personFileB = dlBaseInfor.getRow(0).get("ExpertRecommend2") != null ? dlBaseInfor.getRow(0).get("ExpertRecommend2").ToString() : string.Empty;
-                                        string personFileC = dlBaseInfor.getRow(0).get("ExpertRecommend3") != null ? dlBaseInfor.getRow(0).get("ExpertRecommend3").ToString() : string.Empty;
-
-                                        //查找单位推荐意见附件
-                                        if (File.Exists(Path.Combine(fileDir, unitFileA)))
-                                        {
-                                            //文件序号+1
-                                            fileIndex++;
-
-                                            //文件重命名
-                                            try
-                                            {
-                                                File.Move(Path.Combine(fileDir, unitFileA), Path.Combine(fileDir, "附件" + fileIndex + "_单位推荐意见" + new FileInfo(Path.Combine(fileDir, unitFileA)).Extension));
-                                            }
-                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
-                                        }
-
-                                        //查找专家提名附件
-                                        if (File.Exists(Path.Combine(fileDir, personFileA)))
-                                        {
-                                            //文件序号+1
-                                            fileIndex++;
-
-                                            //文件重命名
-                                            try
-                                            {
-                                                File.Move(Path.Combine(fileDir, personFileA), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileA)).Extension));
-                                            }
-                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
-                                        }
-
-                                        //查找专家提名附件
-                                        if (File.Exists(Path.Combine(fileDir, personFileB)))
-                                        {
-                                            //文件序号+1
-                                            fileIndex++;
-
-                                            //文件重命名
-                                            try
-                                            {
-                                                File.Move(Path.Combine(fileDir, personFileB), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileB)).Extension));
-                                            }
-                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
-                                        }
-
-                                        //查找专家提名附件
-                                        if (File.Exists(Path.Combine(fileDir, personFileC)))
-                                        {
-                                            //文件序号+1
-                                            fileIndex++;
-
-                                            //文件重命名
-                                            try
-                                            {
-                                                File.Move(Path.Combine(fileDir, personFileC), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileC)).Extension));
-                                            }
-                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
-                                        }
-
-                                        //整理保密资质命名,查找Doc文件
-                                        string[] extFiles = Directory.GetFiles(fileDir);
-                                        foreach (string sss in extFiles)
-                                        {
-                                            FileInfo fii = new FileInfo(sss);
-                                            if (fii.Name.StartsWith("extFile_"))
-                                            {
-                                                try
-                                                {
-                                                    //文件序号+1
-                                                    fileIndex++;
-
-                                                    //移动文件
-                                                    File.Move(sss, Path.Combine(fileDir, "附件" + fileIndex + "_" + "保密资质复印件.png"));
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    MainForm.writeLog(ex.ToString());
-                                                }
-                                            }
-                                            else if (fii.Name.EndsWith(".doc"))
-                                            {
-                                                if (fii.Name.StartsWith(unitID) && fii.Name.Contains(personName))
-                                                {
-                                                    //真实的申报书路径
-                                                    string destDocFile = Path.Combine(fii.DirectoryName, "项目申报书.doc");
-
-                                                    //文件改名
-                                                    try
-                                                    {
-                                                        File.Move(sss, destDocFile);
-                                                    }
-                                                    catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
-
-                                                    //转换成PDF
-                                                    convertToPDF(destDocFile);
-                                                }
-                                                else
-                                                {
-                                                    if (fii.Name.EndsWith("项目申报书.doc"))
-                                                    {
-                                                        try
-                                                        {
-                                                            File.Delete(sss);
-                                                        }
-                                                        catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
-                                                    }
-                                                }
-                                            }
-                                        }
+                                        pkgZipFile = sssss;
+                                        break;
                                     }
-                                    catch (Exception ex)
-                                    {
-                                        MainForm.writeLog(ex.ToString());
-                                    }
-                                    finally
-                                    {
-                                        factory.Dispose();
-                                        context.Dispose();
-                                        context = null;
+                                }
 
-                                        //**链接close（）和dispose（）之后任然不能释放与db文件的连接,原因是sqlite在执行SQLiteConnectionHandle.Dispose()操作时候，其实并没有真正的释放连接，只有显式调用 CLR垃圾回收之后才能真正释放连接
-                                        GC.Collect();
-                                        GC.WaitForPendingFinalizers();
+                                //判断ZIP文件是否存在
+                                if (pkgZipFile != null && pkgZipFile.EndsWith(".zip"))
+                                {
 
-                                        //删除数据库文件
+                                    //解压这个包
+                                    new NdeyDocFilesUnZip().UnZipFile(pkgZipFile, pkgDir, string.Empty, true);
+
+                                    //文件目录
+                                    string fileDir = pkgDir;
+
+                                    //判断申报包是否有效
+                                    //生成DB文件路径
+                                    string dbFile = System.IO.Path.Combine(fileDir, "myData.db");
+                                    //判断文件是否存在
+                                    if (System.IO.File.Exists(dbFile))
+                                    {
+                                        //SQLite数据库工厂
+                                        System.Data.SQLite.SQLiteFactory factory = new System.Data.SQLite.SQLiteFactory();
+                                        //NDEY数据库连接
+                                        Noear.Weed.DbContext context = new Noear.Weed.DbContext("main", "Data Source = " + dbFile, factory);
+
                                         try
                                         {
-                                            File.Delete(dbFile);
+                                            //提取论文详细
+                                            DataList dlRTreatises = context.table("RTreatises").select("RTreatisesName,RTreatisesPDF").getDataList();
+                                            //提取科技奖项
+                                            DataList dlTechnologyAwards = context.table("TechnologyAwards").select("TechnologyAwardsPName,TechnologyAwardsPDF").getDataList();
+                                            //提取专利情况
+                                            DataList dlNDPatent = context.table("NDPatent").select("NDPatentName,NDPatentPDF").getDataList();
+                                            //提取推荐意见
+                                            DataList dlBaseInfor = context.table("BaseInfor").select("UnitRecommend,ExpertRecommend1,ExpertRecommend2,ExpertRecommend3").getDataList();
+
+                                            //提取UnitID
+                                            string unitID = context.table("BaseInfor").select("UnitID").getValue<string>(string.Empty);
+
+                                            string personName = context.table("BaseInfor").select("UserName").getValue<string>(string.Empty);
+
+                                            //附件序号
+                                            int fileIndex = 0;
+
+                                            //整理附件名称
+                                            foreach (DataItem item in dlRTreatises.getRows())
+                                            {
+                                                //获得文件扩展名
+                                                string extName = new FileInfo(Path.Combine(fileDir, item.getString("RTreatisesPDF"))).Extension;
+
+                                                //文件序号+1
+                                                fileIndex++;
+
+                                                //文件重命名
+                                                try
+                                                {
+                                                    File.Move(Path.Combine(fileDir, item.getString("RTreatisesPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("RTreatisesName") + extName));
+                                                }
+                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                            }
+                                            foreach (DataItem item in dlTechnologyAwards.getRows())
+                                            {
+                                                //获得文件扩展名
+                                                string extName = new FileInfo(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF"))).Extension;
+
+                                                //文件序号+1
+                                                fileIndex++;
+
+                                                //文件重命名
+                                                try
+                                                {
+                                                    File.Move(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("TechnologyAwardsPName") + extName));
+                                                }
+                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                            }
+                                            foreach (DataItem item in dlNDPatent.getRows())
+                                            {
+                                                //获得文件扩展名
+                                                string extName = new FileInfo(Path.Combine(fileDir, item.getString("NDPatentPDF"))).Extension;
+
+                                                //文件序号+1
+                                                fileIndex++;
+
+                                                //文件重命名
+                                                try
+                                                {
+                                                    File.Move(Path.Combine(fileDir, item.getString("NDPatentPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("NDPatentName") + extName));
+                                                }
+                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                            }
+
+                                            //整理推荐意见附件
+                                            string unitFileA = dlBaseInfor.getRow(0).get("UnitRecommend") != null ? dlBaseInfor.getRow(0).get("UnitRecommend").ToString() : string.Empty;
+                                            string personFileA = dlBaseInfor.getRow(0).get("ExpertRecommend1") != null ? dlBaseInfor.getRow(0).get("ExpertRecommend1").ToString() : string.Empty;
+                                            string personFileB = dlBaseInfor.getRow(0).get("ExpertRecommend2") != null ? dlBaseInfor.getRow(0).get("ExpertRecommend2").ToString() : string.Empty;
+                                            string personFileC = dlBaseInfor.getRow(0).get("ExpertRecommend3") != null ? dlBaseInfor.getRow(0).get("ExpertRecommend3").ToString() : string.Empty;
+
+                                            //查找单位推荐意见附件
+                                            if (File.Exists(Path.Combine(fileDir, unitFileA)))
+                                            {
+                                                //文件序号+1
+                                                fileIndex++;
+
+                                                //文件重命名
+                                                try
+                                                {
+                                                    File.Move(Path.Combine(fileDir, unitFileA), Path.Combine(fileDir, "附件" + fileIndex + "_单位推荐意见" + new FileInfo(Path.Combine(fileDir, unitFileA)).Extension));
+                                                }
+                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                            }
+
+                                            //查找专家提名附件
+                                            if (File.Exists(Path.Combine(fileDir, personFileA)))
+                                            {
+                                                //文件序号+1
+                                                fileIndex++;
+
+                                                //文件重命名
+                                                try
+                                                {
+                                                    File.Move(Path.Combine(fileDir, personFileA), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileA)).Extension));
+                                                }
+                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                            }
+
+                                            //查找专家提名附件
+                                            if (File.Exists(Path.Combine(fileDir, personFileB)))
+                                            {
+                                                //文件序号+1
+                                                fileIndex++;
+
+                                                //文件重命名
+                                                try
+                                                {
+                                                    File.Move(Path.Combine(fileDir, personFileB), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileB)).Extension));
+                                                }
+                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                            }
+
+                                            //查找专家提名附件
+                                            if (File.Exists(Path.Combine(fileDir, personFileC)))
+                                            {
+                                                //文件序号+1
+                                                fileIndex++;
+
+                                                //文件重命名
+                                                try
+                                                {
+                                                    File.Move(Path.Combine(fileDir, personFileC), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileC)).Extension));
+                                                }
+                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                            }
+
+                                            //整理保密资质命名,查找Doc文件
+                                            string[] extFiles = Directory.GetFiles(fileDir);
+                                            foreach (string sss in extFiles)
+                                            {
+                                                FileInfo fii = new FileInfo(sss);
+                                                if (fii.Name.StartsWith("extFile_"))
+                                                {
+                                                    try
+                                                    {
+                                                        //文件序号+1
+                                                        fileIndex++;
+
+                                                        //移动文件
+                                                        File.Move(sss, Path.Combine(fileDir, "附件" + fileIndex + "_" + "保密资质复印件.png"));
+                                                    }
+                                                    catch (Exception ex)
+                                                    {
+                                                        MainForm.writeLog(ex.ToString());
+                                                    }
+                                                }
+                                                else if (fii.Name.EndsWith(".doc"))
+                                                {
+                                                    if (fii.Name.StartsWith(unitID) && fii.Name.Contains(personName))
+                                                    {
+                                                        //真实的申报书路径
+                                                        string destDocFile = Path.Combine(fii.DirectoryName, "项目申报书.doc");
+
+                                                        //文件改名
+                                                        try
+                                                        {
+                                                            File.Move(sss, destDocFile);
+                                                        }
+                                                        catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+
+                                                        //转换成PDF
+                                                        convertToPDF(destDocFile);
+                                                    }
+                                                    else
+                                                    {
+                                                        if (fii.Name.EndsWith("项目申报书.doc"))
+                                                        {
+                                                            try
+                                                            {
+                                                                File.Delete(sss);
+                                                            }
+                                                            catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
-                                        catch (Exception ex) { }
+                                        catch (Exception ex)
+                                        {
+                                            MainForm.writeLog(ex.ToString());
+                                        }
+                                        finally
+                                        {
+                                            factory.Dispose();
+                                            context.Dispose();
+                                            context = null;
+
+                                            //**链接close（）和dispose（）之后任然不能释放与db文件的连接,原因是sqlite在执行SQLiteConnectionHandle.Dispose()操作时候，其实并没有真正的释放连接，只有显式调用 CLR垃圾回收之后才能真正释放连接
+                                            GC.Collect();
+                                            GC.WaitForPendingFinalizers();
+
+                                            //删除数据库文件
+                                            try
+                                            {
+                                                File.Delete(dbFile);
+                                            }
+                                            catch (Exception ex) { }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        MainForm.writeLog("没有找到DB文件__" + projectNumber);
                                     }
                                 }
                                 else
                                 {
-                                    MainForm.writeLog("没有找到DB文件__" + projectNumber);
+                                    MainForm.writeLog("没有找到ZIP文件__" + projectNumber);
                                 }
                             }
                             else
@@ -417,12 +424,12 @@ namespace NDEYImporter.Forms
                                 MainForm.writeLog("没有找到ZIP文件__" + projectNumber);
                             }
                         }
-                        else
-                        {
-                            MainForm.writeLog("没有找到ZIP文件__" + projectNumber);
-                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MainForm.writeLog("项目编号" + projectNumber + "解包错误，Ex:" + ex.ToString());
             }
         }
 
