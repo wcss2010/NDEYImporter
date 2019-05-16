@@ -292,7 +292,14 @@ namespace NDEYImporter
 
                             //读取开户帐号
                             string unitBankNo = ConnectionManager.Context.table("Unit").where("ID='" + projectUnitID + "'").select("UnitBankNo").getValue<string>(string.Empty);
-                            rowData.Add(new KeyValuePair<string, object>("开户账号", unitBankNo));
+                            if (string.IsNullOrEmpty(unitBankNo))
+                            {
+                                rowData.Add(new KeyValuePair<string, object>("开户账号", "对不起，没有找到开户帐号"));
+                            }
+                            else
+                            {
+                                rowData.Add(new KeyValuePair<string, object>("开户账号", unitBankNo));
+                            }
 
                             rowData.Add(new KeyValuePair<string, object>("单位常用名", dlProjects.getRow(0).get("UnitNormal")));
                             rowData.Add(new KeyValuePair<string, object>("单位联系人", dlProjects.getRow(0).get("UnitContacts")));
