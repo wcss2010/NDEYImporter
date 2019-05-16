@@ -610,7 +610,7 @@ namespace NDEYImporter
             }
 
             //Excel列宽自动适应
-            if (table.Count >= 1)
+            if (table.Count >= 1 && sheet.GetRow(0) != null)
             {
                 for (int k = 0; k < sheet.GetRow(0).Cells.Count; k++)
                 {
