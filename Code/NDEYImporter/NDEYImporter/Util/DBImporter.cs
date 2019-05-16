@@ -392,7 +392,7 @@ namespace NDEYImporter.Util
                     else
                     {
                         //没有选择单位信息
-                        throw new Exception("对不起，没有找到单位信息！");
+                        MainForm.writeLog("对不起，没有找到项目ID" + projectID + "的单位信息！");
                     }
 
                     //学术经历 （Old）AcademicPost --- （New）ResearchExperience
