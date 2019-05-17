@@ -354,7 +354,7 @@ namespace NDEYImporter
                                     muBiaoNeiRongChuangXinDianJieZhi += "预期军事价值:" + array[5].Trim() + "\n";
 
                                     //拼装资助对象简介
-                                    ziZhuDuiXiang += "基本信息:" + dlProjects.getRow(0).getString("UserName") + "," + dlProjects.getRow(0).getString("Sex") + "," + (DateTime.Now.Year - long.Parse(dlProjects.getRow(0).getString("Birthdate").Substring(0, 4))).ToString() + "," + dlProjects.getRow(0).getString("Degree") + "," + dlProjects.getRow(0).getString("UnitName") + dlProjects.getRow(0).getString("JobTitle") + ",主要研究领域是" + dlProjects.getRow(0).getString("MainResearch") + "\n";
+                                    ziZhuDuiXiang += "基本信息:" + dlProjects.getRow(0).getString("UserName") + "," + dlProjects.getRow(0).getString("Sex") + "," + (DateTime.Now.Year - long.Parse(dlProjects.getRow(0).getString("Birthdate").Substring(0, 4))).ToString() + "岁," + dlProjects.getRow(0).getString("Degree") + "," + dlProjects.getRow(0).getString("UnitName") + dlProjects.getRow(0).getString("JobTitle") + ",主要研究领域是" + dlProjects.getRow(0).getString("MainResearch") + "。\n";
                                     ziZhuDuiXiang += "入选人才计划情况:" + array[0].Trim() + "\n";
                                     ziZhuDuiXiang += "代表性成果或贡献:" + array[1].Trim() + "\n";
                                 }
