@@ -430,11 +430,6 @@ namespace NDEYImporter
 
                     try
                     {
-
-                        //需要输出的数据行
-                        List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
-                        outputData.Add(rowData);
-
                         //查找人才计划
                         DataList dlTalentsPlanList = ConnectionManager.Context.table("TalentsPlanExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
                         //判断是否存在人才计划
@@ -443,6 +438,10 @@ namespace NDEYImporter
                             //将数据输出到outputData列表中
                             foreach (DataItem diTalent in dlTalentsPlanList.getRows())
                             {
+                                //需要输出的数据行
+                                List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
+                                outputData.Add(rowData);
+
                                 //判断当前项是否为其它，如果是则忽略
                                 if (diTalent.get("Name") != null && diTalent.get("Name").ToString().StartsWith("其它:"))
                                 {
@@ -490,11 +489,6 @@ namespace NDEYImporter
 
                     try
                     {
-
-                        //需要输出的数据行
-                        List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
-                        outputData.Add(rowData);
-
                         //查找科技奖励
                         DataList dlTechnologyAwardsList = ConnectionManager.Context.table("TechnologyAwardsExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
                         //判断是否存在科技奖励
@@ -503,6 +497,10 @@ namespace NDEYImporter
                             //将数据输出到outputData列表中
                             foreach (DataItem diTech in dlTechnologyAwardsList.getRows())
                             {
+                                //需要输出的数据行
+                                List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
+                                outputData.Add(rowData);
+
                                 //判断当前项是否为其它，如果是则忽略
                                 if (diTech.get("TypeLevel") != null && diTech.get("TypeLevel").ToString().StartsWith("其它:"))
                                 {
