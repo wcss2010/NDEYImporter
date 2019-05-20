@@ -150,6 +150,8 @@ namespace NDEYImporter.Forms
             //打开缺少文件日志
             if (File.Exists(missFileLogPath))
             {
+                MessageBox.Show("缺少文件列表生成完成!路径:" + missFileLogPath);
+
                 try
                 {
                     System.Diagnostics.Process.Start(missFileLogPath);
