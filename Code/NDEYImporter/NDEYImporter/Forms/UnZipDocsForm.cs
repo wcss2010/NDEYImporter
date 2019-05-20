@@ -548,6 +548,13 @@ namespace NDEYImporter.Forms
                 itemName = itemName.Substring(0, 8);
             }
 
+            //去掉itemName中的非法字符
+            string[] errorString = new string[] { "\\", "/", ":", "*", "?", "\"", "<", ">", "|" };
+            foreach (string essss in errorString)
+            {
+                itemName = itemName.Replace(essss, string.Empty);
+            }
+
             //生成目标路径
             destPath = Path.Combine(new FileInfo(source).DirectoryName, "附件" + fileIndex + "_" + itemName + extName);
             
