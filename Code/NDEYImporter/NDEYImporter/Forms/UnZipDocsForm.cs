@@ -197,7 +197,10 @@ namespace NDEYImporter.Forms
                                 //删除解压目录
                                 try
                                 {
-                                    Directory.Delete(pkgDir, true);
+                                    if (Directory.Exists(pkgDir))
+                                    {
+                                        Directory.Delete(pkgDir, true);
+                                    }
                                 }
                                 catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
 
@@ -446,11 +449,7 @@ namespace NDEYImporter.Forms
                                                         //文件改名
                                                         try
                                                         {
-                                                            //复制文件到新位置
-                                                            File.Copy(sss, destDocFile, true);
-
-                                                            //删除源文件
-                                                            File.Delete(sss);
+                                                            File.Move(sss, destDocFile);
                                                         }
                                                         catch (Exception ex)
                                                         {
@@ -572,20 +571,9 @@ namespace NDEYImporter.Forms
 
             //生成目标路径
             destPath = Path.Combine(new FileInfo(source).DirectoryName, "附件" + fileIndex + "_" + itemName + extName);
-            
-            //复制文件到新位置
-            try
-            {
-                File.Copy(source, destPath, true);
-            }
-            catch (Exception ex) { }
 
-            //删除源文件
-            try
-            {
-                File.Delete(source);
-            }
-            catch (Exception ex) { }
+            //文件重命名
+            File.Move(source, destPath);
         }
 
         /// <summary>
