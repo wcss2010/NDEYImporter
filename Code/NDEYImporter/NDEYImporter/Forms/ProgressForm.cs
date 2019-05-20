@@ -23,6 +23,16 @@ namespace NDEYImporter.Forms
         /// </summary>
         private EventHandler ehDynamicMethod = null;
 
+        /// <summary>
+        /// 错误计数
+        /// </summary>
+        public static int errorCount;
+
+        /// <summary>
+        /// 是否显示错误日志
+        /// </summary>
+        public static bool isNeedShowLog = true;
+
         public ProgressForm()
         {
             InitializeComponent();
@@ -36,7 +46,20 @@ namespace NDEYImporter.Forms
             //运行工作事件
             if (ehDynamicMethod != null)
             {
-                ehDynamicMethod(this, new EventArgs());
+                try
+                {
+                    ehDynamicMethod(this, new EventArgs());
+                }
+                catch (Exception ex)
+                {
+                    MainForm.writeLog(ex.ToString());
+                }
+            }
+
+            //检查是否需要显示错误日志
+            if (errorCount >= 1 && isNeedShowLog)
+            {
+                
             }
         }
 

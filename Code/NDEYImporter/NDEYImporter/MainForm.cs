@@ -839,14 +839,25 @@ namespace NDEYImporter
             //判断是否需要创建目录
             if (!System.IO.Directory.Exists(logPath))
             {
-                System.IO.Directory.CreateDirectory(logPath);
+                try
+                {
+                    System.IO.Directory.CreateDirectory(logPath);
+                }
+                catch (Exception ex) { }
             }
 
             //生成日志文件名称
             string fileFullName = System.IO.Path.Combine(logPath, string.Format("{0}.txt", DateTime.Now.ToString("yyyyMMdd")));
 
             //写日志
-            File.AppendAllText(fileFullName, DateTime.Now.ToString() + ":" + text + "\n");
+            try
+            {
+                File.AppendAllText(fileFullName, DateTime.Now.ToString() + ":" + text + "\n");
+            }
+            catch (Exception ex) { }
+
+            //错误计数
+            ProgressForm.errorCount++;
         }
     }
 
