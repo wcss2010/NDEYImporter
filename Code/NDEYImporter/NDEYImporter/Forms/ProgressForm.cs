@@ -59,7 +59,22 @@ namespace NDEYImporter.Forms
             //检查是否需要显示错误日志
             if (errorCount >= 1 && isNeedShowLog)
             {
-                
+                //错误数量清空
+                errorCount = 0;
+
+                //日志路径
+                string logFile = System.IO.Path.Combine(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs"), string.Format("{0}.txt", DateTime.Now.ToString("yyyyMMdd")));
+
+                //询问是否需要显示日志
+                if (MessageBox.Show("是否需要打开错误日志文件?", "提示", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    //打开日志文件
+                    try
+                    {
+                        System.Diagnostics.Process.Start(logFile);
+                    }
+                    catch (Exception ex) { }
+                }
             }
         }
 
