@@ -255,7 +255,12 @@ namespace NDEYImporter.Forms
                                                 {
                                                     File.Move(Path.Combine(fileDir, item.getString("RTreatisesPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("RTreatisesName") + extName));
                                                 }
-                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                                catch (Exception ex)
+                                                {
+                                                    MainForm.writeLog(ex.ToString());
+
+                                                    outputErrorFile(projectNumber, item.getString("RTreatisesPDF"));
+                                                }
                                             }
                                             foreach (DataItem item in dlTechnologyAwards.getRows())
                                             {
@@ -270,7 +275,12 @@ namespace NDEYImporter.Forms
                                                 {
                                                     File.Move(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("TechnologyAwardsPName") + extName));
                                                 }
-                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                                catch (Exception ex)
+                                                {
+                                                    MainForm.writeLog(ex.ToString());
+
+                                                    outputErrorFile(projectNumber, item.getString("TechnologyAwardsPDF"));
+                                                }
                                             }
                                             foreach (DataItem item in dlNDPatent.getRows())
                                             {
@@ -285,7 +295,12 @@ namespace NDEYImporter.Forms
                                                 {
                                                     File.Move(Path.Combine(fileDir, item.getString("NDPatentPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("NDPatentName") + extName));
                                                 }
-                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                                catch (Exception ex)
+                                                {
+                                                    MainForm.writeLog(ex.ToString());
+
+                                                    outputErrorFile(projectNumber, item.getString("NDPatentPDF"));
+                                                }
                                             }
 
                                             //整理推荐意见附件
@@ -305,7 +320,12 @@ namespace NDEYImporter.Forms
                                                 {
                                                     File.Move(Path.Combine(fileDir, unitFileA), Path.Combine(fileDir, "附件" + fileIndex + "_单位推荐意见" + new FileInfo(Path.Combine(fileDir, unitFileA)).Extension));
                                                 }
-                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                                catch (Exception ex)
+                                                {
+                                                    MainForm.writeLog(ex.ToString());
+
+                                                    outputErrorFile(projectNumber, unitFileA);
+                                                }
                                             }
 
                                             //查找专家提名附件
@@ -319,7 +339,12 @@ namespace NDEYImporter.Forms
                                                 {
                                                     File.Move(Path.Combine(fileDir, personFileA), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileA)).Extension));
                                                 }
-                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                                catch (Exception ex)
+                                                {
+                                                    MainForm.writeLog(ex.ToString());
+
+                                                    outputErrorFile(projectNumber, personFileA);
+                                                }
                                             }
 
                                             //查找专家提名附件
@@ -333,7 +358,12 @@ namespace NDEYImporter.Forms
                                                 {
                                                     File.Move(Path.Combine(fileDir, personFileB), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileB)).Extension));
                                                 }
-                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                                catch (Exception ex)
+                                                {
+                                                    MainForm.writeLog(ex.ToString());
+
+                                                    outputErrorFile(projectNumber, personFileB);
+                                                }
                                             }
 
                                             //查找专家提名附件
@@ -347,7 +377,12 @@ namespace NDEYImporter.Forms
                                                 {
                                                     File.Move(Path.Combine(fileDir, personFileC), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileC)).Extension));
                                                 }
-                                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                                catch (Exception ex)
+                                                {
+                                                    MainForm.writeLog(ex.ToString());
+
+                                                    outputErrorFile(projectNumber, personFileC);
+                                                }
                                             }
 
                                             //整理保密资质命名,查找Doc文件
@@ -368,6 +403,8 @@ namespace NDEYImporter.Forms
                                                     catch (Exception ex)
                                                     {
                                                         MainForm.writeLog(ex.ToString());
+
+                                                        outputErrorFile(projectNumber, fii.Name);
                                                     }
                                                 }
                                                 else if (fii.Name.EndsWith(".doc"))
@@ -382,7 +419,12 @@ namespace NDEYImporter.Forms
                                                         {
                                                             File.Move(sss, destDocFile);
                                                         }
-                                                        catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+                                                        catch (Exception ex)
+                                                        {
+                                                            MainForm.writeLog(ex.ToString());
+
+                                                            outputErrorFile(projectNumber, fii.Name);
+                                                        }
 
                                                         //转换成PDF
                                                         convertToPDF(destDocFile);
@@ -445,6 +487,20 @@ namespace NDEYImporter.Forms
             {
                 MainForm.writeLog("项目编号" + projectNumber + "解包错误，Ex:" + ex.ToString());
             }
+        }
+
+        /// <summary>
+        /// 输出重命名错误的文件
+        /// </summary>
+        /// <param name="projectNumber">项目编号</param>
+        /// <param name="fileName">文件名称</param>
+        private void outputErrorFile(string projectNumber, string fileName)
+        {   
+            //生成缺少的文件列表.txt
+            string destFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "缺少的文件.txt");
+
+            //向文件添加缺少的文件
+            File.AppendAllText(destFilePath, projectNumber + ":" + fileName);
         }
 
         /// <summary>
