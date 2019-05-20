@@ -87,7 +87,7 @@ namespace NDEYImporter
         /// </summary>
         private void refreshTotalDir()
         {
-            tsslHintText.Text = "总目录：" + MainForm.Config.TotalDir;
+            tsslHintText.Text = "申报总目录:" + MainForm.Config.TotalDir + ",解压总目录:" + MainForm.Config.UnZipDir;
         }
 
         /// <summary>
@@ -800,6 +800,9 @@ namespace NDEYImporter
 
                 //保存配置
                 saveConfig();
+
+                //刷新目录显示
+                refreshTotalDir();
             }
         }
 
