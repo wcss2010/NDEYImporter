@@ -126,6 +126,18 @@ namespace NDEYImporter.Forms
                     }
                 }
 
+                //打开缺少文件日志
+                if (File.Exists(missFileLogPath))
+                {
+                    MessageBox.Show("缺少文件列表生成完成!路径:" + missFileLogPath);
+
+                    try
+                    {
+                        System.Diagnostics.Process.Start(missFileLogPath);
+                    }
+                    catch (Exception ex) { }
+                }
+
                 //检查是否已创建句柄，并调用委托执行UI方法
                 if (pf.IsHandleCreated)
                 {
@@ -146,18 +158,6 @@ namespace NDEYImporter.Forms
                     }));
                 }
             }));
-
-            //打开缺少文件日志
-            if (File.Exists(missFileLogPath))
-            {
-                MessageBox.Show("缺少文件列表生成完成!路径:" + missFileLogPath);
-
-                try
-                {
-                    System.Diagnostics.Process.Start(missFileLogPath);
-                }
-                catch (Exception ex) { }
-            }
 
             //关闭窗口
             Close();
