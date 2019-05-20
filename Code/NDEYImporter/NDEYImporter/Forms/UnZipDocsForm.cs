@@ -253,7 +253,7 @@ namespace NDEYImporter.Forms
                                                 //文件重命名
                                                 try
                                                 {
-                                                    renameFile(Path.Combine(fileDir, item.getString("RTreatisesPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("RTreatisesName") + extName));
+                                                    renameFile(Path.Combine(fileDir, item.getString("RTreatisesPDF")), fileIndex, item.getString("RTreatisesName"), extName);
                                                 }
                                                 catch (Exception ex)
                                                 {
@@ -273,7 +273,7 @@ namespace NDEYImporter.Forms
                                                 //文件重命名
                                                 try
                                                 {
-                                                    renameFile(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("TechnologyAwardsPName") + extName));
+                                                    renameFile(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF")), fileIndex, item.getString("TechnologyAwardsPName"), extName);
                                                 }
                                                 catch (Exception ex)
                                                 {
@@ -293,7 +293,7 @@ namespace NDEYImporter.Forms
                                                 //文件重命名
                                                 try
                                                 {
-                                                    renameFile(Path.Combine(fileDir, item.getString("NDPatentPDF")), Path.Combine(fileDir, "附件" + fileIndex + "_" + item.getString("NDPatentName") + extName));
+                                                    renameFile(Path.Combine(fileDir, item.getString("NDPatentPDF")), fileIndex, item.getString("NDPatentName"), extName);
                                                 }
                                                 catch (Exception ex)
                                                 {
@@ -318,7 +318,7 @@ namespace NDEYImporter.Forms
                                                 //文件重命名
                                                 try
                                                 {
-                                                    renameFile(Path.Combine(fileDir, unitFileA), Path.Combine(fileDir, "附件" + fileIndex + "_单位推荐意见" + new FileInfo(Path.Combine(fileDir, unitFileA)).Extension));
+                                                    renameFile(Path.Combine(fileDir, unitFileA), fileIndex, "_单位推荐意见", new FileInfo(Path.Combine(fileDir, unitFileA)).Extension);
                                                 }
                                                 catch (Exception ex)
                                                 {
@@ -337,7 +337,7 @@ namespace NDEYImporter.Forms
                                                 //文件重命名
                                                 try
                                                 {
-                                                    renameFile(Path.Combine(fileDir, personFileA), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileA)).Extension));
+                                                    renameFile(Path.Combine(fileDir, personFileA), fileIndex, "_专家提名", new FileInfo(Path.Combine(fileDir, personFileA)).Extension);
                                                 }
                                                 catch (Exception ex)
                                                 {
@@ -356,7 +356,7 @@ namespace NDEYImporter.Forms
                                                 //文件重命名
                                                 try
                                                 {
-                                                    renameFile(Path.Combine(fileDir, personFileB), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileB)).Extension));
+                                                    renameFile(Path.Combine(fileDir, personFileB), fileIndex,"_专家提名",new FileInfo(Path.Combine(fileDir, personFileB)).Extension);
                                                 }
                                                 catch (Exception ex)
                                                 {
@@ -375,7 +375,7 @@ namespace NDEYImporter.Forms
                                                 //文件重命名
                                                 try
                                                 {
-                                                    renameFile(Path.Combine(fileDir, personFileC), Path.Combine(fileDir, "附件" + fileIndex + "_专家提名" + new FileInfo(Path.Combine(fileDir, personFileC)).Extension));
+                                                    renameFile(Path.Combine(fileDir, personFileC), fileIndex,"_专家提名",new FileInfo(Path.Combine(fileDir, personFileC)).Extension);
                                                 }
                                                 catch (Exception ex)
                                                 {
@@ -398,7 +398,7 @@ namespace NDEYImporter.Forms
                                                         fileIndex++;
 
                                                         //移动文件
-                                                        renameFile(sss, Path.Combine(fileDir, "附件" + fileIndex + "_" + "保密资质复印件.png"));
+                                                        renameFile(sss,fileIndex,"保密资质复印件",".png");
                                                     }
                                                     catch (Exception ex)
                                                     {
@@ -417,7 +417,7 @@ namespace NDEYImporter.Forms
                                                         //文件改名
                                                         try
                                                         {
-                                                            renameFile(sss, destDocFile);
+                                                            File.Move(sss, destDocFile);
                                                         }
                                                         catch (Exception ex)
                                                         {
@@ -513,23 +513,27 @@ namespace NDEYImporter.Forms
         /// <summary>
         /// 重命名附件
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="dest"></param>
-        private void renameFile(string source, string dest)
+        /// <param name="source">源路径</param>
+        /// <param name="fileIndex">文件序号</param>
+        /// <param name="itemName">项目名称</param>
+        /// <param name="extName">扩展名称</param>
+        private void renameFile(string source, int fileIndex,string itemName,string extName)
         {
-            //文件重命名
-            File.Move(source, dest);
+            //目标路径
+            string destPath = string.Empty;
 
-            //处理附件的文件名称，超过8个字符则省略
-            FileInfo fi = new FileInfo(dest);
-            if (fi.Name.Length - 8 > 8)
+            //检查itemName是不是大于8个字符
+            if (itemName != null && itemName.Length > 8)
             {
-                //截取附件X_XXXXXX中_前的字符加上_后面的8个字符
-                string shortName = fi.Name.Substring(0, 12);
-
-                //缩短文件名称
-                File.Move(dest, Path.Combine(fi.DirectoryName, shortName + fi.Extension));
+                //截取前8个字符
+                itemName = itemName.Substring(0, 8);
             }
+
+            //生成目标路径
+            destPath = Path.Combine(new FileInfo(source).DirectoryName, "附件" + fileIndex + "_" + itemName + extName);
+            
+            //文件重命名
+            File.Move(source, destPath);            
         }
 
         /// <summary>
