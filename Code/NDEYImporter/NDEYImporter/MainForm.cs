@@ -852,7 +852,7 @@ namespace NDEYImporter
             //写日志
             try
             {
-                File.AppendAllText(fileFullName, DateTime.Now.ToString() + ":" + text + "\n");
+                File.AppendAllText(fileFullName, DateTime.Now.ToString() + ":" + text + Environment.NewLine);
             }
             catch (Exception ex) { }
 

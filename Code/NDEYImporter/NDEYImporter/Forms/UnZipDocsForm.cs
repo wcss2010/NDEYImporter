@@ -516,7 +516,7 @@ namespace NDEYImporter.Forms
             try
             {
                 //向文件添加缺少的文件
-                File.AppendAllText(missFileLogPath, DateTime.Now.ToString() + ":在项目" + projectNumber + "下缺少文件" + fileName + "\n");
+                File.AppendAllText(missFileLogPath, DateTime.Now.ToString() + ":在项目" + projectNumber + "下缺少文件" + fileName + Environment.NewLine);
             }
             catch (Exception ex)
             {
