@@ -500,7 +500,7 @@ namespace NDEYImporter.Forms
             string destFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "缺少的文件.txt");
 
             //向文件添加缺少的文件
-            File.AppendAllText(destFilePath, projectNumber + ":" + fileName);
+            File.AppendAllText(destFilePath, projectNumber + ":" + fileName + "\n");
         }
 
         /// <summary>
