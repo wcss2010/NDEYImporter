@@ -522,10 +522,10 @@ namespace NDEYImporter.Forms
 
             //处理附件的文件名称，超过8个字符则省略
             FileInfo fi = new FileInfo(dest);
-            if (fi.Name.Length - 4 > 8)
+            if (fi.Name.Length - 8 > 8)
             {
-                //截取前8个字符
-                string shortName = fi.Name.Substring(0, 8);
+                //截取附件X_XXXXXX中_前的字符加上_后面的8个字符
+                string shortName = fi.Name.Substring(0, 12);
 
                 //缩短文件名称
                 File.Move(dest, Path.Combine(fi.DirectoryName, shortName + fi.Extension));
