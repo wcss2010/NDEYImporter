@@ -185,6 +185,8 @@ namespace NDEYImporter.Forms
                         //判断目录是否符合条件
                         if (di.Name.Contains(projectNumber) && di.Name.Length >= 12)
                         {
+                            MainForm.writeLog("开始进行项目" + projectNumber + "的解包......");
+
                             //查找子文件
                             string[] subFiless = Directory.GetFiles(s);
                             if (subFiless != null && subFiless.Length >= 1)
@@ -197,7 +199,7 @@ namespace NDEYImporter.Forms
                                 {
                                     Directory.Delete(pkgDir, true);
                                 }
-                                catch (Exception ex) { }
+                                catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
 
                                 //创建解压目录
                                 try
@@ -222,9 +224,12 @@ namespace NDEYImporter.Forms
                                 //判断ZIP文件是否存在
                                 if (pkgZipFile != null && pkgZipFile.EndsWith(".zip"))
                                 {
+                                    MainForm.writeLog("项目" + projectNumber + "的解包操作，开始ZIP文件解压");
 
                                     //解压这个包
                                     new NdeyDocFilesUnZip().UnZipFile(pkgZipFile, pkgDir, string.Empty, true);
+
+                                    MainForm.writeLog("项目" + projectNumber + "的解包操作，结束ZIP文件解压");
 
                                     //文件目录
                                     string fileDir = pkgDir;
@@ -242,6 +247,8 @@ namespace NDEYImporter.Forms
 
                                         try
                                         {
+                                            MainForm.writeLog("项目" + projectNumber + "的解包操作，读取论文详细，科技奖项，专利情况信息...");
+
                                             //提取论文详细
                                             DataList dlRTreatises = context.table("RTreatises").select("RTreatisesName,RTreatisesPDF").getDataList();
                                             //提取科技奖项
@@ -256,9 +263,9 @@ namespace NDEYImporter.Forms
 
                                             string personName = context.table("BaseInfor").select("UserName").getValue<string>(string.Empty);
 
+                                            MainForm.writeLog("项目" + projectNumber + "的解包操作，开始替换附件名称...");
                                             //附件序号
                                             int fileIndex = 0;
-
                                             //整理附件名称
                                             foreach (DataItem item in dlRTreatises.getRows())
                                             {
@@ -403,6 +410,10 @@ namespace NDEYImporter.Forms
                                                 }
                                             }
 
+                                            MainForm.writeLog("项目" + projectNumber + "的解包操作，结束替换附件名称...");
+
+                                            MainForm.writeLog("项目" + projectNumber + "的解包操作，开始处理保密资质附件和申报书文档转PDF...");
+
                                             //整理保密资质命名,查找Doc文件
                                             string[] extFiles = Directory.GetFiles(fileDir);
                                             foreach (string sss in extFiles)
@@ -464,6 +475,8 @@ namespace NDEYImporter.Forms
                                                     }
                                                 }
                                             }
+
+                                            MainForm.writeLog("项目" + projectNumber + "的解包操作，结束处理保密资质附件和申报书文档转PDF...");
                                         }
                                         catch (Exception ex)
                                         {
@@ -501,6 +514,8 @@ namespace NDEYImporter.Forms
                             {
                                 MainForm.writeLog("没有找到ZIP文件__" + projectNumber);
                             }
+
+                            MainForm.writeLog("结束进行项目" + projectNumber + "的解包......");
                         }
                     }
                 }
