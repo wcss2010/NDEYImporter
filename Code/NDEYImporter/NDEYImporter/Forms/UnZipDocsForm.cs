@@ -318,7 +318,7 @@ namespace NDEYImporter.Forms
                                                 //文件重命名
                                                 try
                                                 {
-                                                    renameFile(Path.Combine(fileDir, unitFileA), fileIndex, "_单位推荐意见", new FileInfo(Path.Combine(fileDir, unitFileA)).Extension);
+                                                    renameFile(Path.Combine(fileDir, unitFileA), fileIndex, "单位推荐意见", new FileInfo(Path.Combine(fileDir, unitFileA)).Extension);
                                                 }
                                                 catch (Exception ex)
                                                 {
@@ -337,7 +337,7 @@ namespace NDEYImporter.Forms
                                                 //文件重命名
                                                 try
                                                 {
-                                                    renameFile(Path.Combine(fileDir, personFileA), fileIndex, "_专家提名", new FileInfo(Path.Combine(fileDir, personFileA)).Extension);
+                                                    renameFile(Path.Combine(fileDir, personFileA), fileIndex, "专家提名", new FileInfo(Path.Combine(fileDir, personFileA)).Extension);
                                                 }
                                                 catch (Exception ex)
                                                 {
@@ -356,7 +356,7 @@ namespace NDEYImporter.Forms
                                                 //文件重命名
                                                 try
                                                 {
-                                                    renameFile(Path.Combine(fileDir, personFileB), fileIndex,"_专家提名",new FileInfo(Path.Combine(fileDir, personFileB)).Extension);
+                                                    renameFile(Path.Combine(fileDir, personFileB), fileIndex,"专家提名",new FileInfo(Path.Combine(fileDir, personFileB)).Extension);
                                                 }
                                                 catch (Exception ex)
                                                 {
@@ -375,7 +375,7 @@ namespace NDEYImporter.Forms
                                                 //文件重命名
                                                 try
                                                 {
-                                                    renameFile(Path.Combine(fileDir, personFileC), fileIndex,"_专家提名",new FileInfo(Path.Combine(fileDir, personFileC)).Extension);
+                                                    renameFile(Path.Combine(fileDir, personFileC), fileIndex,"专家提名",new FileInfo(Path.Combine(fileDir, personFileC)).Extension);
                                                 }
                                                 catch (Exception ex)
                                                 {
