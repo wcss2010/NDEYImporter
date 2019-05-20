@@ -14,6 +14,11 @@ namespace NDEYImporter.Forms
     public partial class UnZipDocsForm : Form
     {
         /// <summary>
+        /// 缺少文件的日志
+        /// </summary>
+        private string missFileLogPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "缺少的文件.txt");
+
+        /// <summary>
         /// 是否导入所有申报包
         /// </summary>
         public bool IsImportAllPackage { get; private set; }
@@ -141,6 +146,16 @@ namespace NDEYImporter.Forms
                     }));
                 }
             }));
+
+            //打开缺少文件日志
+            if (File.Exists(missFileLogPath))
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start(missFileLogPath);
+                }
+                catch (Exception ex) { }
+            }
 
             //关闭窗口
             Close();
@@ -498,11 +513,8 @@ namespace NDEYImporter.Forms
         {
             try
             {
-                //生成缺少的文件列表.txt
-                string destFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "缺少的文件.txt");
-
                 //向文件添加缺少的文件
-                File.AppendAllText(destFilePath, DateTime.Now.ToString() + ":" + projectNumber + "___" + fileName + "\n");
+                File.AppendAllText(missFileLogPath, DateTime.Now.ToString() + ":在项目" + projectNumber + "下缺少文件" + fileName + "\n");
             }
             catch (Exception ex)
             {

@@ -31,7 +31,7 @@ namespace NDEYImporter.Forms
         /// <summary>
         /// 是否显示错误日志
         /// </summary>
-        public static bool isNeedShowLog = true;
+        public static bool isNeedShowLog = false;
 
         public ProgressForm()
         {
