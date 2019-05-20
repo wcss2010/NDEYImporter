@@ -495,12 +495,19 @@ namespace NDEYImporter.Forms
         /// <param name="projectNumber">项目编号</param>
         /// <param name="fileName">文件名称</param>
         private void outputErrorFile(string projectNumber, string fileName)
-        {   
-            //生成缺少的文件列表.txt
-            string destFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "缺少的文件.txt");
+        {
+            try
+            {
+                //生成缺少的文件列表.txt
+                string destFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "缺少的文件.txt");
 
-            //向文件添加缺少的文件
-            File.AppendAllText(destFilePath, projectNumber + ":" + fileName + "\n");
+                //向文件添加缺少的文件
+                File.AppendAllText(destFilePath, DateTime.Now.ToString() + ":" + projectNumber + "___" + fileName + "\n");
+            }
+            catch (Exception ex)
+            {
+                MainForm.writeLog(ex.ToString());
+            }
         }
 
         /// <summary>
