@@ -435,7 +435,11 @@ namespace NDEYImporter.Forms
                                                         //文件改名
                                                         try
                                                         {
-                                                            File.Move(sss, destDocFile);
+                                                            //复制文件到新位置
+                                                            File.Copy(sss, destDocFile, true);
+
+                                                            //删除源文件
+                                                            File.Delete(sss);
                                                         }
                                                         catch (Exception ex)
                                                         {
@@ -547,8 +551,19 @@ namespace NDEYImporter.Forms
             //生成目标路径
             destPath = Path.Combine(new FileInfo(source).DirectoryName, "附件" + fileIndex + "_" + itemName + extName);
             
-            //文件重命名
-            File.Move(source, destPath);            
+            //复制文件到新位置
+            try
+            {
+                File.Copy(source, destPath, true);
+            }
+            catch (Exception ex) { }
+
+            //删除源文件
+            try
+            {
+                File.Delete(source);
+            }
+            catch (Exception ex) { }
         }
 
         /// <summary>
