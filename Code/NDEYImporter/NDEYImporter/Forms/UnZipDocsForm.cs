@@ -491,6 +491,8 @@ namespace NDEYImporter.Forms
                                             {
                                                 //没有找到Doc文件
                                                 MainForm.writeLog("对不起，没有找到项目申报书！");
+                                                //输出缺失的文件
+                                                outputErrorFile(projectNumber, "项目申报书.doc");
                                             }
 
                                             MainForm.writeLog("项目" + projectNumber + "的解包操作，结束处理保密资质附件和申报书文档转PDF...");
