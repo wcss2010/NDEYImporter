@@ -417,6 +417,9 @@ namespace NDEYImporter.Forms
 
                                             MainForm.writeLog("项目" + projectNumber + "的解包操作，开始处理保密资质附件和申报书文档转PDF...");
 
+                                            //是否已经找到Doc文件
+                                            bool isFoundDocFile = false;
+
                                             //整理保密资质命名,查找Doc文件
                                             string[] extFiles = Directory.GetFiles(fileDir);
                                             foreach (string sss in extFiles)
@@ -443,6 +446,9 @@ namespace NDEYImporter.Forms
                                                 {
                                                     if (fii.Name.StartsWith(unitID) && fii.Name.Contains(personName))
                                                     {
+                                                        //找到Doc文件
+                                                        isFoundDocFile = true;
+
                                                         //真实的申报书路径
                                                         string destDocFile = Path.Combine(fii.DirectoryName, "项目申报书.doc");
 
@@ -473,6 +479,18 @@ namespace NDEYImporter.Forms
                                                         }
                                                     }
                                                 }
+                                            }
+
+                                            //判断是否找到Doc文件
+                                            if (isFoundDocFile)
+                                            {
+                                                //找到DOC文件
+                                                //MainForm.writeLog("项目申报书已找到！");
+                                            }
+                                            else
+                                            {
+                                                //没有找到Doc文件
+                                                MainForm.writeLog("对不起，没有找到项目申报书！");
                                             }
 
                                             MainForm.writeLog("项目" + projectNumber + "的解包操作，结束处理保密资质附件和申报书文档转PDF...");
