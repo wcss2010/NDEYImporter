@@ -131,7 +131,7 @@ namespace NDEYImporter
                     //设置默认的配置项
                     MainForm.Config = new MainConfig();
                     MainForm.Config.TotalDir = PackageDir;
-                    MainForm.Config.ZipEncode = "utf8";
+                    MainForm.Config.ZipEncode = "UTF-8";
                     saveConfig();
                 }
             }
@@ -140,7 +140,7 @@ namespace NDEYImporter
                 //设置默认的配置项
                 MainForm.Config = new MainConfig();
                 MainForm.Config.TotalDir = PackageDir;
-                MainForm.Config.ZipEncode = "utf8";
+                MainForm.Config.ZipEncode = "UTF-8";
                 saveConfig();
             }
         }
