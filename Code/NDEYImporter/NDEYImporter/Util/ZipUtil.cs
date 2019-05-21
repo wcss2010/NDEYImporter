@@ -273,55 +273,62 @@ namespace NDEYImporter.Util
                         //检查当前项是否为文件
                         if (ze.IsFile)
                         {
-                            //目标文件路径
-                            string destPath = Path.Combine(strDirectory, new FileInfo(ze.Name).Name);
-
-                            //创建目标目录
                             try
                             {
-                                Directory.CreateDirectory(new FileInfo(destPath).DirectoryName);
-                            }
-                            catch (Exception ex) { }
+                                //目标文件路径
+                                string destPath = Path.Combine(strDirectory, new FileInfo(ze.Name).Name);
 
-                            //检查后缀名是否带有.db或.rtf
-                            if (ze.Name.EndsWith(".db") || ze.Name.EndsWith(".rtf"))
-                            {
-                                //获得该文件输入流
-                                Stream s = zip.GetInputStream(ze);
-
+                                //创建目标目录
                                 try
                                 {
-                                    //写文件
-                                    using (FileStream streamWriter = File.Create(destPath))
-                                    {
-                                        int size = 2048;
-                                        byte[] data = new byte[2048];
-                                        try
-                                        {
-                                            while (true)
-                                            {
-                                                size = s.Read(data, 0, data.Length);
+                                    Directory.CreateDirectory(new FileInfo(destPath).DirectoryName);
+                                }
+                                catch (Exception ex) { }
 
-                                                if (size > 0)
+                                //检查后缀名是否带有.db或.rtf
+                                if (ze.Name.EndsWith(".db") || ze.Name.EndsWith(".rtf"))
+                                {
+                                    //获得该文件输入流
+                                    Stream s = zip.GetInputStream(ze);
+
+                                    try
+                                    {
+                                        //写文件
+                                        using (FileStream streamWriter = File.Create(destPath))
+                                        {
+                                            int size = 2048;
+                                            byte[] data = new byte[2048];
+                                            try
+                                            {
+                                                while (true)
                                                 {
-                                                    streamWriter.Write(data, 0, size);
-                                                }
-                                                else
-                                                {
-                                                    break;
+                                                    size = s.Read(data, 0, data.Length);
+
+                                                    if (size > 0)
+                                                    {
+                                                        streamWriter.Write(data, 0, size);
+                                                    }
+                                                    else
+                                                    {
+                                                        break;
+                                                    }
                                                 }
                                             }
-                                        }
-                                        finally
-                                        {
-                                            streamWriter.Close();
+                                            finally
+                                            {
+                                                streamWriter.Close();
+                                            }
                                         }
                                     }
+                                    finally
+                                    {
+                                        s.Close();
+                                    }
                                 }
-                                finally
-                                {
-                                    s.Close();
-                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MainForm.writeLog(ex.ToString());
                             }
                         }
                     }
@@ -372,55 +379,62 @@ namespace NDEYImporter.Util
                         //检查当前项是否为文件
                         if (ze.IsFile)
                         {
-                            //目标文件路径
-                            string destPath = Path.Combine(strDirectory, new FileInfo(ze.Name).Name);
-
-                            //创建目标目录
                             try
                             {
-                                Directory.CreateDirectory(new FileInfo(destPath).DirectoryName);
-                            }
-                            catch (Exception ex) { }
+                                //目标文件路径
+                                string destPath = Path.Combine(strDirectory, new FileInfo(ze.Name).Name);
 
-                            //检查后缀名是否带有.db或.rtf,如果是则跳过
-                            if (!ze.Name.EndsWith(".rtf"))
-                            {
-                                //获得该文件输入流
-                                Stream s = zip.GetInputStream(ze);
-
+                                //创建目标目录
                                 try
                                 {
-                                    //写文件
-                                    using (FileStream streamWriter = File.Create(destPath))
-                                    {
-                                        int size = 2048;
-                                        byte[] data = new byte[2048];
-                                        try
-                                        {
-                                            while (true)
-                                            {
-                                                size = s.Read(data, 0, data.Length);
+                                    Directory.CreateDirectory(new FileInfo(destPath).DirectoryName);
+                                }
+                                catch (Exception ex) { }
 
-                                                if (size > 0)
+                                //检查后缀名是否带有.db或.rtf,如果是则跳过
+                                if (!ze.Name.EndsWith(".rtf"))
+                                {
+                                    //获得该文件输入流
+                                    Stream s = zip.GetInputStream(ze);
+
+                                    try
+                                    {
+                                        //写文件
+                                        using (FileStream streamWriter = File.Create(destPath))
+                                        {
+                                            int size = 2048;
+                                            byte[] data = new byte[2048];
+                                            try
+                                            {
+                                                while (true)
                                                 {
-                                                    streamWriter.Write(data, 0, size);
-                                                }
-                                                else
-                                                {
-                                                    break;
+                                                    size = s.Read(data, 0, data.Length);
+
+                                                    if (size > 0)
+                                                    {
+                                                        streamWriter.Write(data, 0, size);
+                                                    }
+                                                    else
+                                                    {
+                                                        break;
+                                                    }
                                                 }
                                             }
-                                        }
-                                        finally
-                                        {
-                                            streamWriter.Close();
+                                            finally
+                                            {
+                                                streamWriter.Close();
+                                            }
                                         }
                                     }
+                                    finally
+                                    {
+                                        s.Close();
+                                    }
                                 }
-                                finally
-                                {
-                                    s.Close();
-                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MainForm.writeLog(ex.ToString());
                             }
                         }
                     }

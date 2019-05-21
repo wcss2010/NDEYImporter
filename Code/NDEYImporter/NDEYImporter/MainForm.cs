@@ -66,6 +66,29 @@ namespace NDEYImporter
                 System.IO.Directory.CreateDirectory(DBTempDir);
             }
             catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
+
+            //尝试设置压缩包字符编码
+            if (string.IsNullOrEmpty(MainForm.Config.ZipEncode))
+            {
+                MainForm.writeLog("对不起，没有设置压缩包字符编码!");
+            }
+            else
+            {
+                try
+                {
+                    //设置编码
+                    ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = Encoding.GetEncoding(MainForm.Config.ZipEncode).CodePage;
+                    //输出提示
+                    MainForm.writeLog("设置压缩包字符编码完成！CodePage:" + ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage + ",Encode:" + MainForm.Config.ZipEncode);
+                }
+                catch (Exception ex)
+                {
+                    //设置编码出错，默认设置为Default
+                    ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = Encoding.Default.CodePage;
+                    //输出提示
+                    MainForm.writeLog("设置压缩包字符编码错误！当前CodePage:" + ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage + ",当前Encode:Default");
+                }
+            }
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -108,6 +131,7 @@ namespace NDEYImporter
                     //设置默认的配置项
                     MainForm.Config = new MainConfig();
                     MainForm.Config.TotalDir = PackageDir;
+                    MainForm.Config.ZipEncode = "utf8";
                     saveConfig();
                 }
             }
@@ -116,6 +140,7 @@ namespace NDEYImporter
                 //设置默认的配置项
                 MainForm.Config = new MainConfig();
                 MainForm.Config.TotalDir = PackageDir;
+                MainForm.Config.ZipEncode = "utf8";
                 saveConfig();
             }
         }
@@ -1052,5 +1077,10 @@ namespace NDEYImporter
         /// 文档解压目录
         /// </summary>
         public string UnZipDir { get; set; }
+
+        /// <summary>
+        /// 压缩包字符编码
+        /// </summary>
+        public string ZipEncode { get; set; }
     }
 }
