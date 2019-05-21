@@ -615,18 +615,18 @@ namespace NDEYImporter.Forms
                     }
                 }
 
-                //保存文档
-                //xDoc.Save(destDocFile);
-
-                //删除Doc文档
-                try
-                {
-                    File.Delete(destDocFile);
-                }
-                catch (Exception ex) { }
-
                 //保存为PDF
                 xDoc.Save(Path.Combine(new FileInfo(destDocFile).DirectoryName, "项目申报书.pdf"), Aspose.Words.SaveFormat.Pdf);
+            }
+            catch (Exception ex)
+            {
+                MainForm.writeLog(ex.ToString());
+            }
+
+            //删除Doc文档
+            try
+            {
+                File.Delete(destDocFile);
             }
             catch (Exception ex)
             {

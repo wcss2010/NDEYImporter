@@ -68,7 +68,7 @@ namespace NDEYImporter
             catch (Exception ex) { MainForm.writeLog(ex.ToString()); }
 
             //尝试设置压缩包字符编码
-            if (string.IsNullOrEmpty(MainForm.Config.ZipEncode))
+            if (MainForm.Config.ZipCodePage == 0)
             {
                 MainForm.writeLog("对不起，没有设置压缩包字符编码!");
             }
@@ -77,16 +77,16 @@ namespace NDEYImporter
                 try
                 {
                     //设置编码
-                    ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = Encoding.GetEncoding(MainForm.Config.ZipEncode).CodePage;
+                    ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = MainForm.Config.ZipCodePage;
                     //输出提示
-                    MainForm.writeLog("设置压缩包字符编码完成！CodePage:" + ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage + ",Encode:" + MainForm.Config.ZipEncode);
+                    MainForm.writeLog("设置压缩包字符编码完成！CodePage:" + ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage);
                 }
                 catch (Exception ex)
                 {
                     //设置编码出错，默认设置为Default
                     ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage = Encoding.Default.CodePage;
                     //输出提示
-                    MainForm.writeLog("设置压缩包字符编码错误！当前CodePage:" + ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage + ",当前Encode:Default");
+                    MainForm.writeLog("设置压缩包字符编码错误！当前CodePage:" + ICSharpCode.SharpZipLib.Zip.ZipConstants.DefaultCodePage);
                 }
             }
         }
@@ -131,7 +131,7 @@ namespace NDEYImporter
                     //设置默认的配置项
                     MainForm.Config = new MainConfig();
                     MainForm.Config.TotalDir = PackageDir;
-                    MainForm.Config.ZipEncode = "UTF-8";
+                    MainForm.Config.ZipCodePage = Encoding.Default.CodePage;
                     saveConfig();
                 }
             }
@@ -140,7 +140,7 @@ namespace NDEYImporter
                 //设置默认的配置项
                 MainForm.Config = new MainConfig();
                 MainForm.Config.TotalDir = PackageDir;
-                MainForm.Config.ZipEncode = "UTF-8";
+                MainForm.Config.ZipCodePage = Encoding.Default.CodePage;
                 saveConfig();
             }
         }
@@ -1081,6 +1081,6 @@ namespace NDEYImporter
         /// <summary>
         /// 压缩包字符编码
         /// </summary>
-        public string ZipEncode { get; set; }
+        public int ZipCodePage { get; set; }
     }
 }
