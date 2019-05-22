@@ -143,9 +143,9 @@ namespace NDEYImporter.Forms
                     pf.Invoke(new MethodInvoker(delegate()
                     {
                         //打开缺少文件日志
-                        pf.Top = Screen.PrimaryScreen.Bounds.Height * 2;
+                        pf.Height = 0;
                         pf.TopMost = false;
-                        if (File.Exists(missFileLogPath))
+                        if (File.Exists(missFileLogPath) && errorFileList != null && errorFileList.Count >= 1)
                         {
                             MessageBox.Show("缺少文件列表生成完成!路径:" + missFileLogPath);
 
