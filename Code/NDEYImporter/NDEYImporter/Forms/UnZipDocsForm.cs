@@ -16,8 +16,13 @@ namespace NDEYImporter.Forms
         /// <summary>
         /// 缺少文件的日志
         /// </summary>
-        private string missFileLogPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "缺少的文件.txt");
+        private string missFileLogPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "缺少的文件.xlsx");
 
+        /// <summary>
+        /// 缺少文件列表
+        /// </summary>
+        private List<List<KeyValuePair<string, object>>> errorFileList = new List<List<KeyValuePair<string, object>>>();
+        
         /// <summary>
         /// 是否导入所有申报包
         /// </summary>
@@ -124,6 +129,12 @@ namespace NDEYImporter.Forms
                     {
                         MainForm.writeLog(ex.ToString());
                     }
+                }
+
+                //尝试输出Excel日志
+                if (errorFileList != null && errorFileList.Count >= 1)
+                {
+                    writeErrorExcelFile();
                 }
 
                 //检查是否已创建句柄，并调用委托执行UI方法
@@ -287,7 +298,7 @@ namespace NDEYImporter.Forms
                                                 {
                                                     MainForm.writeLog(ex.ToString());
 
-                                                    outputErrorFile(projectNumber, item.getString("RTreatisesPDF"));
+                                                    addErrorFile(projectNumber, item.getString("RTreatisesPDF"));
                                                 }
                                             }
                                             foreach (DataItem item in dlTechnologyAwards.getRows())
@@ -307,7 +318,7 @@ namespace NDEYImporter.Forms
                                                 {
                                                     MainForm.writeLog(ex.ToString());
 
-                                                    outputErrorFile(projectNumber, item.getString("TechnologyAwardsPDF"));
+                                                    addErrorFile(projectNumber, item.getString("TechnologyAwardsPDF"));
                                                 }
                                             }
                                             foreach (DataItem item in dlNDPatent.getRows())
@@ -327,7 +338,7 @@ namespace NDEYImporter.Forms
                                                 {
                                                     MainForm.writeLog(ex.ToString());
 
-                                                    outputErrorFile(projectNumber, item.getString("NDPatentPDF"));
+                                                    addErrorFile(projectNumber, item.getString("NDPatentPDF"));
                                                 }
                                             }
 
@@ -352,7 +363,7 @@ namespace NDEYImporter.Forms
                                                 {
                                                     MainForm.writeLog(ex.ToString());
 
-                                                    outputErrorFile(projectNumber, unitFileA);
+                                                    addErrorFile(projectNumber, unitFileA);
                                                 }
                                             }
 
@@ -371,7 +382,7 @@ namespace NDEYImporter.Forms
                                                 {
                                                     MainForm.writeLog(ex.ToString());
 
-                                                    outputErrorFile(projectNumber, personFileA);
+                                                    addErrorFile(projectNumber, personFileA);
                                                 }
                                             }
 
@@ -390,7 +401,7 @@ namespace NDEYImporter.Forms
                                                 {
                                                     MainForm.writeLog(ex.ToString());
 
-                                                    outputErrorFile(projectNumber, personFileB);
+                                                    addErrorFile(projectNumber, personFileB);
                                                 }
                                             }
 
@@ -409,7 +420,7 @@ namespace NDEYImporter.Forms
                                                 {
                                                     MainForm.writeLog(ex.ToString());
 
-                                                    outputErrorFile(projectNumber, personFileC);
+                                                    addErrorFile(projectNumber, personFileC);
                                                 }
                                             }
 
@@ -439,7 +450,7 @@ namespace NDEYImporter.Forms
                                                     {
                                                         MainForm.writeLog(ex.ToString());
 
-                                                        outputErrorFile(projectNumber, fii.Name);
+                                                        addErrorFile(projectNumber, fii.Name);
                                                     }
                                                 }
                                                 else if (fii.Name.EndsWith(".doc"))
@@ -461,7 +472,7 @@ namespace NDEYImporter.Forms
                                                         {
                                                             MainForm.writeLog(ex.ToString());
 
-                                                            outputErrorFile(projectNumber, fii.Name);
+                                                            addErrorFile(projectNumber, fii.Name);
                                                         }
 
                                                         //转换成PDF
@@ -492,7 +503,7 @@ namespace NDEYImporter.Forms
                                                 //没有找到Doc文件
                                                 MainForm.writeLog("对不起，没有找到项目申报书！");
                                                 //输出缺失的文件
-                                                outputErrorFile(projectNumber, "项目申报书.doc");
+                                                addErrorFile(projectNumber, "项目申报书.doc");
                                             }
 
                                             MainForm.writeLog("项目" + projectNumber + "的解包操作，结束处理保密资质附件和申报书文档转PDF...");
@@ -550,16 +561,88 @@ namespace NDEYImporter.Forms
         /// </summary>
         /// <param name="projectNumber">项目编号</param>
         /// <param name="fileName">文件名称</param>
-        private void outputErrorFile(string projectNumber, string fileName)
+        private void addErrorFile(string projectNumber, string fileName)
         {
             try
             {
-                //向文件添加缺少的文件
-                File.AppendAllText(missFileLogPath, DateTime.Now.ToString() + ":在项目" + projectNumber + "下缺少文件" + fileName + Environment.NewLine);
+                //错误文件的位置
+                string destFile = Path.Combine(Path.Combine(MainForm.Config.UnZipDir, projectNumber), fileName);
+
+                List<KeyValuePair<string, object>> row = new List<KeyValuePair<string, object>>();
+                row.Add(new KeyValuePair<string, object>("项目编号", projectNumber));
+                row.Add(new KeyValuePair<string, object>("缺少文件", fileName));
+                row.Add(new KeyValuePair<string, object>("时间", DateTime.Now.ToString()));
+                row.Add(new KeyValuePair<string, object>("类型", File.Exists(destFile) ? "Move错误" : "文件不存在"));
+                errorFileList.Add(row);
             }
             catch (Exception ex)
             {
                 MainForm.writeLog(ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 写错误日志的Excel文件
+        /// </summary>
+        private void writeErrorExcelFile()
+        {
+            try
+            {
+                //输出的Excel路径
+                string excelFile = missFileLogPath;
+
+                //Excel数据
+                MemoryStream memoryStream = new MemoryStream();
+                //创建Workbook
+                NPOI.XSSF.UserModel.XSSFWorkbook workbook = new NPOI.XSSF.UserModel.XSSFWorkbook();
+
+                //创建单元格设置对象(普通内容)
+                NPOI.SS.UserModel.ICellStyle cellStyleA = workbook.CreateCellStyle();
+                cellStyleA.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Left;
+                cellStyleA.VerticalAlignment = NPOI.SS.UserModel.VerticalAlignment.Center;
+                cellStyleA.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleA.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleA.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleA.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleA.WrapText = true;
+
+                //创建单元格设置对象(普通内容)
+                NPOI.SS.UserModel.ICellStyle cellStyleB = workbook.CreateCellStyle();
+                cellStyleB.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
+                cellStyleB.VerticalAlignment = NPOI.SS.UserModel.VerticalAlignment.Center;
+                cellStyleB.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleB.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleB.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleB.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+                cellStyleB.WrapText = true;
+
+                //创建设置字体对象(内容字体)
+                NPOI.SS.UserModel.IFont fontA = workbook.CreateFont();
+                fontA.FontHeightInPoints = 16;//设置字体大小
+                fontA.FontName = "宋体";
+                cellStyleA.SetFont(fontA);
+
+                //创建设置字体对象(标题字体)
+                NPOI.SS.UserModel.IFont fontB = workbook.CreateFont();
+                fontB.FontHeightInPoints = 16;//设置字体大小
+                fontB.FontName = "宋体";
+                fontB.Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Bold;
+                cellStyleB.SetFont(fontB);
+
+                //输出Sheet表格
+                MainForm.writeSheet(workbook, cellStyleA, cellStyleB, errorFileList);
+
+                //输出到Excel文件
+                workbook.Write(memoryStream);
+                File.WriteAllBytes(excelFile, memoryStream.ToArray());
+
+                MessageBox.Show("导出完成！路径：" + excelFile, "提示");
+                //打开Excel文件
+                System.Diagnostics.Process.Start(excelFile);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("对不起，导出失败！Ex:" + ex.ToString());
             }
         }
 

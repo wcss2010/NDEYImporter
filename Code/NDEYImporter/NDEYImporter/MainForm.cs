@@ -576,7 +576,7 @@ namespace NDEYImporter
         /// <param name="normalStyle">普通样式(用于表格内容)</param>
         /// <param name="boldStyle">粗体样式(用于表格头部)</param>
         /// <param name="table">表格数据</param>
-        private void writeSheet(NPOI.XSSF.UserModel.XSSFWorkbook workbook,NPOI.SS.UserModel.ICellStyle normalStyle,NPOI.SS.UserModel.ICellStyle boldStyle,List<List<KeyValuePair<string, object>>> table)
+        public static void writeSheet(NPOI.XSSF.UserModel.XSSFWorkbook workbook, NPOI.SS.UserModel.ICellStyle normalStyle, NPOI.SS.UserModel.ICellStyle boldStyle, List<List<KeyValuePair<string, object>>> table)
         {
             //创建Sheet页
             NPOI.SS.UserModel.ISheet sheet = workbook.CreateSheet();
