@@ -56,6 +56,15 @@ namespace NDEYImporter.Forms
                 }
             }
 
+            //异常本窗体
+            if (IsHandleCreated)
+            {
+                this.Invoke(new MethodInvoker(delegate()
+                    {
+                        Visible = false;
+                    }));
+            }
+
             //检查是否需要显示错误日志
             if (errorCount >= 1 && isNeedShowLog)
             {

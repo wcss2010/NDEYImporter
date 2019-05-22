@@ -434,6 +434,14 @@ namespace NDEYImporter.Forms
 
                                             //整理保密资质命名,查找Doc文件
                                             string[] extFiles = Directory.GetFiles(fileDir);
+
+                                            //需要删除的文件列表
+                                            List<string> needDeleteList = new List<string>();
+                                            if (extFiles != null)
+                                            {
+                                                needDeleteList.AddRange(extFiles);
+                                            }
+
                                             foreach (string sss in extFiles)
                                             {
                                                 FileInfo fii = new FileInfo(sss);
@@ -441,6 +449,9 @@ namespace NDEYImporter.Forms
                                                 {
                                                     try
                                                     {
+                                                        //移除正常的申报包文件，把不属于本次申报内容的文件留下
+                                                        needDeleteList.Remove(sss);
+
                                                         //文件序号+1
                                                         fileIndex++;
 
@@ -456,6 +467,9 @@ namespace NDEYImporter.Forms
                                                 }
                                                 else if (fii.Name.EndsWith(".doc"))
                                                 {
+                                                    //移除正常的申报包文件，把不属于本次申报内容的文件留下
+                                                    needDeleteList.Remove(sss);
+
                                                     if (fii.Name.StartsWith(unitID) && fii.Name.Contains(personName))
                                                     {
                                                         //找到Doc文件
@@ -477,7 +491,7 @@ namespace NDEYImporter.Forms
                                                         }
 
                                                         //转换成PDF
-                                                        convertToPDF(destDocFile);
+                                                        convertToPDF(projectNumber, destDocFile);
                                                     }
                                                     else
                                                     {
@@ -491,6 +505,25 @@ namespace NDEYImporter.Forms
                                                         }
                                                     }
                                                 }
+                                            }
+
+                                            //判断是否存在不属于本次申报包的文件
+                                            if (needDeleteList != null && needDeleteList.Count >= 1)
+                                            {
+                                                MainForm.writeLog("项目" + projectNumber + "的解包操作，开始移除不属于本次申报包的文件");
+                                                //删除不属于本次申报包的内容
+                                                foreach (string needdelete in needDeleteList)
+                                                {
+                                                    try
+                                                    {
+                                                        File.Delete(needdelete);
+                                                    }
+                                                    catch (Exception ex)
+                                                    {
+                                                        MainForm.writeLog(ex.ToString());
+                                                    }
+                                                }
+                                                MainForm.writeLog("项目" + projectNumber + "的解包操作，开始移除不属于本次申报包的文件");
                                             }
 
                                             //判断是否找到Doc文件
@@ -558,28 +591,36 @@ namespace NDEYImporter.Forms
         }
 
         /// <summary>
-        /// 输出重命名错误的文件
+        /// 输出错误的文件
         /// </summary>
         /// <param name="projectNumber">项目编号</param>
         /// <param name="fileName">文件名称</param>
-        private void addErrorFile(string projectNumber, string fileName)
+        /// <param name="errorType">错误类型</param>
+        private void addErrorFile(string projectNumber, string fileName, string errorType)
         {
             try
             {
-                //错误文件的位置
-                string destFile = Path.Combine(Path.Combine(MainForm.Config.UnZipDir, projectNumber), fileName);
-
                 List<KeyValuePair<string, object>> row = new List<KeyValuePair<string, object>>();
                 row.Add(new KeyValuePair<string, object>("项目编号", projectNumber));
                 row.Add(new KeyValuePair<string, object>("缺少文件", fileName));
                 row.Add(new KeyValuePair<string, object>("时间", DateTime.Now.ToString()));
-                row.Add(new KeyValuePair<string, object>("类型", File.Exists(destFile) ? "Move错误" : "文件不存在"));
+                row.Add(new KeyValuePair<string, object>("类型", errorType));
                 errorFileList.Add(row);
             }
             catch (Exception ex)
             {
                 MainForm.writeLog(ex.ToString());
             }
+        }
+
+        /// <summary>
+        /// 输出错误的文件
+        /// </summary>
+        /// <param name="projectNumber">项目编号</param>
+        /// <param name="fileName">文件名称</param>
+        private void addErrorFile(string projectNumber, string fileName)
+        {
+            addErrorFile(projectNumber, fileName, File.Exists(Path.Combine(Path.Combine(MainForm.Config.UnZipDir, projectNumber), fileName)) ? "Move错误" : "文件不存在");
         }
 
         /// <summary>
@@ -684,7 +725,7 @@ namespace NDEYImporter.Forms
         /// 转换到PDF文件
         /// </summary>
         /// <param name="destDocFile"></param>
-        private void convertToPDF(string destDocFile)
+        private void convertToPDF(string projectNumber, string destDocFile)
         {
             try
             {
@@ -734,6 +775,17 @@ namespace NDEYImporter.Forms
             catch (Exception ex)
             {
                 MainForm.writeLog(ex.ToString());
+
+                //尝试取文件名称
+                string fileName = destDocFile;
+                try
+                {
+                    fileName = new FileInfo(destDocFile).Name;
+                }
+                catch (Exception exxx) { }
+
+                //检查是不是出现了保存成PDF时内存溢出
+                addErrorFile(projectNumber, fileName, "PDF转换失败");
             }
 
             //删除Doc文档
