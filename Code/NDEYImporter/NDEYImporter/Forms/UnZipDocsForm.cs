@@ -143,6 +143,7 @@ namespace NDEYImporter.Forms
                     pf.Invoke(new MethodInvoker(delegate()
                     {
                         //打开缺少文件日志
+                        pf.Top = Screen.PrimaryScreen.Bounds.Height * 2;
                         pf.TopMost = false;
                         if (File.Exists(missFileLogPath))
                         {
