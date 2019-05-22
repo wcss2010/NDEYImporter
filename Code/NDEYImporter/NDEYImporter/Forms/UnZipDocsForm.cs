@@ -610,15 +610,6 @@ namespace NDEYImporter.Forms
                 //获得附件表格
                 Aspose.Words.Tables.Table tablee = (Aspose.Words.Tables.Table)xDoc.GetChild(Aspose.Words.NodeType.Table, xDoc.GetChildNodes(Aspose.Words.NodeType.Table, true).Count - 1, true);
 
-                //获得附件表格
-                Aspose.Words.Tables.Table tablee2 = (Aspose.Words.Tables.Table)xDoc.GetChild(Aspose.Words.NodeType.Table, xDoc.GetChildNodes(Aspose.Words.NodeType.Table, true).Count, true);
-
-                //如果没有找到tablee的那个表格，就看一下tablee2有没有
-                if (tablee2 != null && tablee2.Rows != null && (tablee == null || tablee.Rows == null))
-                {
-                    tablee = tablee2;
-                }
-
                 //行与
                 int rowIndex = 0;
 
