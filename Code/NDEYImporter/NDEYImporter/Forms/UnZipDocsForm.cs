@@ -253,11 +253,11 @@ namespace NDEYImporter.Forms
                                             MainForm.writeLog("项目" + projectNumber + "的解包操作，读取论文详细，科技奖项，专利情况信息...");
 
                                             //提取论文详细
-                                            DataList dlRTreatises = context.table("RTreatises").select("RTreatisesName,RTreatisesPDF").getDataList();
+                                            DataList dlRTreatises = context.table("RTreatises").orderBy("RTreatisesOrder desc").select("RTreatisesName,RTreatisesPDF").getDataList();
                                             //提取科技奖项
-                                            DataList dlTechnologyAwards = context.table("TechnologyAwards").select("TechnologyAwardsPName,TechnologyAwardsPDF").getDataList();
+                                            DataList dlTechnologyAwards = context.table("TechnologyAwards").orderBy("TechnologyAwardsOrder desc").select("TechnologyAwardsPName,TechnologyAwardsPDF").getDataList();
                                             //提取专利情况
-                                            DataList dlNDPatent = context.table("NDPatent").select("NDPatentName,NDPatentPDF").getDataList();
+                                            DataList dlNDPatent = context.table("NDPatent").orderBy("NDPatentOrder desc").select("NDPatentName,NDPatentPDF").getDataList();
                                             //提取推荐意见
                                             DataList dlBaseInfor = context.table("BaseInfor").select("UnitRecommend,ExpertRecommend1,ExpertRecommend2,ExpertRecommend3").getDataList();
 
@@ -610,29 +610,47 @@ namespace NDEYImporter.Forms
                 //获得附件表格
                 Aspose.Words.Tables.Table tablee = (Aspose.Words.Tables.Table)xDoc.GetChild(Aspose.Words.NodeType.Table, xDoc.GetChildNodes(Aspose.Words.NodeType.Table, true).Count - 1, true);
 
+                //获得附件表格
+                Aspose.Words.Tables.Table tablee2 = (Aspose.Words.Tables.Table)xDoc.GetChild(Aspose.Words.NodeType.Table, xDoc.GetChildNodes(Aspose.Words.NodeType.Table, true).Count, true);
+
+                //如果没有找到tablee的那个表格，就看一下tablee2有没有
+                if (tablee2 != null && tablee2.Rows != null && (tablee == null || tablee.Rows == null))
+                {
+                    tablee = tablee2;
+                }
+
                 //行与
                 int rowIndex = 0;
 
                 //查找需要替换位置
-                foreach (Aspose.Words.Tables.Row row in tablee.Rows)
+                if (tablee != null && tablee.Rows != null)
                 {
-                    if (row.Cells[0].GetText().Contains("序号"))
+                    //表格有效
+                    foreach (Aspose.Words.Tables.Row row in tablee.Rows)
                     {
-                        continue;
-                    }
-                    else
-                    {
-                        //行号+1
-                        rowIndex++;
+                        if (row.Cells[0].GetText().Contains("序号"))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            //行号+1
+                            rowIndex++;
 
-                        //清理单位格内容
-                        row.Cells[0].Paragraphs.Clear();
+                            //清理单位格内容
+                            row.Cells[0].Paragraphs.Clear();
 
-                        //写行号
-                        Aspose.Words.Paragraph p = new Aspose.Words.Paragraph(xDoc);
-                        p.AppendChild(new Aspose.Words.Run(xDoc, rowIndex.ToString()));
-                        row.Cells[0].AppendChild(p);
+                            //写行号
+                            Aspose.Words.Paragraph p = new Aspose.Words.Paragraph(xDoc);
+                            p.AppendChild(new Aspose.Words.Run(xDoc, rowIndex.ToString()));
+                            row.Cells[0].AppendChild(p);
+                        }
                     }
+                }
+                else
+                {
+                    //表格无效
+                    MainForm.writeLog("没有找到附件清单，当前文件" + destDocFile + ",表格数量:" + xDoc.GetChildNodes(Aspose.Words.NodeType.Table, true).Count);
                 }
 
                 //保存为PDF
