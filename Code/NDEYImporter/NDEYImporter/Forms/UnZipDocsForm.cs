@@ -14,11 +14,6 @@ namespace NDEYImporter.Forms
     public partial class UnZipDocsForm : Form
     {
         /// <summary>
-        /// 缺少文件的日志
-        /// </summary>
-        private string missFileLogPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "缺少的文件.xlsx");
-
-        /// <summary>
         /// 缺少文件列表
         /// </summary>
         private List<List<KeyValuePair<string, object>>> errorFileList = new List<List<KeyValuePair<string, object>>>();
@@ -96,6 +91,16 @@ namespace NDEYImporter.Forms
             }
             #endregion
 
+            //检查是否已创建句柄，并调用委托执行UI方法
+            if (IsHandleCreated)
+            {
+                Invoke(new MethodInvoker(delegate()
+                {
+                    //隐藏本窗体
+                    Top = Screen.PrimaryScreen.Bounds.Height * 2;
+                }));
+            }
+
             //开始导入
             ProgressForm pf = new ProgressForm();
             pf.Show();
@@ -138,29 +143,12 @@ namespace NDEYImporter.Forms
                 }
 
                 //检查是否已创建句柄，并调用委托执行UI方法
-                if (pf.IsHandleCreated)
+                if (IsHandleCreated)
                 {
-                    pf.Invoke(new MethodInvoker(delegate()
+                    Invoke(new MethodInvoker(delegate()
                     {
-                        //打开缺少文件日志
-                        pf.Height = 0;
-                        pf.TopMost = false;
-                        if (File.Exists(missFileLogPath) && errorFileList != null && errorFileList.Count >= 1)
-                        {
-                            MessageBox.Show("缺少文件列表生成完成!路径:" + missFileLogPath);
-
-                            try
-                            {
-                                System.Diagnostics.Process.Start(missFileLogPath);
-                            }
-                            catch (Exception ex) { }
-                        }
-
                         try
                         {
-                            //刷新Catalog列表
-                            MainForm.Instance.reloadCatalogList();
-
                             //关闭进度窗口
                             pf.Close();
                         }
@@ -168,12 +156,12 @@ namespace NDEYImporter.Forms
                         {
                             MainForm.writeLog(ex.ToString());
                         }
+
+                        //关闭窗口
+                        Close();
                     }));
                 }
             }));
-
-            //关闭窗口
-            Close();
         }
 
         /// <summary>
@@ -278,12 +266,22 @@ namespace NDEYImporter.Forms
 
                                             string personName = context.table("BaseInfor").select("UserName").getValue<string>(string.Empty);
 
+                                            //需要删除的文件列表
+                                            List<string> needDeleteList = new List<string>();
+                                            needDeleteList.AddRange(Directory.GetFiles(fileDir));
+
+                                            //移除正常的申报包文件，把不属于本次申报内容的文件留下
+                                            needDeleteList.Remove(dbFile);
+
                                             MainForm.writeLog("项目" + projectNumber + "的解包操作，开始替换附件名称...");
                                             //附件序号
                                             int fileIndex = 0;
                                             //整理附件名称
                                             foreach (DataItem item in dlRTreatises.getRows())
                                             {
+                                                //移除正常的申报包文件，把不属于本次申报内容的文件留下
+                                                needDeleteList.Remove(Path.Combine(fileDir, item.getString("RTreatisesPDF")));
+
                                                 //获得文件扩展名
                                                 string extName = new FileInfo(Path.Combine(fileDir, item.getString("RTreatisesPDF"))).Extension;
 
@@ -304,6 +302,9 @@ namespace NDEYImporter.Forms
                                             }
                                             foreach (DataItem item in dlTechnologyAwards.getRows())
                                             {
+                                                //移除正常的申报包文件，把不属于本次申报内容的文件留下
+                                                needDeleteList.Remove(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF")));
+
                                                 //获得文件扩展名
                                                 string extName = new FileInfo(Path.Combine(fileDir, item.getString("TechnologyAwardsPDF"))).Extension;
 
@@ -324,6 +325,9 @@ namespace NDEYImporter.Forms
                                             }
                                             foreach (DataItem item in dlNDPatent.getRows())
                                             {
+                                                //移除正常的申报包文件，把不属于本次申报内容的文件留下
+                                                needDeleteList.Remove(Path.Combine(fileDir, item.getString("NDPatentPDF")));
+
                                                 //获得文件扩展名
                                                 string extName = new FileInfo(Path.Combine(fileDir, item.getString("NDPatentPDF"))).Extension;
 
@@ -352,6 +356,9 @@ namespace NDEYImporter.Forms
                                             //查找单位推荐意见附件
                                             if (File.Exists(Path.Combine(fileDir, unitFileA)))
                                             {
+                                                //移除正常的申报包文件，把不属于本次申报内容的文件留下
+                                                needDeleteList.Remove(Path.Combine(fileDir, unitFileA));
+
                                                 //文件序号+1
                                                 fileIndex++;
 
@@ -371,6 +378,9 @@ namespace NDEYImporter.Forms
                                             //查找专家提名附件
                                             if (File.Exists(Path.Combine(fileDir, personFileA)))
                                             {
+                                                //移除正常的申报包文件，把不属于本次申报内容的文件留下
+                                                needDeleteList.Remove(Path.Combine(fileDir, personFileA));
+
                                                 //文件序号+1
                                                 fileIndex++;
 
@@ -390,6 +400,9 @@ namespace NDEYImporter.Forms
                                             //查找专家提名附件
                                             if (File.Exists(Path.Combine(fileDir, personFileB)))
                                             {
+                                                //移除正常的申报包文件，把不属于本次申报内容的文件留下
+                                                needDeleteList.Remove(Path.Combine(fileDir, personFileB));
+
                                                 //文件序号+1
                                                 fileIndex++;
 
@@ -409,6 +422,9 @@ namespace NDEYImporter.Forms
                                             //查找专家提名附件
                                             if (File.Exists(Path.Combine(fileDir, personFileC)))
                                             {
+                                                //移除正常的申报包文件，把不属于本次申报内容的文件留下
+                                                needDeleteList.Remove(Path.Combine(fileDir, personFileC));
+
                                                 //文件序号+1
                                                 fileIndex++;
 
@@ -434,14 +450,6 @@ namespace NDEYImporter.Forms
 
                                             //整理保密资质命名,查找Doc文件
                                             string[] extFiles = Directory.GetFiles(fileDir);
-
-                                            //需要删除的文件列表
-                                            List<string> needDeleteList = new List<string>();
-                                            if (extFiles != null)
-                                            {
-                                                needDeleteList.AddRange(extFiles);
-                                            }
-
                                             foreach (string sss in extFiles)
                                             {
                                                 FileInfo fii = new FileInfo(sss);
@@ -626,12 +634,12 @@ namespace NDEYImporter.Forms
         /// <summary>
         /// 写错误日志的Excel文件
         /// </summary>
-        private void writeErrorExcelFile()
+        private string writeErrorExcelFile()
         {
             try
             {
                 //输出的Excel路径
-                string excelFile = missFileLogPath;
+                string excelFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "缺少的文件_" + DateTime.Now.ToString("yyyyMMddHHmm") + ".xlsx");
 
                 //Excel数据
                 MemoryStream memoryStream = new MemoryStream();
@@ -678,13 +686,24 @@ namespace NDEYImporter.Forms
                 workbook.Write(memoryStream);
                 File.WriteAllBytes(excelFile, memoryStream.ToArray());
 
-                MessageBox.Show("导出完成！路径：" + excelFile, "提示");
-                //打开Excel文件
-                System.Diagnostics.Process.Start(excelFile);
+                if (errorFileList != null && errorFileList.Count >= 1)
+                {
+                    MessageBox.Show("缺少文件列表生成完成!路径:" + excelFile);
+
+                    try
+                    {
+                        System.Diagnostics.Process.Start(excelFile);
+                    }
+                    catch (Exception ex) { }
+                }
+
+                return excelFile;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("对不起，导出失败！Ex:" + ex.ToString());
+                MainForm.writeLog(ex.ToString());
+
+                return string.Empty;
             }
         }
 
