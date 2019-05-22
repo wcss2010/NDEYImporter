@@ -136,12 +136,6 @@ namespace NDEYImporter.Forms
                     }
                 }
 
-                //尝试输出Excel日志
-                if (errorFileList != null && errorFileList.Count >= 1)
-                {
-                    writeErrorExcelFile();
-                }
-
                 //检查是否已创建句柄，并调用委托执行UI方法
                 if (IsHandleCreated)
                 {
@@ -155,6 +149,12 @@ namespace NDEYImporter.Forms
                         catch (Exception ex)
                         {
                             MainForm.writeLog(ex.ToString());
+                        }
+
+                        //尝试输出Excel日志
+                        if (errorFileList != null && errorFileList.Count >= 1)
+                        {
+                            writeErrorExcelFile();
                         }
 
                         //关闭窗口
