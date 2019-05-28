@@ -448,6 +448,9 @@ namespace NDEYImporter.Forms
                                             //是否已经找到Doc文件
                                             bool isFoundDocFile = false;
 
+                                            //上一个保密资质修改时间
+                                            DateTime lastExtFileModifyTime = DateTime.MinValue;
+
                                             //整理保密资质命名,查找Doc文件
                                             string[] extFiles = Directory.GetFiles(fileDir);
                                             foreach (string sss in extFiles)
@@ -457,11 +460,22 @@ namespace NDEYImporter.Forms
                                                 {
                                                     try
                                                     {
+                                                        //查看最后创建的文件
+                                                        if (fii.CreationTime >= lastExtFileModifyTime)
+                                                        {
+                                                            //记录当前创建时间
+                                                            lastExtFileModifyTime = fii.CreationTime;
+
+                                                            //文件序号+1
+                                                            fileIndex++;
+                                                        }
+                                                        else
+                                                        {
+                                                            continue;
+                                                        }
+
                                                         //移除正常的申报包文件，把不属于本次申报内容的文件留下
                                                         needDeleteList.Remove(sss);
-
-                                                        //文件序号+1
-                                                        fileIndex++;
 
                                                         //移动文件
                                                         renameFile(sss,fileIndex,"保密资质复印件",".png");
@@ -735,6 +749,19 @@ namespace NDEYImporter.Forms
 
             //生成目标路径
             destPath = Path.Combine(new FileInfo(source).DirectoryName, "附件" + fileIndex + "_" + itemName + extName);
+
+            //判断目标文件是否存在
+            if (File.Exists(destPath))
+            {
+                try
+                {
+                    File.Delete(destPath);
+                }
+                catch (Exception ex)
+                {
+                    MainForm.writeLog(ex.ToString());
+                }
+            }
 
             //文件重命名
             File.Move(source, destPath);
