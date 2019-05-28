@@ -463,11 +463,15 @@ namespace NDEYImporter.Forms
                                                         //查看最后创建的文件
                                                         if (fii.CreationTime >= lastExtFileModifyTime)
                                                         {
+                                                            //只有第一个extFile才分配文件序号
+                                                            if (lastExtFileModifyTime == DateTime.MinValue)
+                                                            {
+                                                                //文件序号+1
+                                                                fileIndex++;
+                                                            }
+
                                                             //记录当前创建时间
                                                             lastExtFileModifyTime = fii.CreationTime;
-
-                                                            //文件序号+1
-                                                            fileIndex++;
                                                         }
                                                         else
                                                         {
