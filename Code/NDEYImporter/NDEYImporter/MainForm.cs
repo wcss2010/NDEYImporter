@@ -1,4 +1,5 @@
-﻿using NDEYImporter.DB;
+﻿using Aspose.Words;
+using NDEYImporter.DB;
 using NDEYImporter.Forms;
 using NDEYImporter.Util;
 using Noear.Weed;
@@ -315,18 +316,19 @@ namespace NDEYImporter
                             rowData.Add(new KeyValuePair<string, object>("电子邮箱", dlProjects.getRow(0).get("EMail")));
                             rowData.Add(new KeyValuePair<string, object>("单位名称", dlProjects.getRow(0).get("UnitName")));
 
-                            //读取开户帐号
-                            string unitBankNo = ConnectionManager.Context.table("Unit").where("ID='" + projectUnitID + "'").select("UnitBankNo").getValue<string>(string.Empty);
-                            if (string.IsNullOrEmpty(unitBankNo))
-                            {
-                                rowData.Add(new KeyValuePair<string, object>("开户账号", "对不起，没有找到开户帐号"));
-                            }
-                            else
-                            {
-                                rowData.Add(new KeyValuePair<string, object>("开户账号", unitBankNo));
-                            }
+                            ////读取开户帐号
+                            //string unitBankNo = ConnectionManager.Context.table("Unit").where("ID='" + projectUnitID + "'").select("UnitBankNo").getValue<string>(string.Empty);
+                            //if (string.IsNullOrEmpty(unitBankNo))
+                            //{
+                            //    rowData.Add(new KeyValuePair<string, object>("开户账号", "对不起，没有找到开户帐号"));
+                            //}
+                            //else
+                            //{
+                            //    rowData.Add(new KeyValuePair<string, object>("开户账号", unitBankNo));
+                            //}
 
                             rowData.Add(new KeyValuePair<string, object>("单位常用名", dlProjects.getRow(0).get("UnitNormal")));
+                            rowData.Add(new KeyValuePair<string, object>("所属院系", dlProjects.getRow(0).get("UnitSchool")));
                             rowData.Add(new KeyValuePair<string, object>("单位联系人", dlProjects.getRow(0).get("UnitContacts")));
                             rowData.Add(new KeyValuePair<string, object>("隶属部门", dlProjects.getRow(0).get("UnitForORG")));
                             rowData.Add(new KeyValuePair<string, object>("单位性质", dlProjects.getRow(0).get("UnitProperties")));
@@ -407,14 +409,17 @@ namespace NDEYImporter
 
                             rowData.Add(new KeyValuePair<string, object>("专家一姓名", dlProjects.getRow(0).get("ExpertName1")));
                             rowData.Add(new KeyValuePair<string, object>("专家一研究领域", dlProjects.getRow(0).get("ExpertArea1")));
+                            rowData.Add(new KeyValuePair<string, object>("专家一专家类别", dlProjects.getRow(0).get("ExpertWorkType1")));
                             rowData.Add(new KeyValuePair<string, object>("专家一职务职称", dlProjects.getRow(0).get("ExpertUnitPosition1")));
                             rowData.Add(new KeyValuePair<string, object>("专家一工作单位", dlProjects.getRow(0).get("ExpertUnit1")));
                             rowData.Add(new KeyValuePair<string, object>("专家二姓名", dlProjects.getRow(0).get("ExpertName2")));
                             rowData.Add(new KeyValuePair<string, object>("专家二研究领域", dlProjects.getRow(0).get("ExpertArea2")));
+                            rowData.Add(new KeyValuePair<string, object>("专家二专家类别", dlProjects.getRow(0).get("ExpertWorkType2")));
                             rowData.Add(new KeyValuePair<string, object>("专家二职务职称", dlProjects.getRow(0).get("ExpertUnitPosition2")));
                             rowData.Add(new KeyValuePair<string, object>("专家二工作单位", dlProjects.getRow(0).get("ExpertUnit2")));
                             rowData.Add(new KeyValuePair<string, object>("专家三姓名", dlProjects.getRow(0).get("ExpertName3")));
                             rowData.Add(new KeyValuePair<string, object>("专家三研究领域", dlProjects.getRow(0).get("ExpertArea3")));
+                            rowData.Add(new KeyValuePair<string, object>("专家三专家类别", dlProjects.getRow(0).get("ExpertWorkType3")));
                             rowData.Add(new KeyValuePair<string, object>("专家三职务职称", dlProjects.getRow(0).get("ExpertUnitPosition3")));
                             rowData.Add(new KeyValuePair<string, object>("专家三工作单位", dlProjects.getRow(0).get("ExpertUnit3")));
 
@@ -719,10 +724,10 @@ namespace NDEYImporter
                                 }
 
                                 //判断第一年研究任务.rtf这个文件是否存在,如果存在则说明之前解压过
-                                if (File.Exists(Path.Combine(destDir, "第一年研究任务.rtf")))
+                                if (File.Exists(Path.Combine(destDir, "第一年研究任务.doc")))
                                 {
                                     //存在这个文件,直接读取
-                                    rtfText = File.ReadAllText(Path.Combine(destDir, "第一年研究任务.rtf"));
+                                    rtfText = getTextFromDoc(Path.Combine(destDir, "第一年研究任务.doc"));
                                     break;
                                 }
                                 else
@@ -739,7 +744,7 @@ namespace NDEYImporter
                                     //解压这个包
                                     try
                                     {
-                                        new NdeyMyDataUnZip().UnZipFile(pkgZipFile, destDir, string.Empty, true);
+                                        new NdeyDocFilesUnZip().UnZipFile(pkgZipFile, destDir, string.Empty, true);
                                     }
                                     catch (Exception ex)
                                     {
@@ -747,10 +752,10 @@ namespace NDEYImporter
                                     }
 
                                     //判断第一年研究任务.rtf这个文件是否存在
-                                    if (File.Exists(Path.Combine(destDir, "第一年研究任务.rtf")))
+                                    if (File.Exists(Path.Combine(destDir, "第一年研究任务.doc")))
                                     {
                                         //存在这个文件,直接读取
-                                        rtfText = File.ReadAllText(Path.Combine(destDir, "第一年研究任务.rtf"));
+                                        rtfText = getTextFromDoc(Path.Combine(destDir, "第一年研究任务.doc"));
                                         break;
                                     }
                                 }
@@ -758,16 +763,16 @@ namespace NDEYImporter
                         }
                     }
 
-                    //如果RTF内容非空,则需要获得纯文本
-                    if (!string.IsNullOrEmpty(rtfText))
-                    {
-                        //将RTF文本设置到RichTextBox对象
-                        RichTextBox rtb = new RichTextBox();
-                        rtb.Rtf = rtfText;
+                    ////如果RTF内容非空,则需要获得纯文本
+                    //if (!string.IsNullOrEmpty(rtfText))
+                    //{
+                    //    //将RTF文本设置到RichTextBox对象
+                    //    RichTextBox rtb = new RichTextBox();
+                    //    rtb.Rtf = rtfText;
 
-                        //获得纯文本
-                        rtfText = rtb.Text;
-                    }
+                    //    //获得纯文本
+                    //    rtfText = rtb.Text;
+                    //}
                 }
             }
             catch (Exception ex)
@@ -776,6 +781,25 @@ namespace NDEYImporter
             }
 
             return rtfText;
+        }
+
+        private string getTextFromDoc(string docFile)
+        {
+            string result = string.Empty;
+
+            if (File.Exists(docFile))
+            {
+                try
+                {
+                    Document docc = new Document(docFile);
+                    docc.Save(Path.Combine(Path.GetDirectoryName(docFile), "第一个研究任务.txt"), SaveFormat.Text);
+
+                    result = File.ReadAllText(Path.Combine(Path.GetDirectoryName(docFile), "第一个研究任务.txt"));
+                }
+                catch (Exception ex) { }
+            }
+
+            return result;
         }
 
         private void btnSelectTotalDir_Click(object sender, EventArgs e)

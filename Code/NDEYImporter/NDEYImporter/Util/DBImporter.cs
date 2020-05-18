@@ -66,7 +66,7 @@ namespace NDEYImporter.Util
                     else
                     {
                         //需要新建
-                        
+
                         //插入数据到本地库中
                         //新项目ID
                         projectID = insertToLocalDB(Guid.NewGuid().ToString(), sourceFile);
@@ -208,7 +208,7 @@ namespace NDEYImporter.Util
             ConnectionManager.Context.table("NationalDefenseProjectExperience").where("ProjectID='" + projectID + "'").delete();
             //清理获得国防专利经历
             ConnectionManager.Context.table("NationalDefensePatentExperience ").where("ProjectID='" + projectID + "'").delete();
-                        
+
             //单位ID
             string unitId = ConnectionManager.Context.table("Catalog").where("ProjectID='" + projectID + "'").select("ProjectCreaterUnitID").getValue<string>(string.Empty);
             //使用次数
@@ -279,6 +279,14 @@ namespace NDEYImporter.Util
                     diNewProject.set("UnitID", dlOldProjects.getRow(0).get("UnitID"));
                     diNewProject.set("UnitName", dlOldProjects.getRow(0).get("UnitName"));
                     diNewProject.set("UnitNormal", dlOldProjects.getRow(0).get("UnitNormal"));
+
+                    //防止数据库中没有这个字段
+                    try
+                    {
+                        diNewProject.set("UnitSchool", dlOldProjects.getRow(0).get("UnitSchool"));
+                    }
+                    catch (Exception ex) { }
+
                     diNewProject.set("UnitIDCard", dlOldProjects.getRow(0).get("UnitIDCard"));
                     diNewProject.set("UnitContacts", dlOldProjects.getRow(0).get("UnitContacts"));
                     diNewProject.set("UnitAddress", dlOldProjects.getRow(0).get("UnitAddress"));
@@ -315,18 +323,42 @@ namespace NDEYImporter.Util
                     diNewProject.set("UnitRecommendOName", dlOldProjects.getRow(0).get("UnitRecommendOName"));
                     diNewProject.set("ExpertName1", dlOldProjects.getRow(0).get("ExpertName1"));
                     diNewProject.set("ExpertArea1", dlOldProjects.getRow(0).get("ExpertArea1"));
+
+                    //防止数据库中没有这个字段
+                    try
+                    {
+                        diNewProject.set("ExpertWorkType1", dlOldProjects.getRow(0).get("ExpertWorkType1"));
+                    }
+                    catch (Exception ex) { }
+
                     diNewProject.set("ExpertUnitPosition1", dlOldProjects.getRow(0).get("ExpertUnitPosition1"));
                     diNewProject.set("ExpertUnit1", dlOldProjects.getRow(0).get("ExpertUnit1"));
                     diNewProject.set("ExpertRecommend1", dlOldProjects.getRow(0).get("ExpertRecommend1"));
                     diNewProject.set("ExpertRecommend1OName", dlOldProjects.getRow(0).get("ExpertRecommend1OName"));
                     diNewProject.set("ExpertName2", dlOldProjects.getRow(0).get("ExpertName2"));
                     diNewProject.set("ExpertArea2", dlOldProjects.getRow(0).get("ExpertArea2"));
+
+                    //防止数据库中没有这个字段
+                    try
+                    {
+                        diNewProject.set("ExpertWorkType2", dlOldProjects.getRow(0).get("ExpertWorkType2"));
+                    }
+                    catch (Exception ex) { }
+
                     diNewProject.set("ExpertUnitPosition2", dlOldProjects.getRow(0).get("ExpertUnitPosition2"));
                     diNewProject.set("ExpertUnit2", dlOldProjects.getRow(0).get("ExpertUnit2"));
                     diNewProject.set("ExpertRecommend2", dlOldProjects.getRow(0).get("ExpertRecommend2"));
                     diNewProject.set("ExpertRecommend2OName", dlOldProjects.getRow(0).get("ExpertRecommend2OName"));
                     diNewProject.set("ExpertName3", dlOldProjects.getRow(0).get("ExpertName3"));
                     diNewProject.set("ExpertArea3", dlOldProjects.getRow(0).get("ExpertArea3"));
+
+                    //防止数据库中没有这个字段
+                    try
+                    {
+                        diNewProject.set("ExpertWorkType3", dlOldProjects.getRow(0).get("ExpertWorkType3"));
+                    }
+                    catch (Exception ex) { }
+
                     diNewProject.set("ExpertUnitPosition3", dlOldProjects.getRow(0).get("ExpertUnitPosition3"));
                     diNewProject.set("ExpertUnit3", dlOldProjects.getRow(0).get("ExpertUnit3"));
                     diNewProject.set("ExpertRecommend3", dlOldProjects.getRow(0).get("ExpertRecommend3"));
@@ -336,64 +368,70 @@ namespace NDEYImporter.Util
                     //单位信息 （Old）UnitInfor --- （New）Unit
                     //这里的逻辑是先看看当前用的单位是不是自定义的，如果不是，就无需添加，如果是则检查之前有没有添加过相同的记录，如果添加过，就替换掉这条记录，如果没有直接添加
                     //旧的单位信息数据
-                    DataList dlUnitList = context.table("UnitInfor").where("ID = '" + diNewProject.getString("UnitID") + "'").select("*").getDataList();
 
-                    //判断是否选择了单位信息
-                    if (dlUnitList.getRowCount() >= 1)
+                    //防止数据库中没有Unit或UnitID为空
+                    try
                     {
-                        //有选择单位信息
-                        
-                        //判断是否为自定义单位
-                        if (dlUnitList.getRow(0).getInt("IsUserAdded") == 1)
+                        DataList dlUnitList = context.table("UnitInfor").where("ID = '" + diNewProject.getString("UnitID") + "'").select("*").getDataList();
+
+                        //判断是否选择了单位信息
+                        if (dlUnitList.getRowCount() >= 1)
                         {
-                            //自定义单位
+                            //有选择单位信息
 
-                            //检查本地库中有没有这条记录
-                            DataList dlLocalCustomUnit = ConnectionManager.Context.table("Unit").where("UnitBankNo='" + dlUnitList.getRow(0).getString("UnitBankNo") + "'").select("*").getDataList();
-
-                            //添加或更新的单位信息
-                            DataItem diNewUnit = new DataItem();
-                            diNewUnit.set("ID", Guid.NewGuid().ToString());
-                            diNewUnit.set("UnitName", dlUnitList.getRow(0).get("UnitName"));
-                            diNewUnit.set("UnitType", dlUnitList.getRow(0).get("UnitType"));
-                            diNewUnit.set("UnitBankUser", dlUnitList.getRow(0).get("UnitBankUser"));
-                            diNewUnit.set("UnitBankName", dlUnitList.getRow(0).get("UnitBankName"));
-                            diNewUnit.set("UnitBankNo", dlUnitList.getRow(0).get("UnitBankNo"));
-                            diNewUnit.set("IsUserAdded", dlUnitList.getRow(0).get("IsUserAdded"));
-
-                            //判断是不是添加过这条自定义单位
-                            if (dlLocalCustomUnit.getRowCount() >= 1)
+                            //判断是否为自定义单位
+                            if (dlUnitList.getRow(0).getInt("IsUserAdded") == 1)
                             {
-                                //删除掉旧的记录
-                                ConnectionManager.Context.table("Unit").where("ID='" + dlLocalCustomUnit.getRow(0).getString("ID") + "'").delete();
+                                //自定义单位
 
-                                //更新Project的UnitID
-                                ConnectionManager.Context.table("Project").set("UnitID", diNewUnit.getString("ID")).where("UnitID = '" + dlLocalCustomUnit.getRow(0).getString("ID") + "'").update();
+                                //检查本地库中有没有这条记录
+                                DataList dlLocalCustomUnit = ConnectionManager.Context.table("Unit").where("UnitBankNo='" + dlUnitList.getRow(0).getString("UnitBankNo") + "'").select("*").getDataList();
 
-                                //更新Catalog的ProjectCreaterUnitID
-                                ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", diNewUnit.getString("ID")).where("ProjectCreaterUnitID = '" + dlLocalCustomUnit.getRow(0).getString("ID") + "'").update();
+                                //添加或更新的单位信息
+                                DataItem diNewUnit = new DataItem();
+                                diNewUnit.set("ID", Guid.NewGuid().ToString());
+                                diNewUnit.set("UnitName", dlUnitList.getRow(0).get("UnitName"));
+                                diNewUnit.set("UnitType", dlUnitList.getRow(0).get("UnitType"));
+                                diNewUnit.set("UnitBankUser", dlUnitList.getRow(0).get("UnitBankUser"));
+                                diNewUnit.set("UnitBankName", dlUnitList.getRow(0).get("UnitBankName"));
+                                diNewUnit.set("UnitBankNo", dlUnitList.getRow(0).get("UnitBankNo"));
+                                diNewUnit.set("IsUserAdded", dlUnitList.getRow(0).get("IsUserAdded"));
+
+                                //判断是不是添加过这条自定义单位
+                                if (dlLocalCustomUnit.getRowCount() >= 1)
+                                {
+                                    //删除掉旧的记录
+                                    ConnectionManager.Context.table("Unit").where("ID='" + dlLocalCustomUnit.getRow(0).getString("ID") + "'").delete();
+
+                                    //更新Project的UnitID
+                                    ConnectionManager.Context.table("Project").set("UnitID", diNewUnit.getString("ID")).where("UnitID = '" + dlLocalCustomUnit.getRow(0).getString("ID") + "'").update();
+
+                                    //更新Catalog的ProjectCreaterUnitID
+                                    ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", diNewUnit.getString("ID")).where("ProjectCreaterUnitID = '" + dlLocalCustomUnit.getRow(0).getString("ID") + "'").update();
+                                }
+
+                                //添加单位数据
+                                ConnectionManager.Context.table("Unit").insert(diNewUnit);
+
+                                //更新本项目的Project的UnitID
+                                ConnectionManager.Context.table("Project").set("UnitID", diNewUnit.getString("ID")).where("ID = '" + projectID + "'").update();
+
+                                //更新本项目的Catalog的ProjectCreaterUnitID
+                                ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", diNewUnit.getString("ID")).where("ProjectID = '" + projectID + "'").update();
                             }
-
-                            //添加单位数据
-                            ConnectionManager.Context.table("Unit").insert(diNewUnit);
-
-                            //更新本项目的Project的UnitID
-                            ConnectionManager.Context.table("Project").set("UnitID", diNewUnit.getString("ID")).where("ID = '" + projectID + "'").update();
-
-                            //更新本项目的Catalog的ProjectCreaterUnitID
-                            ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", diNewUnit.getString("ID")).where("ProjectID = '" + projectID + "'").update();
+                            else
+                            {
+                                //更新本项目的Catalog的ProjectCreaterUnitID
+                                ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", dlUnitList.getRow(0).getString("ID")).where("ProjectID = '" + projectID + "'").update();
+                            }
                         }
                         else
                         {
-                            //更新本项目的Catalog的ProjectCreaterUnitID
-                            ConnectionManager.Context.table("Catalog").set("ProjectCreaterUnitID", dlUnitList.getRow(0).getString("ID")).where("ProjectID = '" + projectID + "'").update();
+                            //没有选择单位信息
+                            MainForm.writeLog("对不起，没有找到项目ID" + projectID + "的单位信息！");
                         }
                     }
-                    else
-                    {
-                        //没有选择单位信息
-                        MainForm.writeLog("对不起，没有找到项目ID" + projectID + "的单位信息！");
-                    }
+                    catch (Exception ex) { }
 
                     //学术经历 （Old）AcademicPost --- （New）ResearchExperience
 
@@ -574,6 +612,10 @@ namespace NDEYImporter.Util
                     //空数据库
                     throw new Exception("对不起，没有找到项目申报信息！");
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
             finally
             {
