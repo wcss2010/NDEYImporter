@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -910,6 +911,15 @@ namespace NDEYImporter
 
             //错误计数
             ProgressForm.errorCount++;
+        }
+
+        private void btnOpenLog_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start(Path.Combine(Application.StartupPath, "Logs"));
+            }
+            catch (Exception ex) { }
         }
     }
 

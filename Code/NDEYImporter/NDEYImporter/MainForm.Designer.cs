@@ -35,10 +35,14 @@
             this.btnSelectTotalDir = new System.Windows.Forms.ToolStripButton();
             this.btnImportAll = new System.Windows.Forms.ToolStripButton();
             this.btnImportWithSelectedList = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnExportExcel = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnSelectUnZipDir = new System.Windows.Forms.ToolStripButton();
             this.btnUnZipAll = new System.Windows.Forms.ToolStripButton();
             this.btnUnZipWithSelectedList = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnOpenLog = new System.Windows.Forms.ToolStripButton();
             this.btnExit = new System.Windows.Forms.ToolStripButton();
             this.plContent = new System.Windows.Forms.Panel();
             this.dgvCatalogs = new System.Windows.Forms.DataGridView();
@@ -63,7 +67,7 @@
             this.tsslHintText});
             this.ssStatus.Location = new System.Drawing.Point(0, 498);
             this.ssStatus.Name = "ssStatus";
-            this.ssStatus.Size = new System.Drawing.Size(1067, 22);
+            this.ssStatus.Size = new System.Drawing.Size(1140, 22);
             this.ssStatus.TabIndex = 0;
             this.ssStatus.Text = "statusStrip1";
             // 
@@ -80,14 +84,18 @@
             this.btnSelectTotalDir,
             this.btnImportAll,
             this.btnImportWithSelectedList,
+            this.toolStripSeparator2,
             this.btnExportExcel,
+            this.toolStripSeparator3,
             this.btnSelectUnZipDir,
             this.btnUnZipAll,
             this.btnUnZipWithSelectedList,
+            this.toolStripSeparator4,
+            this.btnOpenLog,
             this.btnExit});
             this.tsToolBar.Location = new System.Drawing.Point(0, 0);
             this.tsToolBar.Name = "tsToolBar";
-            this.tsToolBar.Size = new System.Drawing.Size(1067, 39);
+            this.tsToolBar.Size = new System.Drawing.Size(1140, 39);
             this.tsToolBar.TabIndex = 1;
             // 
             // btnSelectTotalDir
@@ -120,6 +128,11 @@
             this.btnImportWithSelectedList.Text = "选择性导入";
             this.btnImportWithSelectedList.Click += new System.EventHandler(this.btnImportWithSelectedList_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
+            // 
             // btnExportExcel
             // 
             this.btnExportExcel.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -130,14 +143,19 @@
             this.btnExportExcel.Text = "导出列表到Excel";
             this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 39);
+            // 
             // btnSelectUnZipDir
             // 
             this.btnSelectUnZipDir.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnSelectUnZipDir.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectUnZipDir.Image")));
             this.btnSelectUnZipDir.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSelectUnZipDir.Name = "btnSelectUnZipDir";
-            this.btnSelectUnZipDir.Size = new System.Drawing.Size(127, 36);
-            this.btnSelectUnZipDir.Text = "选择解包目录";
+            this.btnSelectUnZipDir.Size = new System.Drawing.Size(183, 36);
+            this.btnSelectUnZipDir.Text = "设置输出评审材料目录";
             this.btnSelectUnZipDir.Click += new System.EventHandler(this.btnSelectUnZipDir_Click);
             // 
             // btnUnZipAll
@@ -147,7 +165,7 @@
             this.btnUnZipAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnUnZipAll.Name = "btnUnZipAll";
             this.btnUnZipAll.Size = new System.Drawing.Size(99, 36);
-            this.btnUnZipAll.Text = "全部解压";
+            this.btnUnZipAll.Text = "全部生成";
             this.btnUnZipAll.Click += new System.EventHandler(this.btnUnZipAll_Click);
             // 
             // btnUnZipWithSelectedList
@@ -157,8 +175,22 @@
             this.btnUnZipWithSelectedList.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnUnZipWithSelectedList.Name = "btnUnZipWithSelectedList";
             this.btnUnZipWithSelectedList.Size = new System.Drawing.Size(113, 36);
-            this.btnUnZipWithSelectedList.Text = "选择性解压";
+            this.btnUnZipWithSelectedList.Text = "选择性生成";
             this.btnUnZipWithSelectedList.Click += new System.EventHandler(this.btnUnZipWithSelectedList_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 39);
+            // 
+            // btnOpenLog
+            // 
+            this.btnOpenLog.Image = ((System.Drawing.Image)(resources.GetObject("btnOpenLog.Image")));
+            this.btnOpenLog.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnOpenLog.Name = "btnOpenLog";
+            this.btnOpenLog.Size = new System.Drawing.Size(113, 36);
+            this.btnOpenLog.Text = "打开日志目录";
+            this.btnOpenLog.Click += new System.EventHandler(this.btnOpenLog_Click);
             // 
             // btnExit
             // 
@@ -176,7 +208,7 @@
             this.plContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.plContent.Location = new System.Drawing.Point(0, 39);
             this.plContent.Name = "plContent";
-            this.plContent.Size = new System.Drawing.Size(1067, 459);
+            this.plContent.Size = new System.Drawing.Size(1140, 459);
             this.plContent.TabIndex = 2;
             // 
             // dgvCatalogs
@@ -198,7 +230,7 @@
             this.dgvCatalogs.ReadOnly = true;
             this.dgvCatalogs.RowHeadersVisible = false;
             this.dgvCatalogs.RowTemplate.Height = 23;
-            this.dgvCatalogs.Size = new System.Drawing.Size(1067, 459);
+            this.dgvCatalogs.Size = new System.Drawing.Size(1140, 459);
             this.dgvCatalogs.TabIndex = 0;
             this.dgvCatalogs.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCatalogs_CellContentClick);
             // 
@@ -260,7 +292,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1067, 520);
+            this.ClientSize = new System.Drawing.Size(1140, 520);
             this.Controls.Add(this.plContent);
             this.Controls.Add(this.tsToolBar);
             this.Controls.Add(this.ssStatus);
@@ -303,6 +335,10 @@
         private System.Windows.Forms.ToolStripButton btnUnZipWithSelectedList;
         private System.Windows.Forms.ToolStripButton btnSelectUnZipDir;
         private System.Windows.Forms.ToolStripButton btnUnZipAll;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripButton btnOpenLog;
 
     }
 }
