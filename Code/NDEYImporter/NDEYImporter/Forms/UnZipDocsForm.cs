@@ -261,8 +261,8 @@ namespace NDEYImporter.Forms
                                             //提取推荐意见
                                             DataList dlBaseInfor = context.table("BaseInfor").select("UnitRecommend,ExpertRecommend1,ExpertRecommend2,ExpertRecommend3").getDataList();
 
-                                            //提取UnitID
-                                            string unitID = context.table("BaseInfor").select("UnitID").getValue<string>(string.Empty);
+                                            //提取UnitName
+                                            string unitName = context.table("BaseInfor").select("UnitName").getValue<string>(string.Empty);
 
                                             string personName = context.table("BaseInfor").select("UserName").getValue<string>(string.Empty);
 
@@ -493,11 +493,11 @@ namespace NDEYImporter.Forms
                                                 }
                                                 else if (fii.Name.EndsWith(".doc"))
                                                 {
-                                                    //移除正常的申报包文件，把不属于本次申报内容的文件留下
-                                                    needDeleteList.Remove(sss);
-
-                                                    if (fii.Name.StartsWith(unitID) && fii.Name.Contains(personName))
+                                                    if (fii.Name.StartsWith(unitName) && fii.Name.Contains(personName))
                                                     {
+                                                        //移除正常的申报包文件，把不属于本次申报内容的文件留下
+                                                        needDeleteList.Remove(sss);
+
                                                         //找到Doc文件
                                                         isFoundDocFile = true;
 
@@ -523,6 +523,9 @@ namespace NDEYImporter.Forms
                                                     {
                                                         if (fii.Name.EndsWith("项目申报书.doc"))
                                                         {
+                                                            //移除正常的申报包文件，把不属于本次申报内容的文件留下
+                                                            needDeleteList.Remove(sss);
+
                                                             try
                                                             {
                                                                 File.Delete(sss);
