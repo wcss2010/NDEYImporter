@@ -53,7 +53,7 @@ namespace NDEYImporter.Forms
                 System.IO.DirectoryInfo fi = new System.IO.DirectoryInfo(s);
 
                 //判断目录名是否符合要求(2019-ZQ-001_xxxxxxxxx)
-                if (fi.Name.Contains("-ZQ-") && fi.Name.Length >= 13)
+                if (fi.Name.Contains("-ZQ-"))
                 {
                     //添加目录名称
                     tvSubDirs.Nodes.Add(fi.Name);
