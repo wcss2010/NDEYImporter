@@ -183,7 +183,7 @@ namespace NDEYImporter.Forms
                         DirectoryInfo di = new DirectoryInfo(s);
 
                         //判断目录是否符合条件
-                        if (di.Name.Contains(projectNumber) && di.Name.Length >= 12)
+                        if (di.Name.Contains(projectNumber))
                         {
                             MainForm.writeLog("开始进行项目" + projectNumber + "的解包......");
 
