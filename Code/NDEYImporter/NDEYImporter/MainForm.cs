@@ -778,6 +778,11 @@ namespace NDEYImporter
             }
         }
 
+        public static void writeSheet(NPOI.XSSF.UserModel.XSSFWorkbook workbook, NPOI.SS.UserModel.ICellStyle normalStyle, NPOI.SS.UserModel.ICellStyle boldStyle, List<List<KeyValuePair<string, object>>> table)
+        {
+            writeSheet(workbook, normalStyle, boldStyle, "Data", table);
+        }
+
         /// <summary>
         /// 获得第一年任务的纯文本
         /// </summary>
