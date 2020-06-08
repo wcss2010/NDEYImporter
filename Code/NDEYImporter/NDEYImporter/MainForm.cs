@@ -237,7 +237,7 @@ namespace NDEYImporter
                 MemoryStream memoryStream = new MemoryStream();
                 //创建Workbook
                 NPOI.XSSF.UserModel.XSSFWorkbook workbook = new NPOI.XSSF.UserModel.XSSFWorkbook();
- 
+
                 //创建单元格设置对象(普通内容)
                 NPOI.SS.UserModel.ICellStyle cellStyleA = workbook.CreateCellStyle();
                 cellStyleA.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Left;
@@ -438,7 +438,7 @@ namespace NDEYImporter
                 }
 
                 //写表格数据
-                writeSheet(workbook, cellStyleA, cellStyleB, "项目列表",outputData);
+                writeSheet(workbook, cellStyleA, cellStyleB, "项目列表", outputData);
 
                 #endregion
 
@@ -446,7 +446,7 @@ namespace NDEYImporter
 
                 //需要输出的数据
                 outputData = new List<List<KeyValuePair<string, object>>>();
-                                
+
                 //输出Excel数据
                 foreach (DataItem diCatalogItem in dlCatalogs.getRows())
                 {
@@ -497,7 +497,7 @@ namespace NDEYImporter
                 }
 
                 //写表格数据
-                writeSheet(workbook, cellStyleA, cellStyleB, "人才计划",outputData);
+                writeSheet(workbook, cellStyleA, cellStyleB, "人才计划", outputData);
 
                 #endregion
 
@@ -559,6 +559,105 @@ namespace NDEYImporter
                 //写表格数据
                 writeSheet(workbook, cellStyleA, cellStyleB, "科技奖励", outputData);
 
+                #endregion
+
+                #region 工作经历
+                //需要输出的数据
+                outputData = new List<List<KeyValuePair<string, object>>>();
+
+                //输出Excel数据
+                foreach (DataItem diCatalogItem in dlCatalogs.getRows())
+                {
+                    //项目ID
+                    string projectID = diCatalogItem.getString("ProjectID");
+                    //项目编号
+                    string projectNumber = diCatalogItem.getString("ProjectNumber");
+                    //项目申请人
+                    string projectCreater = diCatalogItem.getString("ProjectCreater");
+                    //项目申请单位ID
+                    string projectUnitID = diCatalogItem.getString("ProjectCreaterUnitID");
+
+                    try
+                    {
+                        //查找科技奖励
+                        DataList dlTechnologyAwardsList = ConnectionManager.Context.table("WorkExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
+                        //判断是否存在科技奖励
+                        if (dlTechnologyAwardsList != null)
+                        {
+                            //将数据输出到outputData列表中
+                            foreach (DataItem diTech in dlTechnologyAwardsList.getRows())
+                            {
+                                //需要输出的数据行
+                                List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
+                                outputData.Add(rowData);
+
+                                //输出这个项
+                                rowData.Add(new KeyValuePair<string, object>("姓名", projectCreater));
+                                rowData.Add(new KeyValuePair<string, object>("开始年月", diTech.get("StartDate")));
+                                rowData.Add(new KeyValuePair<string, object>("结束年月", diTech.get("EndDate")));
+                                rowData.Add(new KeyValuePair<string, object>("工作单位", diTech.get("Org")));
+                                rowData.Add(new KeyValuePair<string, object>("职务/职称", diTech.get("Job")));
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MainForm.writeLog("项目编号" + projectNumber + "的输出到Excel异常,Ex:" + ex.ToString());
+                    }
+                }
+
+                //写表格数据
+                writeSheet(workbook, cellStyleA, cellStyleB, "工作经历", outputData);
+                #endregion
+
+                #region 教育经历
+                //需要输出的数据
+                outputData = new List<List<KeyValuePair<string, object>>>();
+
+                //输出Excel数据
+                foreach (DataItem diCatalogItem in dlCatalogs.getRows())
+                {
+                    //项目ID
+                    string projectID = diCatalogItem.getString("ProjectID");
+                    //项目编号
+                    string projectNumber = diCatalogItem.getString("ProjectNumber");
+                    //项目申请人
+                    string projectCreater = diCatalogItem.getString("ProjectCreater");
+                    //项目申请单位ID
+                    string projectUnitID = diCatalogItem.getString("ProjectCreaterUnitID");
+
+                    try
+                    {
+                        //查找科技奖励
+                        DataList dlTechnologyAwardsList = ConnectionManager.Context.table("TechnologyAwardsExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
+                        //判断是否存在科技奖励
+                        if (dlTechnologyAwardsList != null)
+                        {
+                            //将数据输出到outputData列表中
+                            foreach (DataItem diTech in dlTechnologyAwardsList.getRows())
+                            {
+                                //需要输出的数据行
+                                List<KeyValuePair<string, object>> rowData = new List<KeyValuePair<string, object>>();
+                                outputData.Add(rowData);
+
+                                //输出这个项
+                                rowData.Add(new KeyValuePair<string, object>("姓名", projectCreater));
+                                rowData.Add(new KeyValuePair<string, object>("开始年月", diTech.get("StartDate")));
+                                rowData.Add(new KeyValuePair<string, object>("结束年月", diTech.get("EndDate")));
+                                rowData.Add(new KeyValuePair<string, object>("校(院)及系名称", diTech.get("Org")));
+                                rowData.Add(new KeyValuePair<string, object>("专业", diTech.get("Major")));
+                                rowData.Add(new KeyValuePair<string, object>("学位", diTech.get("Degree")));
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MainForm.writeLog("项目编号" + projectNumber + "的输出到Excel异常,Ex:" + ex.ToString());
+                    }
+                }
+
+                //写表格数据
+                writeSheet(workbook, cellStyleA, cellStyleB, "教育经历", outputData);
                 #endregion
 
                 //输出到Excel文件
