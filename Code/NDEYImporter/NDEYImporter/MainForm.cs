@@ -629,7 +629,7 @@ namespace NDEYImporter
                     try
                     {
                         //查找科技奖励
-                        DataList dlTechnologyAwardsList = ConnectionManager.Context.table("TechnologyAwardsExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
+                        DataList dlTechnologyAwardsList = ConnectionManager.Context.table("EducationExperience").where("ProjectID='" + projectID + "'").select("*").getDataList();
                         //判断是否存在科技奖励
                         if (dlTechnologyAwardsList != null)
                         {
