@@ -438,7 +438,7 @@ namespace NDEYImporter
                 }
 
                 //写表格数据
-                writeSheet(workbook, cellStyleA, cellStyleB, outputData);
+                writeSheet(workbook, cellStyleA, cellStyleB, "项目列表",outputData);
 
                 #endregion
 
@@ -497,7 +497,7 @@ namespace NDEYImporter
                 }
 
                 //写表格数据
-                writeSheet(workbook, cellStyleA, cellStyleB, outputData);
+                writeSheet(workbook, cellStyleA, cellStyleB, "人才计划",outputData);
 
                 #endregion
 
@@ -557,7 +557,7 @@ namespace NDEYImporter
                 }
 
                 //写表格数据
-                writeSheet(workbook, cellStyleA, cellStyleB, outputData);
+                writeSheet(workbook, cellStyleA, cellStyleB, "科技奖励", outputData);
 
                 #endregion
 
@@ -582,10 +582,10 @@ namespace NDEYImporter
         /// <param name="normalStyle">普通样式(用于表格内容)</param>
         /// <param name="boldStyle">粗体样式(用于表格头部)</param>
         /// <param name="table">表格数据</param>
-        public static void writeSheet(NPOI.XSSF.UserModel.XSSFWorkbook workbook, NPOI.SS.UserModel.ICellStyle normalStyle, NPOI.SS.UserModel.ICellStyle boldStyle, List<List<KeyValuePair<string, object>>> table)
+        public static void writeSheet(NPOI.XSSF.UserModel.XSSFWorkbook workbook, NPOI.SS.UserModel.ICellStyle normalStyle, NPOI.SS.UserModel.ICellStyle boldStyle, string tableName, List<List<KeyValuePair<string, object>>> table)
         {
             //创建Sheet页
-            NPOI.SS.UserModel.ISheet sheet = workbook.CreateSheet();
+            NPOI.SS.UserModel.ISheet sheet = workbook.CreateSheet(tableName);
 
             //行号
             int rowIndex = 0;
